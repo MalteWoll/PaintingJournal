@@ -1,4 +1,4 @@
-package com.example.paintingjournal.views.MainMenu
+package com.example.paintingjournal.views.mainMenu
 
 import androidx.lifecycle.ViewModel
 

@@ -1,4 +1,4 @@
-package com.example.paintingjournal.views.MainMenu
+package com.example.paintingjournal.views.miniList
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,9 +19,9 @@ import com.example.paintingjournal.R
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MainMenuView(
+fun MiniListView(
     navController: NavController,
-    mainViewModel: MainMenuViewModel = koinViewModel()
+    mainViewModel: MiniListViewModel = koinViewModel()
 ) {
     Surface(
         modifier = Modifier.fillMaxSize()

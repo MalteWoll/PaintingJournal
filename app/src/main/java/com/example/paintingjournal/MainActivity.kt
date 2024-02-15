@@ -16,7 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.paintingjournal.ui.theme.PaintingJournalAppTheme
-import com.example.paintingjournal.views.MainMenu.MainMenuView
+import com.example.paintingjournal.views.mainMenu.MainMenuView
 
 class MainActivity : ComponentActivity() {
     private val requestPermissionLauncher = registerForActivityResult(
