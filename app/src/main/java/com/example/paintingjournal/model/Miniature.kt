@@ -8,5 +8,6 @@ data class Miniature (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
-    val manufacturer: String
+    val manufacturer: String,
+    val faction: String
 )

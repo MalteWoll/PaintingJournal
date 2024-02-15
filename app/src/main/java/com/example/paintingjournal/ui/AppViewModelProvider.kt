@@ -20,7 +20,7 @@ object AppViewModelProvider {
             MiniListViewModel()
         }
         initializer {
-            MiniAddViewModel()
+            MiniAddViewModel(paintingJournalApplication().container.miniaturesRepository)
         }
     }
 }

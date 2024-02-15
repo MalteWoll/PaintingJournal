@@ -3,6 +3,10 @@
     <string name="back_button">Back</string>
     <string name="main_menu_mini_list_button">Miniature List</string>
     <string name="main_menu_title">Main Menu</string>
+    <string name="mini_add_form_name">Name</string>
+    <string name="mini_add_form_manufacturer">Manufacturer</string>
+    <string name="mini_add_form_faction">Faction</string>
     <string name="mini_add_title">Add Miniature</string>
     <string name="mini_list_title">Miniature List</string>
+    <string name="save_action">Save</string>
 </resources>
