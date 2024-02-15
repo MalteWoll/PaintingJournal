@@ -8,8 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
@@ -35,13 +37,11 @@ class MainActivity : ComponentActivity() {
         requestCameraPermission()
         setContent {
              PaintingJournalAppTheme {
-                val navController = rememberNavController()
-                Surface(color = MaterialTheme.colorScheme.background) {
-                    NavHost(navController = navController, startDestination = "mainMenuView") {
-                        composable("mainMenuView") {
-                            MainMenuView(navController)
-                        }
-                    }
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    PaintingJournalApp()
                 }
             }
         }

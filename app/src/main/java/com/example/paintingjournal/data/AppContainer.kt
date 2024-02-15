@@ -8,6 +8,6 @@ interface AppContainer {
 
 class AppDataContainer(private val context: Context) : AppContainer {
     override val miniaturesRepository: MiniaturesRepository by lazy {
-        OfflineMiniaturesRepository(MiniatureDatabase.getDatabase(context).miniatureDao())
+        MiniaturesRepositoryImpl(MiniatureDatabase.getDatabase(context).miniatureDao())
     }
 }

@@ -1,22 +1,17 @@
 package com.example.paintingjournal
 
 import android.app.Application
-import com.example.paintingjournal.di.appModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.startKoin
+import com.example.paintingjournal.data.AppContainer
+import com.example.paintingjournal.data.AppDataContainer
 import org.opencv.android.OpenCVLoader
 
 class PaintingJournal : Application() {
+    lateinit var container: AppContainer
+
     override fun onCreate() {
         super.onCreate()
 
         OpenCVLoader.initLocal()
-
-        startKoin {
-            androidLogger()
-            androidContext(this@PaintingJournal)
-            modules(appModule)
-        }
+        container = AppDataContainer(this)
     }
 }
