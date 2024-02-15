@@ -34,6 +34,7 @@ fun PaintingJournalNavHost(
         }
         composable(route = MiniListDestination.route) {
             MiniListView(
+                navigateToMiniatureEntry = { },
                 navigateToMiniAdd = { navController.navigate(MiniAddDestination.route) },
                 navigateBack = { navController.popBackStack() }
             )

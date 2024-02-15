@@ -1,0 +1,66 @@
+import android.content.Context
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.paintingjournal.data.MiniatureDao
+import com.example.paintingjournal.data.MiniatureDatabase
+import com.example.paintingjournal.model.Miniature
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+import org.junit.Assert.assertEquals
+import org.junit.runner.RunWith
+import java.io.IOException
+import kotlin.jvm.Throws
+
+@RunWith(AndroidJUnit4::class)
+class MiniatureDaoTest {
+    private lateinit var miniatureDao: MiniatureDao
+    private lateinit var miniatureDatabase: MiniatureDatabase
+
+    private var miniature1 = Miniature(1, "Nurgling", "Games Workshop", "Chaos")
+    private var miniature2 = Miniature(2, "Primaris Captain", "Games Workshop", "Ultramarines")
+
+    private suspend fun addOneMiniatureToDb() {
+        miniatureDao.insert(miniature1)
+    }
+
+    private suspend fun addTwoMiniaturesToDb() {
+        miniatureDao.insert(miniature1)
+        miniatureDao.insert(miniature2)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun daoInsert_insertsMiniatureIntoDb() = runBlocking {
+        addOneMiniatureToDb()
+        val allMiniatures = miniatureDao.getAllItems().first()
+        assertEquals(allMiniatures[0], miniature1)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun daoGetAllMiniatures_returnsAllMiniaturesFromDb() = runBlocking {
+        addTwoMiniaturesToDb()
+        val allMiniatures = miniatureDao.getAllItems().first()
+        assertEquals(allMiniatures[0], miniature1)
+        assertEquals(allMiniatures[1], miniature2)
+    }
+
+    @Before
+    fun createDb() {
+        val context: Context = ApplicationProvider.getApplicationContext()
+        miniatureDatabase = Room.inMemoryDatabaseBuilder(context, MiniatureDatabase::class.java)
+            .allowMainThreadQueries()
+            .build()
+        miniatureDao = miniatureDatabase.miniatureDao()
+    }
+
+    @After
+    @Throws(IOException::class)
+    fun closeDb() {
+        miniatureDatabase.close()
+    }
+}

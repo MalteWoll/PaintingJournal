@@ -17,7 +17,7 @@ object AppViewModelProvider {
             MainMenuViewModel()
         }
         initializer {
-            MiniListViewModel()
+            MiniListViewModel(paintingJournalApplication().container.miniaturesRepository)
         }
         initializer {
             MiniAddViewModel(paintingJournalApplication().container.miniaturesRepository)
