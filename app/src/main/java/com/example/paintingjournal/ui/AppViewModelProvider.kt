@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.paintingjournal.PaintingJournal
 import com.example.paintingjournal.views.mainMenu.MainMenuViewModel
 import com.example.paintingjournal.views.miniAdd.MiniAddViewModel
+import com.example.paintingjournal.views.miniDetail.MiniDetailViewModel
 import com.example.paintingjournal.views.miniList.MiniListViewModel
 
 object AppViewModelProvider {
@@ -21,6 +22,12 @@ object AppViewModelProvider {
         }
         initializer {
             MiniAddViewModel(paintingJournalApplication().container.miniaturesRepository)
+        }
+        initializer {
+            MiniDetailViewModel(
+                this.createSavedStateHandle(),
+                paintingJournalApplication().container.miniaturesRepository
+            )
         }
     }
 }

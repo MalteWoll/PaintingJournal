@@ -1,13 +1,23 @@
 <resources>
     <string name="app_name">PaintingJournal</string>
+    <string name="attention">Attention</string>
     <string name="back_button">Back</string>
+    <string name="delete">Delete</string>
+    <string name="delete_question">Are you sure you want to delete?</string>
+    <string name="edit_title">Edit</string>
+    <string name="faction">Faction</string>
+    <string name="no">No</string>
     <string name="main_menu_mini_list_button">Miniature List</string>
     <string name="main_menu_title">Main Menu</string>
+    <string name="manufacturer">Manufacturer</string>
+    <string name="miniature">Miniature</string>
     <string name="mini_add_form_name">Name</string>
     <string name="mini_add_form_manufacturer">Manufacturer</string>
     <string name="mini_add_form_faction">Faction</string>
     <string name="mini_add_title">Add Miniature</string>
+    <string name="mini_details_title">Miniature Details</string>
     <string name="mini_list_no_item_description">No miniatures added yet</string>
     <string name="mini_list_title">Miniature List</string>
     <string name="save_action">Save</string>
+    <string name="yes">Yes</string>
 </resources>
