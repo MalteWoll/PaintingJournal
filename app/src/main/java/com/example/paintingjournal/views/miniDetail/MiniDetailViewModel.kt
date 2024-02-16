@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.paintingjournal.data.MiniaturesRepository
 import com.example.paintingjournal.views.miniAdd.MiniatureDetails
+import com.example.paintingjournal.views.miniAdd.toMiniature
 import com.example.paintingjournal.views.miniAdd.toMiniatureDetails
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class MiniDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    miniaturesRepository: MiniaturesRepository
+    val miniaturesRepository: MiniaturesRepository
 ) : ViewModel() {
     private val miniatureId: Int = checkNotNull(savedStateHandle[MiniatureDetailsDestination.miniatureIdArg])
     val uiState: StateFlow<MiniatureDetailsUiState> =
@@ -28,6 +29,10 @@ class MiniDetailViewModel(
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = MiniatureDetailsUiState()
             )
+
+    suspend fun deleteMiniature() {
+        miniaturesRepository.deleteMiniature(uiState.value.miniatureDetails.toMiniature())
+    }
 
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L

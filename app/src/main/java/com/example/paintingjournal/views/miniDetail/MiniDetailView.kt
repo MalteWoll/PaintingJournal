@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -56,6 +57,7 @@ fun MiniDetailView(
     viewModel: MiniDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState = viewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -80,7 +82,7 @@ fun MiniDetailView(
     ) { innerPadding ->
         MiniatureDetailsBody(
             miniatureDetailsUiState = uiState.value,
-            onDelete = { /*TODO*/ },
+            onDelete = {  },
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())

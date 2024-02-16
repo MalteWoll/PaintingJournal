@@ -11,6 +11,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.runner.RunWith
 import java.io.IOException
 import kotlin.jvm.Throws
@@ -47,6 +48,29 @@ class MiniatureDaoTest {
         val allMiniatures = miniatureDao.getAllItems().first()
         assertEquals(allMiniatures[0], miniature1)
         assertEquals(allMiniatures[1], miniature2)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun daoUpdateItems_updatesItemsInDb() = runBlocking {
+        addTwoMiniaturesToDb()
+        miniatureDao.update(Miniature(1, "Nurgling", "GW", "Nurgle"))
+        miniatureDao.update(Miniature(2, "Primaris Captain", "GW", "Dark Angels"))
+
+        val allMiniatures = miniatureDao.getAllItems().first()
+        assertEquals(allMiniatures[0], Miniature(1, "Nurgling", "GW", "Nurgle"))
+        assertEquals(allMiniatures[1], Miniature(2, "Primaris Captain", "GW", "Dark Angels"))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun daoDeleteItems_deleteAllItemsFromDb() = runBlocking {
+        addTwoMiniaturesToDb()
+        miniatureDao.delete(miniature1)
+        miniatureDao.delete(miniature2)
+
+        val allMiniatures = miniatureDao.getAllItems().first()
+        assertTrue(allMiniatures.isEmpty())
     }
 
     @Before
