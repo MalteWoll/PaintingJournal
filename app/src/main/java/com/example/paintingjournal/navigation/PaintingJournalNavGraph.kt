@@ -59,7 +59,7 @@ fun PaintingJournalNavHost(
             })
         ) {
             MiniEditView(
-                navigateBack = { navController.popBackStack() }
+                navigateBack = { navController.navigateUp() }
             )
         }
 

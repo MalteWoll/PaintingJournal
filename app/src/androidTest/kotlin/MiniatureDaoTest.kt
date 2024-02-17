@@ -33,6 +33,21 @@ class MiniatureDaoTest {
         miniatureDao.insert(miniature2)
     }
 
+    @Before
+    fun createDb() {
+        val context: Context = ApplicationProvider.getApplicationContext()
+        miniatureDatabase = Room.inMemoryDatabaseBuilder(context, MiniatureDatabase::class.java)
+            .allowMainThreadQueries()
+            .build()
+        miniatureDao = miniatureDatabase.miniatureDao()
+    }
+
+    @After
+    @Throws(IOException::class)
+    fun closeDb() {
+        miniatureDatabase.close()
+    }
+
     @Test
     @Throws(Exception::class)
     fun daoInsert_insertsMiniatureIntoDb() = runBlocking {
@@ -73,18 +88,11 @@ class MiniatureDaoTest {
         assertTrue(allMiniatures.isEmpty())
     }
 
-    @Before
-    fun createDb() {
-        val context: Context = ApplicationProvider.getApplicationContext()
-        miniatureDatabase = Room.inMemoryDatabaseBuilder(context, MiniatureDatabase::class.java)
-            .allowMainThreadQueries()
-            .build()
-        miniatureDao = miniatureDatabase.miniatureDao()
-    }
-
-    @After
-    @Throws(IOException::class)
-    fun closeDb() {
-        miniatureDatabase.close()
+    @Test
+    @Throws(Exception::class)
+    fun daoGetItem_returnsItemFromDb() = runBlocking {
+        addOneMiniatureToDb()
+        val miniature = miniatureDao.getItem(1)
+        assertEquals(miniature.first(), miniature1)
     }
 }

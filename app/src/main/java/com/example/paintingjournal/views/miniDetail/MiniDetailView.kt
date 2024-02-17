@@ -69,7 +69,7 @@ fun MiniDetailView(
             )
         }, floatingActionButton = {
             FloatingActionButton(
-                onClick = { navigateToEditMiniature(0) },
+                onClick = { navigateToEditMiniature(uiState.value.miniatureDetails.id) },
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
 
