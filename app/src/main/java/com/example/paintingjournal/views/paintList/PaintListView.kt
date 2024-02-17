@@ -104,8 +104,8 @@ private fun PaintListBody(
             )
         } else {
             PaintList(
-                paintList = paintList, 
-                onPaintclick = { onPaintClick(it.id) },
+                paintList = paintList,
+                onPaintClick = { onPaintClick(it.id) },
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
                 )
         }
@@ -115,7 +115,7 @@ private fun PaintListBody(
 @Composable
 private fun PaintList(
     paintList: List<MiniaturePaint>,
-    onPaintclick: (MiniaturePaint) -> Unit,
+    onPaintClick: (MiniaturePaint) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -123,7 +123,7 @@ private fun PaintList(
             PaintItem(paint = paint,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
-                    .clickable { onPaintclick(paint) })
+                    .clickable { onPaintClick(paint) })
         }
     }
 }

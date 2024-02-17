@@ -65,5 +65,7 @@ fun Miniature.toMiniatureDetails(): MiniatureDetails = MiniatureDetails(
     id = id,
     name = name,
     manufacturer = manufacturer,
-    faction = faction
+    faction = faction,
+    createdAt = createdAt,
+    image = image
 )

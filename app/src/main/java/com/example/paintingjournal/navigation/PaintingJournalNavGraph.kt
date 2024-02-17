@@ -17,6 +17,10 @@ import com.example.paintingjournal.views.miniEdit.MiniEditView
 import com.example.paintingjournal.views.miniEdit.MiniatureEditDestination
 import com.example.paintingjournal.views.miniList.MiniListDestination
 import com.example.paintingjournal.views.miniList.MiniListView
+import com.example.paintingjournal.views.paintAdd.PaintAddDestination
+import com.example.paintingjournal.views.paintAdd.PaintAddView
+import com.example.paintingjournal.views.paintDetail.PaintDetailView
+import com.example.paintingjournal.views.paintDetail.PaintDetailsDestination
 import com.example.paintingjournal.views.paintList.PaintListDestination
 import com.example.paintingjournal.views.paintList.PaintListView
 
@@ -74,9 +78,27 @@ fun PaintingJournalNavHost(
             )
         }
 
+        composable(route = PaintAddDestination.route) {
+            PaintAddView(
+                navigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = PaintDetailsDestination.routeWithArgs,
+            arguments = listOf(navArgument(PaintDetailsDestination.paintIdArg) {
+                type = NavType.IntType
+            })
+        ) {
+            PaintDetailView(
+                navigateToEditPaint = {  },
+                navigateBack = { navController.navigateUp() }
+            )
+        }
+
         composable(route = PaintListDestination.route) {
             PaintListView(
-                navigateToPaintAdd = { /*TODO*/ },
+                navigateToPaintAdd = { navController.navigate(PaintAddDestination.route) },
                 navigateBack = { navController.popBackStack() },
                 navigateToPaintEntry = {}
             )

@@ -10,7 +10,7 @@ import com.example.paintingjournal.converters.UriConverters
 import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniaturePaint
 
-@Database(entities = [Miniature::class, MiniaturePaint::class], version = 4, exportSchema = false)
+@Database(entities = [Miniature::class, MiniaturePaint::class], version = 5, exportSchema = false)
 @TypeConverters(DateConverters::class, UriConverters::class)
 abstract class MiniatureDatabase : RoomDatabase() {
     abstract fun miniatureDao(): MiniatureDao

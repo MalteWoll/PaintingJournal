@@ -1,4 +1,5 @@
 import android.content.Context
+import android.net.Uri
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -14,6 +15,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.runner.RunWith
 import java.io.IOException
+import java.util.Date
 import kotlin.jvm.Throws
 
 @RunWith(AndroidJUnit4::class)
@@ -21,8 +23,8 @@ class MiniatureDaoTest {
     private lateinit var miniatureDao: MiniatureDao
     private lateinit var miniatureDatabase: MiniatureDatabase
 
-    private var miniature1 = Miniature(1, "Nurgling", "Games Workshop", "Chaos")
-    private var miniature2 = Miniature(2, "Primaris Captain", "Games Workshop", "Ultramarines")
+    private var miniature1 = Miniature(1, "Nurgling", "Games Workshop", "Chaos", Date(1), Uri.parse("uriString"))
+    private var miniature2 = Miniature(2, "Primaris Captain", "Games Workshop", "Ultramarines", Date(1), Uri.parse("uriString"))
 
     private suspend fun addOneMiniatureToDb() {
         miniatureDao.insert(miniature1)
@@ -69,12 +71,12 @@ class MiniatureDaoTest {
     @Throws(Exception::class)
     fun daoUpdateItems_updatesItemsInDb() = runBlocking {
         addTwoMiniaturesToDb()
-        miniatureDao.update(Miniature(1, "Nurgling", "GW", "Nurgle"))
-        miniatureDao.update(Miniature(2, "Primaris Captain", "GW", "Dark Angels"))
+        miniatureDao.update(Miniature(1, "Nurgling", "GW", "Nurgle", Date(1), Uri.parse("uriString")))
+        miniatureDao.update(Miniature(2, "Primaris Captain", "GW", "Dark Angels", Date(1), Uri.parse("uriString")))
 
         val allMiniatures = miniatureDao.getAllMiniatures().first()
-        assertEquals(allMiniatures[0], Miniature(1, "Nurgling", "GW", "Nurgle"))
-        assertEquals(allMiniatures[1], Miniature(2, "Primaris Captain", "GW", "Dark Angels"))
+        assertEquals(allMiniatures[0], Miniature(1, "Nurgling", "GW", "Nurgle", Date(1), Uri.parse("uriString")))
+        assertEquals(allMiniatures[1], Miniature(2, "Primaris Captain", "GW", "Dark Angels", Date(1), Uri.parse("uriString")))
     }
 
     @Test

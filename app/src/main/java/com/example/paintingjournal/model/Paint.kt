@@ -13,7 +13,6 @@ data class MiniaturePaint (
     val manufacturer: String,
     val description: String,
     val type: String,
-    val imageUri: String,
-    val createdAt: Date?,
-    val image: Uri?
+    val imageUri: Uri?,
+    val createdAt: Date?
 )
