@@ -100,7 +100,7 @@ fun PaintingJournalNavHost(
             PaintListView(
                 navigateToPaintAdd = { navController.navigate(PaintAddDestination.route) },
                 navigateBack = { navController.popBackStack() },
-                navigateToPaintEntry = {}
+                navigateToPaintEntry = { navController.navigate("${PaintDetailsDestination.route}/${it}")}
             )
         }
     }

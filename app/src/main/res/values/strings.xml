@@ -4,6 +4,7 @@
     <string name="back_button">Back</string>
     <string name="delete">Delete</string>
     <string name="delete_question">Are you sure you want to delete?</string>
+    <string name="description">Description</string>
     <string name="edit_title">Edit</string>
     <string name="faction">Faction</string>
     <string name="no">No</string>
@@ -20,6 +21,7 @@
     <string name="mini_edit_title">Edit Miniature</string>
     <string name="mini_list_no_item_description">No miniatures added yet</string>
     <string name="mini_list_title">Miniature List</string>
+    <string name="paint">Paint</string>
     <string name="paint_add_form_description">Description</string>
     <string name="paint_add_form_name">Name</string>
     <string name="paint_add_form_manufacturer">Manufacturer</string>
@@ -29,5 +31,6 @@
     <string name="paint_list_title">Paint List</string>
     <string name="paint_list_no_item_description">No paints added yet</string>
     <string name="save_action">Save</string>
+    <string name="type">Type</string>
     <string name="yes">Yes</string>
 </resources>

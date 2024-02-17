@@ -7,6 +7,7 @@ import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.views.miniDetail.MiniatureDetailsUiState
 import com.example.paintingjournal.views.paintAdd.MiniaturePaintDetails
 import com.example.paintingjournal.views.paintAdd.toMiniaturePaintDetails
+import com.example.paintingjournal.views.paintAdd.toPaint
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -28,6 +29,10 @@ class PaintDetailViewModel(
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = MiniaturePaintDetailsUiState()
             )
+
+    suspend fun deletePaint() {
+        paintsRepository.deletePaint(uiState.value.miniaturePaintDetails.toPaint())
+    }
 
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
