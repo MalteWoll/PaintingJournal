@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +38,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.example.paintingjournal.BuildConfig
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
@@ -47,6 +51,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import java.util.Objects
 
 object PaintAddDestination: NavigationDestination {
@@ -181,13 +186,18 @@ fun MiniaturePaintInputForm(
             enabled = enabled,
             singleLine = true
         )
-        TakeMiniaturePaintImage()
+        TakeMiniaturePaintImage(
+            miniaturePaintDetails = miniaturePaintDetails,
+            onValueChanged = onValueChanged
+        )
     }
 }
 
 @Composable
 fun TakeMiniaturePaintImage(
-
+    miniaturePaintDetails: MiniaturePaintDetails,
+    modifier: Modifier = Modifier,
+    onValueChanged: (MiniaturePaintDetails) -> Unit = {}
 ) {
     val context = LocalContext.current
     val file = context.createImageFile()
@@ -203,6 +213,7 @@ fun TakeMiniaturePaintImage(
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
             capturedImageUri = uri
+            onValueChanged(miniaturePaintDetails.copy(imageUri = uri))
         }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -222,31 +233,29 @@ fun TakeMiniaturePaintImage(
         if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
             cameraLauncher.launch(uri)
         } else {
-            // Request a permission
             permissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }) {
         Text(text = stringResource(id =R.string.capture_image))
     }
 
-    if (capturedImageUri.path?.isNotEmpty() == true) {
-        Image(
-            modifier = Modifier
-                .padding(16.dp, 8.dp),
-            painter = rememberImagePainter(capturedImageUri),
-            contentDescription = null
+    if (miniaturePaintDetails.imageUri != null) {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(miniaturePaintDetails.imageUri)
+                .build(),
+            contentDescription = "",
+            contentScale = ContentScale.Crop,
         )
     }
 }
 
 fun Context.createImageFile(): File {
-    // Create an image file name
-    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.GERMANY).format(Date())
     val imageFileName = "JPEG_" + timeStamp + "_"
-    val image = File.createTempFile(
-        imageFileName, /* prefix */
-        ".jpg", /* suffix */
-        externalCacheDir      /* directory */
+    return File.createTempFile(
+        imageFileName,
+        ".jpg",
+        externalCacheDir
     )
-    return image
 }
