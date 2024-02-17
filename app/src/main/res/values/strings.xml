@@ -2,6 +2,7 @@
     <string name="app_name">PaintingJournal</string>
     <string name="attention">Attention</string>
     <string name="back_button">Back</string>
+    <string name="capture_image">Capture image</string>
     <string name="delete">Delete</string>
     <string name="delete_question">Are you sure you want to delete?</string>
     <string name="description">Description</string>
