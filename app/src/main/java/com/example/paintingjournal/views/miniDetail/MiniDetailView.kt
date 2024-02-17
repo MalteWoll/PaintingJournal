@@ -40,6 +40,7 @@ import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import com.example.paintingjournal.views.miniAdd.toMiniature
+import kotlinx.coroutines.launch
 
 object MiniatureDetailsDestination : NavigationDestination {
     override val route = "mini_details"
@@ -82,7 +83,12 @@ fun MiniDetailView(
     ) { innerPadding ->
         MiniatureDetailsBody(
             miniatureDetailsUiState = uiState.value,
-            onDelete = {  },
+            onDelete = {
+                       coroutineScope.launch {
+                           viewModel.deleteMiniature()
+                           navigateBack()
+                       }
+            },
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())

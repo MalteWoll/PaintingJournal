@@ -48,7 +48,7 @@ fun PaintingJournalNavHost(
             ) {
             MiniDetailView(
                 navigateToEditMiniature = { navController.navigate("${MiniatureEditDestination.route}/$it") },
-                navigateBack = { navController.popBackStack() }
+                navigateBack = { navController.navigateUp() }
             )
         }
 
