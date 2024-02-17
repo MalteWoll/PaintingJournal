@@ -28,6 +28,7 @@
     <string name="paint_add_form_type">Paint Type</string>
     <string name="paint_add_title">Add Paint</string>
     <string name="paint_details_title">Paint Details</string>
+    <string name="paint_edit_title">Edit Paint</string>
     <string name="paint_list_title">Paint List</string>
     <string name="paint_list_no_item_description">No paints added yet</string>
     <string name="save_action">Save</string>

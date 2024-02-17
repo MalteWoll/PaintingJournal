@@ -21,6 +21,8 @@ import com.example.paintingjournal.views.paintAdd.PaintAddDestination
 import com.example.paintingjournal.views.paintAdd.PaintAddView
 import com.example.paintingjournal.views.paintDetail.PaintDetailView
 import com.example.paintingjournal.views.paintDetail.PaintDetailsDestination
+import com.example.paintingjournal.views.paintEdit.PaintEditDestination
+import com.example.paintingjournal.views.paintEdit.PaintEditView
 import com.example.paintingjournal.views.paintList.PaintListDestination
 import com.example.paintingjournal.views.paintList.PaintListView
 
@@ -91,9 +93,18 @@ fun PaintingJournalNavHost(
             })
         ) {
             PaintDetailView(
-                navigateToEditPaint = {  },
+                navigateToEditPaint = { navController.navigate("${PaintEditDestination.route}/$it") },
                 navigateBack = { navController.navigateUp() }
             )
+        }
+
+        composable(
+            route = PaintEditDestination.routeWithArgs,
+            arguments = listOf(navArgument(PaintEditDestination.paintArg) {
+                type = NavType.IntType
+            })
+        ) {
+            PaintEditView(navigateBack = { navController.popBackStack() })
         }
 
         composable(route = PaintListDestination.route) {

@@ -14,6 +14,7 @@ import com.example.paintingjournal.views.miniEdit.MiniEditViewModel
 import com.example.paintingjournal.views.miniList.MiniListViewModel
 import com.example.paintingjournal.views.paintAdd.PaintAddViewModel
 import com.example.paintingjournal.views.paintDetail.PaintDetailViewModel
+import com.example.paintingjournal.views.paintEdit.PaintEditViewModel
 import com.example.paintingjournal.views.paintList.PaintListViewModel
 
 object AppViewModelProvider {
@@ -46,6 +47,12 @@ object AppViewModelProvider {
         }
         initializer {
             PaintDetailViewModel(
+                this.createSavedStateHandle(),
+                paintingJournalApplication().container.paintsRepository
+            )
+        }
+        initializer {
+            PaintEditViewModel(
                 this.createSavedStateHandle(),
                 paintingJournalApplication().container.paintsRepository
             )
