@@ -61,7 +61,7 @@ fun MiniListView(
             topBar = {
                 PaintingJournalTopAppBar(
                     title = stringResource(id = R.string.mini_list_title),
-                    canNavigateBack = false
+                    canNavigateBack = true
                 )
             },
             floatingActionButton = {

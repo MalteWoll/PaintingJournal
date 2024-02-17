@@ -8,6 +8,7 @@
     <string name="faction">Faction</string>
     <string name="no">No</string>
     <string name="main_menu_mini_list_button">Miniature List</string>
+    <string name="main_menu_paint_list_button">Paint List</string>
     <string name="main_menu_title">Main Menu</string>
     <string name="manufacturer">Manufacturer</string>
     <string name="miniature">Miniature</string>
@@ -20,6 +21,7 @@
     <string name="mini_list_no_item_description">No miniatures added yet</string>
     <string name="mini_list_title">Miniature List</string>
     <string name="paint_list_title">Pain List</string>
+    <string name="paint_list_no_item_description">No paints added yet</string>
     <string name="save_action">Save</string>
     <string name="yes">Yes</string>
 </resources>

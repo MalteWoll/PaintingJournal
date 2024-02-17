@@ -38,6 +38,7 @@ object HomeDestination : NavigationDestination {
 @Composable
 fun MainMenuView(
     navigateToMiniList: () -> Unit,
+    navigateToPaintList: () -> Unit,
     viewModel: MainMenuViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     Surface(
@@ -61,6 +62,9 @@ fun MainMenuView(
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = { navigateToMiniList() }) {
                     Text(text = stringResource(id = R.string.main_menu_mini_list_button))
+                }
+                Button(onClick = { navigateToPaintList() }) {
+                    Text(text = stringResource(id = R.string.main_menu_paint_list_button))
                 }
             }
         }
