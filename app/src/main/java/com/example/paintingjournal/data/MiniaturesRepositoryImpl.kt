@@ -4,9 +4,9 @@ import com.example.paintingjournal.model.Miniature
 import kotlinx.coroutines.flow.Flow
 
 class MiniaturesRepositoryImpl(private val miniatureDao: MiniatureDao) : MiniaturesRepository {
-    override fun getAllMiniaturesStream(): Flow<List<Miniature>> = miniatureDao.getAllItems()
+    override fun getAllMiniaturesStream(): Flow<List<Miniature>> = miniatureDao.getAllMiniatures()
 
-    override fun getMiniatureStream(id: Int): Flow<Miniature?> = miniatureDao.getItem(id)
+    override fun getMiniatureStream(id: Int): Flow<Miniature?> = miniatureDao.getMiniature(id)
 
     override suspend fun insertMiniature(miniature: Miniature) = miniatureDao.insert(miniature)
 

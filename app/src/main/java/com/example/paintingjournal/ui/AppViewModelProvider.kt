@@ -12,6 +12,7 @@ import com.example.paintingjournal.views.miniAdd.MiniAddViewModel
 import com.example.paintingjournal.views.miniDetail.MiniDetailViewModel
 import com.example.paintingjournal.views.miniEdit.MiniEditViewModel
 import com.example.paintingjournal.views.miniList.MiniListViewModel
+import com.example.paintingjournal.views.paintList.PaintListViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -34,6 +35,11 @@ object AppViewModelProvider {
             MiniEditViewModel(
                 this.createSavedStateHandle(),
                 paintingJournalApplication().container.miniaturesRepository
+            )
+        }
+        initializer {
+            PaintListViewModel(
+                paintingJournalApplication().container.paintsRepository
             )
         }
     }

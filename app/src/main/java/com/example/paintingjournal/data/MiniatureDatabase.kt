@@ -4,11 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.paintingjournal.converters.DateConverters
+import com.example.paintingjournal.converters.UriConverters
 import com.example.paintingjournal.model.Miniature
+import com.example.paintingjournal.model.MiniaturePaint
 
-@Database(entities = [Miniature::class], version = 1, exportSchema = false)
+@Database(entities = [Miniature::class, MiniaturePaint::class], version = 4, exportSchema = false)
+@TypeConverters(DateConverters::class, UriConverters::class)
 abstract class MiniatureDatabase : RoomDatabase() {
     abstract fun miniatureDao(): MiniatureDao
+    abstract fun paintDao(): PaintDao
     companion object {
         @Volatile
         private var Instance: MiniatureDatabase? = null

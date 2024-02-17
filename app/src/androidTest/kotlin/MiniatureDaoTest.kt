@@ -52,7 +52,7 @@ class MiniatureDaoTest {
     @Throws(Exception::class)
     fun daoInsert_insertsMiniatureIntoDb() = runBlocking {
         addOneMiniatureToDb()
-        val allMiniatures = miniatureDao.getAllItems().first()
+        val allMiniatures = miniatureDao.getAllMiniatures().first()
         assertEquals(allMiniatures[0], miniature1)
     }
 
@@ -60,7 +60,7 @@ class MiniatureDaoTest {
     @Throws(Exception::class)
     fun daoGetAllMiniatures_returnsAllMiniaturesFromDb() = runBlocking {
         addTwoMiniaturesToDb()
-        val allMiniatures = miniatureDao.getAllItems().first()
+        val allMiniatures = miniatureDao.getAllMiniatures().first()
         assertEquals(allMiniatures[0], miniature1)
         assertEquals(allMiniatures[1], miniature2)
     }
@@ -72,7 +72,7 @@ class MiniatureDaoTest {
         miniatureDao.update(Miniature(1, "Nurgling", "GW", "Nurgle"))
         miniatureDao.update(Miniature(2, "Primaris Captain", "GW", "Dark Angels"))
 
-        val allMiniatures = miniatureDao.getAllItems().first()
+        val allMiniatures = miniatureDao.getAllMiniatures().first()
         assertEquals(allMiniatures[0], Miniature(1, "Nurgling", "GW", "Nurgle"))
         assertEquals(allMiniatures[1], Miniature(2, "Primaris Captain", "GW", "Dark Angels"))
     }
@@ -84,7 +84,7 @@ class MiniatureDaoTest {
         miniatureDao.delete(miniature1)
         miniatureDao.delete(miniature2)
 
-        val allMiniatures = miniatureDao.getAllItems().first()
+        val allMiniatures = miniatureDao.getAllMiniatures().first()
         assertTrue(allMiniatures.isEmpty())
     }
 
@@ -92,7 +92,7 @@ class MiniatureDaoTest {
     @Throws(Exception::class)
     fun daoGetItem_returnsItemFromDb() = runBlocking {
         addOneMiniatureToDb()
-        val miniature = miniatureDao.getItem(1)
+        val miniature = miniatureDao.getMiniature(1)
         assertEquals(miniature.first(), miniature1)
     }
 }

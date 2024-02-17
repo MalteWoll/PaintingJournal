@@ -1,11 +1,13 @@
 package com.example.paintingjournal.views.miniAdd
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.paintingjournal.data.MiniaturesRepository
 import com.example.paintingjournal.model.Miniature
+import java.util.Date
 
 class MiniAddViewModel(
     private val miniaturesRepository: MiniaturesRepository
@@ -40,14 +42,18 @@ data class MiniatureDetails(
     val id: Int = 0,
     val name: String = "",
     val manufacturer: String = "",
-    val faction: String = ""
+    val faction: String = "",
+    val createdAt: Date? = null,
+    val image: Uri? = null
 )
 
 fun MiniatureDetails.toMiniature(): Miniature = Miniature(
     id = id,
     name = name,
     manufacturer = manufacturer,
-    faction = faction
+    faction = faction,
+    createdAt = createdAt,
+    image = image
 )
 
 fun Miniature.toMiniatureUiState(isEntryValid: Boolean = false): MiniatureUiState = MiniatureUiState(

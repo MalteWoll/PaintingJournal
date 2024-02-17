@@ -5,13 +5,15 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
 
-@Entity(tableName = "miniatures")
-data class Miniature (
+@Entity(tableName = "paints")
+data class MiniaturePaint (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
     val manufacturer: String,
-    val faction: String,
+    val description: String,
+    val type: String,
+    val imageUri: String,
     val createdAt: Date?,
     val image: Uri?
 )

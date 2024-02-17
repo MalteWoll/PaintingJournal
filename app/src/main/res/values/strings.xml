@@ -19,6 +19,7 @@
     <string name="mini_edit_title">Edit Miniature</string>
     <string name="mini_list_no_item_description">No miniatures added yet</string>
     <string name="mini_list_title">Miniature List</string>
+    <string name="paint_list_title">Pain List</string>
     <string name="save_action">Save</string>
     <string name="yes">Yes</string>
 </resources>

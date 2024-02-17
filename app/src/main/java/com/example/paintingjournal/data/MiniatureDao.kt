@@ -21,8 +21,8 @@ interface MiniatureDao {
     suspend fun delete(miniature: Miniature)
 
     @Query("SELECT * from miniatures WHERE id = :id")
-    fun getItem(id: Int): Flow<Miniature>
+    fun getMiniature(id: Int): Flow<Miniature>
 
     @Query("SELECT * from miniatures ORDER BY name ASC")
-    fun getAllItems(): Flow<List<Miniature>>
+    fun getAllMiniatures(): Flow<List<Miniature>>
 }
