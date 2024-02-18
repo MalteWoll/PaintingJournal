@@ -33,7 +33,7 @@ class PaintDetailViewModel(
     var miniaturePaintDetailsUiState by mutableStateOf(MiniaturePaintUiState())
         private set
 
-    init {
+    fun getData() {
         viewModelScope.launch {
             miniaturePaintDetailsUiState = paintsRepository.getPaintStream(miniaturePaintId)
                 .filterNotNull()
@@ -47,29 +47,15 @@ class PaintDetailViewModel(
                 .first()
                 .toList()
             if(imageList.isNotEmpty()) {
-                val imageUriList = imageList.map { it.imageUri!! }
                 miniaturePaintDetailsUiState =
                     MiniaturePaintUiState(
                         miniaturePaintDetails = miniaturePaintDetailsUiState.miniaturePaintDetails,
                         isEntryValid = miniaturePaintDetailsUiState.isEntryValid,
-                        imageUriList = imageUriList
+                        imageList = imageList
                     )
             }
         }
-
-        /*
-        val uiState: StateFlow<MiniaturePaintDetailsUiState> =
-            paintsRepository.getPaintStream(miniaturePainId)
-                .filterNotNull()
-                .map {
-                    MiniaturePaintDetailsUiState(miniaturePaintDetails = it.toMiniaturePaintDetails())
-                }.stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                    initialValue = MiniaturePaintDetailsUiState()
-                )*/
     }
-
 
     suspend fun deletePaint() {
         paintsRepository.deletePaint(miniaturePaintDetailsUiState.miniaturePaintDetails.toPaint())

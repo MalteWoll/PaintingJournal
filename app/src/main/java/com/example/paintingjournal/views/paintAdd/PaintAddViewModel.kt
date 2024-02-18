@@ -5,14 +5,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.PaintImageMappingTable
-import com.example.paintingjournal.views.miniAdd.MiniatureUiState
-import kotlinx.coroutines.launch
+import com.example.paintingjournal.model.SaveStateEnum
 import java.util.Date
 
 class PaintAddViewModel(
@@ -22,8 +20,9 @@ class PaintAddViewModel(
     suspend fun saveMiniaturePaint() {
         if(validateInput()) {
             val paintId = paintsRepository.insertPaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())
-            miniaturePaintUiState.imageUriList.forEach {imageUri ->
-                val imageId = imagesRepository.insertImage(Image(imageUri = imageUri))
+            miniaturePaintUiState.imageList.forEach {image ->
+                image.saveState = SaveStateEnum.SAVED
+                val imageId = imagesRepository.insertImage(image)
                 paintsRepository.addImageForPaint(PaintImageMappingTable(paintId, imageId))
             }
         }
@@ -31,13 +30,13 @@ class PaintAddViewModel(
 
     fun addImageToList(uri: Uri?) {
         if(uri != null) {
-            val imageUriList: MutableList<Uri> = miniaturePaintUiState.imageUriList.toMutableList()
-            imageUriList.add(uri)
+            val imageList: MutableList<Image> = miniaturePaintUiState.imageList.toMutableList()
+            imageList.add(Image(imageUri = uri))
             miniaturePaintUiState =
                 MiniaturePaintUiState(
                     miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails,
                     isEntryValid = miniaturePaintUiState.isEntryValid,
-                    imageUriList = imageUriList)
+                    imageList = imageList)
         }
     }
 
@@ -45,12 +44,12 @@ class PaintAddViewModel(
         private set
 
     fun updateUiState(miniaturePaintDetails: MiniaturePaintDetails) {
-        val imageUriList = miniaturePaintUiState.imageUriList
+        val imageList = miniaturePaintUiState.imageList
         miniaturePaintUiState =
             MiniaturePaintUiState(
                 miniaturePaintDetails = miniaturePaintDetails,
                 isEntryValid = validateInput(miniaturePaintDetails),
-                imageUriList = imageUriList)
+                imageList = imageList)
     }
 
     private fun validateInput(uiState: MiniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails) : Boolean {
@@ -63,7 +62,7 @@ class PaintAddViewModel(
 data class MiniaturePaintUiState(
     val miniaturePaintDetails: MiniaturePaintDetails = MiniaturePaintDetails(),
     val isEntryValid: Boolean = false,
-    val imageUriList: List<Uri> = listOf()
+    val imageList: List<Image> = listOf()
 )
 
 data class MiniaturePaintDetails(

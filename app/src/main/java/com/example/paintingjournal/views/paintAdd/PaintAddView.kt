@@ -50,6 +50,7 @@ import com.example.paintingjournal.BuildConfig
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
 import com.example.paintingjournal.data.ComposeFileProvider
+import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import kotlinx.coroutines.launch
@@ -125,7 +126,7 @@ fun PaintEntryBody(
             onSaveImage = onSaveImage
         )
         MiniaturePaintImages(
-            imageUriList = miniaturePaintUiState.imageUriList
+            imageList = miniaturePaintUiState.imageList
         )
         Button(
             onClick = onSaveClicked,
@@ -242,18 +243,18 @@ fun TakeMiniaturePaintImage(
 
 @Composable
 fun MiniaturePaintImages(
-    imageUriList: List<Uri>,
+    imageList: List<Image>,
     modifier: Modifier = Modifier,
 ) {
-    if (imageUriList.isNotEmpty()) {
+    if (imageList.isNotEmpty()) {
         Row(
             modifier = Modifier
                 .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
         ) {
-            imageUriList.forEach {imageUri ->
+            imageList.forEach {image ->
                 AsyncImage(
-                    model = imageUri,
+                    model = image.imageUri,
                     modifier = Modifier
                         .width(100.dp),
                     contentScale = ContentScale.FillBounds,

@@ -28,7 +28,7 @@ interface PaintDao {
     @Query("SELECT * from paints ORDER BY name ASC")
     fun getAllPaints(): Flow<List<MiniaturePaint>>
 
-    @Query("SELECT imageId,imageUri from images " +
+    @Query("SELECT imageId,imageUri,saveState from images " +
             "left join paintImageMapping map on images.imageid = map.imageIdRef " +
             "where paintIdRef = :id")
     fun getImagesForPaint(id: Int): Flow<List<Image>>

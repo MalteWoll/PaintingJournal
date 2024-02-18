@@ -11,6 +11,7 @@ import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.PaintImageMappingTable
+import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.views.paintAdd.MiniaturePaintDetails
 import com.example.paintingjournal.views.paintAdd.MiniaturePaintUiState
 import com.example.paintingjournal.views.paintAdd.toMiniaturePaintUiState
@@ -43,12 +44,11 @@ class PaintEditViewModel(
                 .first()
                 .toList()
             if(imageList.isNotEmpty()) {
-                val imageUriList = imageList.map { it.imageUri!! }
                 miniaturePaintUiState =
                     MiniaturePaintUiState(
                         miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails,
                         isEntryValid = miniaturePaintUiState.isEntryValid,
-                        imageUriList = imageUriList
+                        imageList = imageList
                     )
             }
         }
@@ -62,22 +62,30 @@ class PaintEditViewModel(
     suspend fun updateMiniaturePaint() {
         if(validateInput(miniaturePaintUiState.miniaturePaintDetails)) {
             paintsRepository.updatePaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())
-            miniaturePaintUiState.imageUriList.forEach {imageUri ->
-                val imageId = imagesRepository.insertImage(Image(imageUri = imageUri))
-                paintsRepository.addImageForPaint(PaintImageMappingTable(paintId.toLong(), imageId))
+            miniaturePaintUiState.imageList.forEach {image ->
+                if(image.saveState != SaveStateEnum.SAVED) {
+                    image.saveState = SaveStateEnum.SAVED
+                    val imageId = imagesRepository.insertImage(image)
+                    paintsRepository.addImageForPaint(
+                        PaintImageMappingTable(
+                            paintId.toLong(),
+                            imageId
+                        )
+                    )
+                }
             }
         }
     }
 
     fun addImageToList(uri: Uri?) {
         if(uri != null) {
-            val imageUriList: MutableList<Uri> = miniaturePaintUiState.imageUriList.toMutableList()
-            imageUriList.add(uri)
+            val imageList: MutableList<Image> = miniaturePaintUiState.imageList.toMutableList()
+            imageList.add(Image(imageUri = uri))
             miniaturePaintUiState =
                 MiniaturePaintUiState(
                     miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails,
                     isEntryValid = miniaturePaintUiState.isEntryValid,
-                    imageUriList = imageUriList)
+                    imageList = imageList)
         }
     }
 

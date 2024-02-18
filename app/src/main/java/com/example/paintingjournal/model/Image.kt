@@ -11,5 +11,7 @@ data class Image (
     @ColumnInfo(name = "imageId")
     val id: Long = 0,
     @ColumnInfo(name = "imageUri")
-    val imageUri: Uri?
+    val imageUri: Uri?,
+    @ColumnInfo(name = "saveState")
+    var saveState: SaveStateEnum = SaveStateEnum.NEW
 )
