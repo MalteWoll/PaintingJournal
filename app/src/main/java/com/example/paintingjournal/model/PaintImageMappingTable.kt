@@ -3,8 +3,6 @@ package com.example.paintingjournal.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.example.paintingjournal.model.Image
-import com.example.paintingjournal.model.MiniaturePaint
 
 @Entity(
     tableName = "paintImageMapping",

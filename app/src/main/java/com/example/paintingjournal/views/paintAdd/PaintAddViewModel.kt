@@ -5,17 +5,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.PaintsRepository
+import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.views.miniAdd.MiniatureUiState
+import kotlinx.coroutines.launch
 import java.util.Date
 
 class PaintAddViewModel(
-    private val paintsRepository: PaintsRepository
+    private val paintsRepository: PaintsRepository,
+    private val imagesRepository: ImagesRepository
 ) : ViewModel() {
     suspend fun saveMiniaturePaint() {
         if(validateInput()) {
             paintsRepository.insertPaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())
+        }
+    }
+
+    suspend fun saveImage(uri: Uri?) {
+        if(uri != null) {
+            imagesRepository.insertImage(Image(imageUri = uri))
         }
     }
 

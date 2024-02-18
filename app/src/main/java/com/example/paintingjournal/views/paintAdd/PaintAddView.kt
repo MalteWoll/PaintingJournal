@@ -87,6 +87,11 @@ fun PaintAddView(
                         navigateBack()
                     }
                 },
+                onSaveImage = {
+                    coroutineScope.launch {
+                        viewModel.saveImage(it)
+                    }
+                },
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -101,6 +106,7 @@ fun PaintEntryBody(
     miniaturePaintUiState: MiniaturePaintUiState,
     onMiniaturePaintValueChanged: (MiniaturePaintDetails) -> Unit,
     onSaveClicked: () -> Unit,
+    onSaveImage: (Uri?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -111,6 +117,11 @@ fun PaintEntryBody(
             miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails,
             onValueChanged = onMiniaturePaintValueChanged,
             modifier = Modifier.fillMaxWidth()
+        )
+        TakeMiniaturePaintImage(
+            miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails,
+            onValueChanged = onMiniaturePaintValueChanged,
+            onSaveImage = onSaveImage
         )
         Button(
             onClick = onSaveClicked,
@@ -186,10 +197,6 @@ fun MiniaturePaintInputForm(
             enabled = enabled,
             singleLine = true
         )
-        TakeMiniaturePaintImage(
-            miniaturePaintDetails = miniaturePaintDetails,
-            onValueChanged = onValueChanged
-        )
     }
 }
 
@@ -197,14 +204,11 @@ fun MiniaturePaintInputForm(
 fun TakeMiniaturePaintImage(
     miniaturePaintDetails: MiniaturePaintDetails,
     modifier: Modifier = Modifier,
-    onValueChanged: (MiniaturePaintDetails) -> Unit = {}
+    onValueChanged: (MiniaturePaintDetails) -> Unit = {},
+    onSaveImage: (Uri?) -> Unit
 ) {
     val context = LocalContext.current
-    val file = context.createImageFile()
-    val uri = FileProvider.getUriForFile(
-        Objects.requireNonNull(context),
-        BuildConfig.APPLICATION_ID + ".provider", file
-    )
+    var uri: Uri = Uri.EMPTY
 
     var capturedImageUri by remember {
         mutableStateOf<Uri>(Uri.EMPTY)
@@ -212,8 +216,14 @@ fun TakeMiniaturePaintImage(
 
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+            val file = context.createImageFile()
+            uri = FileProvider.getUriForFile(
+                Objects.requireNonNull(context),
+                BuildConfig.APPLICATION_ID + ".provider", file
+            )
+
             capturedImageUri = uri
-            //onValueChanged(miniaturePaintDetails.copy(imageUri = uri))
+            onSaveImage(uri)
         }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -251,7 +261,7 @@ fun TakeMiniaturePaintImage(
 }
 
 fun Context.createImageFile(): File {
-    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.GERMANY).format(Date())
+    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.GERMANY).format(Date())
     val imageFileName = "JPEG_" + timeStamp + "_"
     return File.createTempFile(
         imageFileName,

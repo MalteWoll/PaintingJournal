@@ -48,6 +48,7 @@ fun PaintEditView(
                     navigateBack()
                 }
             },
+            onSaveImage = {},
             modifier = Modifier.padding(innerPadding)
         )
     }

@@ -42,7 +42,8 @@ object AppViewModelProvider {
         }
         initializer {
             PaintAddViewModel(
-                paintingJournalApplication().container.paintsRepository
+                paintingJournalApplication().container.paintsRepository,
+                paintingJournalApplication().container.imagesRepository
             )
         }
         initializer {
