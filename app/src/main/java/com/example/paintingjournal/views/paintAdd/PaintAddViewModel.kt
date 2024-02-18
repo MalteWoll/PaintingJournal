@@ -27,6 +27,11 @@ class PaintAddViewModel(
     suspend fun saveImage(uri: Uri?) {
         if(uri != null) {
             imagesRepository.insertImage(Image(imageUri = uri))
+
+            val imageUriList = miniaturePaintUiState.imageUriList
+            imageUriList.add(uri)
+            miniaturePaintUiState =
+                MiniaturePaintUiState(imageUriList = imageUriList)
         }
     }
 
@@ -47,7 +52,8 @@ class PaintAddViewModel(
 
 data class MiniaturePaintUiState(
     val miniaturePaintDetails: MiniaturePaintDetails = MiniaturePaintDetails(),
-    val isEntryValid: Boolean = false
+    val isEntryValid: Boolean = false,
+    val imageUriList: MutableList<Uri> = mutableListOf()
 )
 
 data class MiniaturePaintDetails(

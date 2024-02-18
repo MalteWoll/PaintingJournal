@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -45,6 +46,7 @@ import coil.request.ImageRequest
 import com.example.paintingjournal.BuildConfig
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
+import com.example.paintingjournal.data.ComposeFileProvider
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import kotlinx.coroutines.launch
@@ -119,7 +121,7 @@ fun PaintEntryBody(
             modifier = Modifier.fillMaxWidth()
         )
         TakeMiniaturePaintImage(
-            miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails,
+            miniaturePaintUiState = miniaturePaintUiState,
             onValueChanged = onMiniaturePaintValueChanged,
             onSaveImage = onSaveImage
         )
@@ -202,11 +204,51 @@ fun MiniaturePaintInputForm(
 
 @Composable
 fun TakeMiniaturePaintImage(
-    miniaturePaintDetails: MiniaturePaintDetails,
+    miniaturePaintUiState: MiniaturePaintUiState,
     modifier: Modifier = Modifier,
     onValueChanged: (MiniaturePaintDetails) -> Unit = {},
     onSaveImage: (Uri?) -> Unit
 ) {
+    val context = LocalContext.current
+
+    var hasImage by remember {
+        mutableStateOf(false)
+    }
+    // 2
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        hasImage = success
+    }
+
+    // 4
+    if (hasImage && imageUri != null) {
+        // 5
+        AsyncImage(
+            model = imageUri,
+            modifier = Modifier.fillMaxWidth(),
+            contentDescription = "Selected image",
+        )
+    }
+
+    Button(
+        modifier = Modifier.padding(top = 16.dp),
+        onClick = {
+            val uri = ComposeFileProvider.getImageUri(context)
+            imageUri = uri
+            cameraLauncher.launch(uri)
+        },
+    ) {
+        Text(
+            text = "Take photo"
+        )
+    }
+
+    /*
     val context = LocalContext.current
     var uri: Uri = Uri.EMPTY
 
@@ -248,15 +290,27 @@ fun TakeMiniaturePaintImage(
     }) {
         Text(text = stringResource(id =R.string.capture_image))
     }
-/*
-    if (miniaturePaintDetails.imageUri != null) {
+
+    if (capturedImageUri.path?.isNotEmpty() == true) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(miniaturePaintDetails.imageUri)
+                .data(capturedImageUri)
                 .build(),
             contentDescription = "",
             contentScale = ContentScale.Crop,
         )
+    }
+
+    Row {
+        miniaturePaintUiState.imageUriList.forEach {imageUri ->
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageUri)
+                    .build(),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+            )
+        }
     }*/
 }
 
