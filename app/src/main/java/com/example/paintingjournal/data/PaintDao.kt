@@ -6,7 +6,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.PaintImageMappingTable
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,9 +22,20 @@ interface PaintDao {
     @Delete
     suspend fun delete(miniaturePaint: MiniaturePaint)
 
-    @Query("SELECT * from paints WHERE id = :id")
+    @Query("SELECT * from paints WHERE paintId = :id")
     fun getPaint(id: Int): Flow<MiniaturePaint>
 
     @Query("SELECT * from paints ORDER BY name ASC")
     fun getAllPaints(): Flow<List<MiniaturePaint>>
+
+    @Query("SELECT imageId,imageUri from images " +
+            "left join paintImageMapping map on images.imageid = map.imageIdRef " +
+            "where paintIdRef = :id")
+    fun getImagesForPaint(id: Int): Flow<List<Image>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addPaintImageMap(paintImageMappingTable: PaintImageMappingTable)
+
+    @Delete
+    suspend fun deletePaintImageMap(paintImageMappingTable: PaintImageMappingTable)
 }

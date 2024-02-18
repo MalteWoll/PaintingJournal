@@ -7,12 +7,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.paintingjournal.converters.DateConverters
 import com.example.paintingjournal.converters.UriConverters
+import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.PaintImageMappingTable
 
-@Database(entities = [Miniature::class, MiniaturePaint::class], version = 5, exportSchema = false)
+@Database(entities = [Image::class, Miniature::class, MiniaturePaint::class, PaintImageMappingTable::class], version = 7, exportSchema = false)
 @TypeConverters(DateConverters::class, UriConverters::class)
 abstract class MiniatureDatabase : RoomDatabase() {
+    abstract fun imageDao(): ImageDao
     abstract fun miniatureDao(): MiniatureDao
     abstract fun paintDao(): PaintDao
     companion object {

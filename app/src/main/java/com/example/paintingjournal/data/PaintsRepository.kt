@@ -1,6 +1,8 @@
 package com.example.paintingjournal.data
 
+import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.PaintImageMappingTable
 import kotlinx.coroutines.flow.Flow
 
 interface PaintsRepository {
@@ -9,4 +11,7 @@ interface PaintsRepository {
     suspend fun insertPaint(paint: MiniaturePaint)
     suspend fun deletePaint(paint: MiniaturePaint)
     suspend fun updatePaint(paint: MiniaturePaint)
+    fun getImagesForPaint(id: Int): Flow<List<Image>>
+    suspend fun addImageForPaint(paintImageMappingTable: PaintImageMappingTable)
+    suspend fun deleteImageForPaint(paintImageMappingTable: PaintImageMappingTable)
 }

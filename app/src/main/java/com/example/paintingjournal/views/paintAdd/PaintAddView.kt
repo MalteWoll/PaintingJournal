@@ -213,7 +213,7 @@ fun TakeMiniaturePaintImage(
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
             capturedImageUri = uri
-            onValueChanged(miniaturePaintDetails.copy(imageUri = uri))
+            //onValueChanged(miniaturePaintDetails.copy(imageUri = uri))
         }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -238,7 +238,7 @@ fun TakeMiniaturePaintImage(
     }) {
         Text(text = stringResource(id =R.string.capture_image))
     }
-
+/*
     if (miniaturePaintDetails.imageUri != null) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -247,7 +247,7 @@ fun TakeMiniaturePaintImage(
             contentDescription = "",
             contentScale = ContentScale.Crop,
         )
-    }
+    }*/
 }
 
 fun Context.createImageFile(): File {

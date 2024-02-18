@@ -43,8 +43,7 @@ data class MiniatureDetails(
     val name: String = "",
     val manufacturer: String = "",
     val faction: String = "",
-    val createdAt: Date? = null,
-    val image: Uri? = null
+    val createdAt: Date? = null
 )
 
 fun MiniatureDetails.toMiniature(): Miniature = Miniature(
@@ -52,8 +51,7 @@ fun MiniatureDetails.toMiniature(): Miniature = Miniature(
     name = name,
     manufacturer = manufacturer,
     faction = faction,
-    createdAt = createdAt,
-    image = image
+    createdAt = createdAt
 )
 
 fun Miniature.toMiniatureUiState(isEntryValid: Boolean = false): MiniatureUiState = MiniatureUiState(
@@ -66,6 +64,5 @@ fun Miniature.toMiniatureDetails(): MiniatureDetails = MiniatureDetails(
     name = name,
     manufacturer = manufacturer,
     faction = faction,
-    createdAt = createdAt,
-    image = image
+    createdAt = createdAt
 )

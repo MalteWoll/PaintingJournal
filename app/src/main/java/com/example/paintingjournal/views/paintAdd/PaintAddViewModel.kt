@@ -45,7 +45,6 @@ data class MiniaturePaintDetails(
     val manufacturer: String = "",
     val description: String = "",
     val type: String = "",
-    val imageUri: Uri? = null,
     val createdAt: Date? = null
 )
 
@@ -55,7 +54,6 @@ fun MiniaturePaintDetails.toPaint(): MiniaturePaint = MiniaturePaint(
     manufacturer = manufacturer,
     description = description,
     type = type,
-    imageUri = imageUri,
     createdAt = createdAt
 )
 
@@ -70,6 +68,5 @@ fun MiniaturePaint.toMiniaturePaintDetails(): MiniaturePaintDetails = MiniatureP
     manufacturer = manufacturer,
     description = description,
     type = type,
-    imageUri = imageUri,
     createdAt = createdAt
 )
