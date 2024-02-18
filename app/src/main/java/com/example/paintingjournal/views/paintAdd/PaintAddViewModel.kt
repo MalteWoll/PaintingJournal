@@ -29,8 +29,8 @@ class PaintAddViewModel(
 
     suspend fun saveImage(uri: Uri?) {
         if(uri != null) {
-            imagesRepository.insertImage(Image(imageUri = uri))
-
+            val imageId = imagesRepository.insertImage(Image(imageUri = uri))
+            println(imageId)
             val imageUriList: MutableList<Uri> = miniaturePaintUiState.imageUriList.toMutableList()
             imageUriList.add(uri)
             miniaturePaintUiState =

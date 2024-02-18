@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 data class Image (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "imageId")
-    val id: Int = 0,
+    val id: Long = 0,
     @ColumnInfo(name = "imageUri")
     val imageUri: Uri?
 )

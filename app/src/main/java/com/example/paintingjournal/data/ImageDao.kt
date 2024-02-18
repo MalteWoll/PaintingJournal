@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ImageDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(image: Image)
+    suspend fun insert(image: Image): Long
 
     @Update
     suspend fun update(image: Image)

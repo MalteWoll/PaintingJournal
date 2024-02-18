@@ -8,7 +8,7 @@ class ImagesRepositoryImpl(private val imageDao: ImageDao) : ImagesRepository {
 
     override fun getImageStream(id: Int): Flow<Image> = imageDao.getImage(id)
 
-    override suspend fun insertImage(image: Image) = imageDao.insert(image)
+    override suspend fun insertImage(image: Image): Long = imageDao.insert(image)
 
     override suspend fun deleteImage(image: Image) = imageDao.delete(image)
 

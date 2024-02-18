@@ -8,12 +8,15 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -214,7 +217,7 @@ fun TakeMiniaturePaintImage(
     var hasImage by remember {
         mutableStateOf(false)
     }
-    // 2
+
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -223,16 +226,7 @@ fun TakeMiniaturePaintImage(
         contract = ActivityResultContracts.TakePicture()
     ) { success ->
         hasImage = success
-    }
-
-    // 4
-    if (hasImage && imageUri != null) {
-        // 5
-        AsyncImage(
-            model = imageUri,
-            modifier = Modifier.fillMaxWidth(),
-            contentDescription = "Selected image",
-        )
+        onSaveImage(imageUri)
     }
 
     Button(
@@ -248,78 +242,21 @@ fun TakeMiniaturePaintImage(
         )
     }
 
-    /*
-    val context = LocalContext.current
-    var uri: Uri = Uri.EMPTY
-
-    var capturedImageUri by remember {
-        mutableStateOf<Uri>(Uri.EMPTY)
-    }
-
-    val cameraLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-            val file = context.createImageFile()
-            uri = FileProvider.getUriForFile(
-                Objects.requireNonNull(context),
-                BuildConfig.APPLICATION_ID + ".provider", file
-            )
-
-            capturedImageUri = uri
-            onSaveImage(uri)
-        }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) {
-        if (it) {
-            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-            cameraLauncher.launch(uri)
-        } else {
-            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+    if (miniaturePaintUiState.imageUriList.isNotEmpty()) {
+        Row(
+            modifier = Modifier
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+        ) {
+            miniaturePaintUiState.imageUriList.forEach {imageUri ->
+                AsyncImage(
+                    model = imageUri,
+                    modifier = Modifier
+                        .width(100.dp),
+                    contentScale = ContentScale.FillBounds,
+                    contentDescription = "Selected image",
+                )
+            }
         }
     }
-
-    Button(onClick = {
-        val permissionCheckResult =
-            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-            cameraLauncher.launch(uri)
-        } else {
-            permissionLauncher.launch(Manifest.permission.CAMERA)
-        }
-    }) {
-        Text(text = stringResource(id =R.string.capture_image))
-    }
-
-    if (capturedImageUri.path?.isNotEmpty() == true) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(capturedImageUri)
-                .build(),
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-        )
-    }
-
-    Row {
-        miniaturePaintUiState.imageUriList.forEach {imageUri ->
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUri)
-                    .build(),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-            )
-        }
-    }*/
-}
-
-fun Context.createImageFile(): File {
-    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.GERMANY).format(Date())
-    val imageFileName = "JPEG_" + timeStamp + "_"
-    return File.createTempFile(
-        imageFileName,
-        ".jpg",
-        externalCacheDir
-    )
 }
