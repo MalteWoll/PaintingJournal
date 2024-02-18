@@ -38,6 +38,8 @@ import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import com.example.paintingjournal.views.miniDetail.DeleteConfirmationDialog
+import com.example.paintingjournal.views.paintAdd.MiniaturePaintImages
+import com.example.paintingjournal.views.paintAdd.MiniaturePaintUiState
 import com.example.paintingjournal.views.paintAdd.toPaint
 import kotlinx.coroutines.launch
 
@@ -55,7 +57,7 @@ fun PaintDetailView(
     modifier: Modifier = Modifier,
     viewModel: PaintDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.miniaturePaintDetailsUiState
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
@@ -67,7 +69,7 @@ fun PaintDetailView(
             )
         }, floatingActionButton = {
             FloatingActionButton(
-                onClick = { navigateToEditPaint(uiState.value.miniaturePaintDetails.id) },
+                onClick = { navigateToEditPaint(uiState.miniaturePaintDetails.id) },
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
 
@@ -78,9 +80,9 @@ fun PaintDetailView(
                 )
             }
         }, modifier = modifier
-    ) {innerPadding ->
+    ) { innerPadding ->
         MiniaturePaintDetailsBody(
-            miniaturePaintDetailsUiState = uiState.value,
+            miniaturePaintDetailsUiState = uiState,
             onDelete = {
                 coroutineScope.launch {
                     viewModel.deletePaint()
@@ -89,13 +91,14 @@ fun PaintDetailView(
             },
             modifier = Modifier
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState()))
+                .verticalScroll(rememberScrollState())
+        )
     }
 }
 
 @Composable
 private fun MiniaturePaintDetailsBody(
-    miniaturePaintDetailsUiState: MiniaturePaintDetailsUiState,
+    miniaturePaintDetailsUiState: MiniaturePaintUiState,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -108,6 +111,9 @@ private fun MiniaturePaintDetailsBody(
         MiniaturePaintDetails(
             paint = miniaturePaintDetailsUiState.miniaturePaintDetails.toPaint(),
             modifier = Modifier.fillMaxWidth()
+        )
+        MiniaturePaintImages(
+            imageUriList = miniaturePaintDetailsUiState.imageUriList
         )
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },

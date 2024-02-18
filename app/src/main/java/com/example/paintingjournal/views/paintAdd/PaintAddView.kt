@@ -122,9 +122,10 @@ fun PaintEntryBody(
             modifier = Modifier.fillMaxWidth()
         )
         TakeMiniaturePaintImage(
-            miniaturePaintUiState = miniaturePaintUiState,
-            onValueChanged = onMiniaturePaintValueChanged,
             onSaveImage = onSaveImage
+        )
+        MiniaturePaintImages(
+            imageUriList = miniaturePaintUiState.imageUriList
         )
         Button(
             onClick = onSaveClicked,
@@ -205,9 +206,7 @@ fun MiniaturePaintInputForm(
 
 @Composable
 fun TakeMiniaturePaintImage(
-    miniaturePaintUiState: MiniaturePaintUiState,
     modifier: Modifier = Modifier,
-    onValueChanged: (MiniaturePaintDetails) -> Unit = {},
     onSaveImage: (Uri?) -> Unit
 ) {
     val context = LocalContext.current
@@ -239,14 +238,20 @@ fun TakeMiniaturePaintImage(
             text = "Take photo"
         )
     }
+}
 
-    if (miniaturePaintUiState.imageUriList.isNotEmpty()) {
+@Composable
+fun MiniaturePaintImages(
+    imageUriList: List<Uri>,
+    modifier: Modifier = Modifier,
+) {
+    if (imageUriList.isNotEmpty()) {
         Row(
             modifier = Modifier
                 .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
         ) {
-            miniaturePaintUiState.imageUriList.forEach {imageUri ->
+            imageUriList.forEach {imageUri ->
                 AsyncImage(
                     model = imageUri,
                     modifier = Modifier
