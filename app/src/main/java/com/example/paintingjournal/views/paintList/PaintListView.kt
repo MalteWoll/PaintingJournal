@@ -47,7 +47,7 @@ object PaintListDestination : NavigationDestination {
 fun PaintListView(
     navigateToPaintAdd: () -> Unit,
     navigateBack: () -> Unit,
-    navigateToPaintEntry: (Int) -> Unit,
+    navigateToPaintEntry: (Long) -> Unit,
     canNavigateBack: Boolean = true,
     viewModel: PaintListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -89,7 +89,7 @@ fun PaintListView(
 @Composable
 private fun PaintListBody(
     paintList: List<MiniaturePaint>,
-    onPaintClick: (Int) -> Unit,
+    onPaintClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(

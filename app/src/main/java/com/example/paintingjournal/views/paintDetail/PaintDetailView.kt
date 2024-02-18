@@ -50,7 +50,7 @@ object PaintDetailsDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaintDetailView(
-    navigateToEditPaint: (Int) -> Unit,
+    navigateToEditPaint: (Long) -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PaintDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)

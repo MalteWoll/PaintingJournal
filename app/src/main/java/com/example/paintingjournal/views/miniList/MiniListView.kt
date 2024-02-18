@@ -49,7 +49,7 @@ object MiniListDestination : NavigationDestination {
 fun MiniListView(
     navigateToMiniAdd: () -> Unit,
     navigateBack: () -> Unit,
-    navigateToMiniatureEntry: (Int) -> Unit,
+    navigateToMiniatureEntry: (Long) -> Unit,
     canNavigateBack: Boolean = true,
     viewModel: MiniListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -91,7 +91,7 @@ fun MiniListView(
 @Composable
 private fun MiniListBody(
     miniatureList: List<Miniature>,
-    onMiniatureClick: (Int) -> Unit,
+    onMiniatureClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(

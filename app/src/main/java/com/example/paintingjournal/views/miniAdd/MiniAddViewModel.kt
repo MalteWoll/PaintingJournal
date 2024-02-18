@@ -39,7 +39,7 @@ data class MiniatureUiState(
 )
 
 data class MiniatureDetails(
-    val id: Int = 0,
+    val id: Long = 0,
     val name: String = "",
     val manufacturer: String = "",
     val faction: String = "",

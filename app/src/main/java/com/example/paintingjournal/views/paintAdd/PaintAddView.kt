@@ -93,9 +93,7 @@ fun PaintAddView(
                     }
                 },
                 onSaveImage = {
-                    coroutineScope.launch {
-                        viewModel.saveImage(it)
-                    }
+                    viewModel.addImageToList(it)
                 },
                 modifier = Modifier
                     .padding(innerPadding)

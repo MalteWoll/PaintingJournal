@@ -26,7 +26,7 @@ import androidx.room.ForeignKey
 )
 data class PaintImageMappingTable (
     @ColumnInfo(name = "paintIdRef")
-    val paintIdRef: Int,
+    val paintIdRef: Long,
     @ColumnInfo(index = true, name = "imageIdRef")
-    val imageIdRef: Int
+    val imageIdRef: Long
 )

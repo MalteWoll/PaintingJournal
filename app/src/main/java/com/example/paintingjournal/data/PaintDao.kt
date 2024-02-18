@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PaintDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(miniaturePaint: MiniaturePaint)
+    suspend fun insert(miniaturePaint: MiniaturePaint): Long
 
     @Update
     suspend fun update(miniaturePaint: MiniaturePaint)

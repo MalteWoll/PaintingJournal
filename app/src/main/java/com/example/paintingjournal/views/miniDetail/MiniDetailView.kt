@@ -52,7 +52,7 @@ object MiniatureDetailsDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MiniDetailView(
-    navigateToEditMiniature: (Int) -> Unit,
+    navigateToEditMiniature: (Long) -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MiniDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)

@@ -9,7 +9,7 @@ import java.util.Date
 data class Miniature (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "miniatureId")
-    val id: Int = 0,
+    val id: Long = 0,
     val name: String,
     val manufacturer: String,
     val faction: String,
