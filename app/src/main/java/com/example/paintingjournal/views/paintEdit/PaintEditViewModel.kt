@@ -59,6 +59,10 @@ class PaintEditViewModel(
             MiniaturePaintUiState(miniaturePaintDetails, isEntryValid = validateInput(miniaturePaintDetails))
     }
 
+    fun removeImageFromList(image: Image) {
+
+    }
+
     suspend fun updateMiniaturePaint() {
         if(validateInput(miniaturePaintUiState.miniaturePaintDetails)) {
             paintsRepository.updatePaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())

@@ -52,6 +52,7 @@ fun PaintEditView(
                 }
             },
             onSaveImage = { viewModel.addImageToList(it)},
+            onRemoveImage = { viewModel.removeImageFromList(it) },
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())

@@ -10,17 +10,24 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -96,6 +103,9 @@ fun PaintAddView(
                 onSaveImage = {
                     viewModel.addImageToList(it)
                 },
+                onRemoveImage = {
+                    viewModel.removeImageFromList(it)
+                },
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -111,6 +121,7 @@ fun PaintEntryBody(
     onMiniaturePaintValueChanged: (MiniaturePaintDetails) -> Unit,
     onSaveClicked: () -> Unit,
     onSaveImage: (Uri?) -> Unit,
+    onRemoveImage: (Image) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -126,7 +137,9 @@ fun PaintEntryBody(
             onSaveImage = onSaveImage
         )
         MiniaturePaintImages(
-            imageList = miniaturePaintUiState.imageList
+            imageList = miniaturePaintUiState.imageList,
+            canEdit = true,
+            onDelete = onRemoveImage
         )
         Button(
             onClick = onSaveClicked,
@@ -244,6 +257,8 @@ fun TakeMiniaturePaintImage(
 @Composable
 fun MiniaturePaintImages(
     imageList: List<Image>,
+    canEdit: Boolean,
+    onDelete: (Image) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (imageList.isNotEmpty()) {
@@ -252,14 +267,31 @@ fun MiniaturePaintImages(
                 .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
         ) {
-            imageList.forEach {image ->
-                AsyncImage(
-                    model = image.imageUri,
-                    modifier = Modifier
-                        .width(100.dp),
-                    contentScale = ContentScale.FillBounds,
-                    contentDescription = "Selected image",
-                )
+            imageList.forEach { image ->
+                Box {
+                    AsyncImage(
+                        model = image.imageUri,
+                        modifier = Modifier
+                            .width(100.dp),
+                        contentScale = ContentScale.FillBounds,
+                        contentDescription = "Selected image",
+                    )
+                    if (canEdit) {
+                        IconButton(
+                            onClick = { onDelete(image) },
+                            modifier = Modifier
+                                .size(100.dp)
+                        ) {
+                            Icon(
+                                Icons.Outlined.Delete,
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(100.dp),
+                            )
+                        }
+                    }
+                }
             }
         }
     }

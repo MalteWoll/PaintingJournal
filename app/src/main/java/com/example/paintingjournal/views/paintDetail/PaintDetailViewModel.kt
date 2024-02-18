@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 
 class PaintDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    val paintsRepository: PaintsRepository
+    private val paintsRepository: PaintsRepository
 ) : ViewModel() {
     private val miniaturePaintId: Int = checkNotNull(savedStateHandle[PaintDetailsDestination.paintIdArg])
     var miniaturePaintDetailsUiState by mutableStateOf(MiniaturePaintUiState())

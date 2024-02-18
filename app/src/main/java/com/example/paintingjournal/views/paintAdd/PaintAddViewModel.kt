@@ -40,6 +40,10 @@ class PaintAddViewModel(
         }
     }
 
+    fun removeImageFromList(image: Image) {
+
+    }
+
     var miniaturePaintUiState by mutableStateOf(MiniaturePaintUiState())
         private set
 
