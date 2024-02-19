@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -22,15 +25,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
 import com.example.paintingjournal.model.MiniaturePaint
@@ -51,7 +58,10 @@ fun PaintListView(
     canNavigateBack: Boolean = true,
     viewModel: PaintListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val paintListUiState by viewModel.paintListUiState.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.getData()
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -76,7 +86,7 @@ fun PaintListView(
             }
         ) { innerPadding ->
             PaintListBody(
-                paintList = paintListUiState.paintList,
+                paintList = viewModel.paintListUiState.paintList,
                 onPaintClick = navigateToPaintEntry,
                 modifier = Modifier
                     .padding(innerPadding)
@@ -141,23 +151,32 @@ private fun PaintItem(
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = paint.name,
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(Modifier.weight(1f))
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = paint.manufacturer,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(Modifier.weight(1f))
+            Row {
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = paint.name,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Spacer(Modifier.weight(1f))
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = paint.manufacturer,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Spacer(Modifier.weight(1f))
+                    }
+                    AsyncImage(
+                        model = paint.previewImageUri,
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "Selected image",
+                    )
+                }
             }
         }
     }

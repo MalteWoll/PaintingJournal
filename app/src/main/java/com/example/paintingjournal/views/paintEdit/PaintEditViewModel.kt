@@ -69,27 +69,38 @@ class PaintEditViewModel(
     }
 
     suspend fun updateMiniaturePaint() {
-        if(validateInput(miniaturePaintUiState.miniaturePaintDetails)) {
-            paintsRepository.updatePaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())
+        if(miniaturePaintUiState.imageList.isNotEmpty()) {
+            val paintDetails = miniaturePaintUiState.miniaturePaintDetails
+            paintDetails.previewImageUri = miniaturePaintUiState.imageList[0].imageUri
+            miniaturePaintUiState =
+                miniaturePaintUiState.copy(miniaturePaintDetails = paintDetails)
+        } else {
+            val paintDetails = miniaturePaintUiState.miniaturePaintDetails
+            paintDetails.previewImageUri = null
+            miniaturePaintUiState =
+                miniaturePaintUiState.copy(miniaturePaintDetails = paintDetails)
+        }
 
-            miniaturePaintUiState.originalImageList.forEach { image ->
-                if (!miniaturePaintUiState.imageList.contains(image)) {
-                    imagesRepository.deleteImage(image)
-                }
+        paintsRepository.updatePaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())
+
+        miniaturePaintUiState.originalImageList.forEach { image ->
+            if (!miniaturePaintUiState.imageList.contains(image)) {
+                imagesRepository.deleteImage(image)
             }
+        }
 
-            miniaturePaintUiState.imageList.forEach {image ->
-                if(image.saveState != SaveStateEnum.SAVED) {
-                    image.saveState = SaveStateEnum.SAVED
-                    val imageId = imagesRepository.insertImage(image)
-                    paintsRepository.addImageForPaint(
-                        PaintImageMappingTable(
-                            paintId.toLong(),
-                            imageId
-                        )
+        miniaturePaintUiState.imageList.forEach {image ->
+            if(image.saveState != SaveStateEnum.SAVED) {
+                image.saveState = SaveStateEnum.SAVED
+                val imageId = imagesRepository.insertImage(image)
+                paintsRepository.addImageForPaint(
+                    PaintImageMappingTable(
+                        paintId.toLong(),
+                        imageId
                     )
-                }
+                )
             }
+
         }
     }
 

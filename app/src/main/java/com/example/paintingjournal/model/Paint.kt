@@ -1,5 +1,6 @@
 package com.example.paintingjournal.model
 
+import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -14,5 +15,6 @@ data class MiniaturePaint (
     val manufacturer: String,
     val description: String,
     val type: String,
-    val createdAt: Date?
+    val createdAt: Date?,
+    var previewImageUri: Uri?
 )

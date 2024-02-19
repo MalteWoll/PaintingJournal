@@ -5,12 +5,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.PaintImageMappingTable
 import com.example.paintingjournal.model.SaveStateEnum
+import kotlinx.coroutines.launch
 import java.util.Date
 
 class PaintAddViewModel(
@@ -19,6 +21,13 @@ class PaintAddViewModel(
 ) : ViewModel() {
     suspend fun saveMiniaturePaint() {
         if(validateInput()) {
+            if(miniaturePaintUiState.imageList.isNotEmpty()) {
+                val paintDetails = miniaturePaintUiState.miniaturePaintDetails
+                paintDetails.previewImageUri = miniaturePaintUiState.imageList[0].imageUri
+                miniaturePaintUiState =
+                    miniaturePaintUiState.copy(miniaturePaintDetails = paintDetails)
+            }
+
             val paintId = paintsRepository.insertPaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())
             miniaturePaintUiState.imageList.forEach {image ->
                 image.saveState = SaveStateEnum.SAVED
@@ -54,12 +63,8 @@ class PaintAddViewModel(
         private set
 
     fun updateUiState(miniaturePaintDetails: MiniaturePaintDetails) {
-        val imageList = miniaturePaintUiState.imageList
-        miniaturePaintUiState =
-            MiniaturePaintUiState(
-                miniaturePaintDetails = miniaturePaintDetails,
-                isEntryValid = validateInput(miniaturePaintDetails),
-                imageList = imageList)
+        miniaturePaintUiState = miniaturePaintUiState.copy(miniaturePaintDetails = miniaturePaintDetails,
+            isEntryValid = validateInput(miniaturePaintDetails))
     }
 
     private fun validateInput(uiState: MiniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails) : Boolean {
@@ -83,7 +88,8 @@ data class MiniaturePaintDetails(
     val manufacturer: String = "",
     val description: String = "",
     val type: String = "",
-    val createdAt: Date? = null
+    val createdAt: Date? = null,
+    var previewImageUri: Uri? = null
 )
 
 fun MiniaturePaintDetails.toPaint(): MiniaturePaint = MiniaturePaint(
@@ -92,7 +98,8 @@ fun MiniaturePaintDetails.toPaint(): MiniaturePaint = MiniaturePaint(
     manufacturer = manufacturer,
     description = description,
     type = type,
-    createdAt = createdAt
+    createdAt = createdAt,
+    previewImageUri = previewImageUri
 )
 
 fun MiniaturePaint.toMiniaturePaintUiState(isEntryValid: Boolean = false): MiniaturePaintUiState = MiniaturePaintUiState(
@@ -106,5 +113,6 @@ fun MiniaturePaint.toMiniaturePaintDetails(): MiniaturePaintDetails = MiniatureP
     manufacturer = manufacturer,
     description = description,
     type = type,
-    createdAt = createdAt
+    createdAt = createdAt,
+    previewImageUri = previewImageUri
 )
