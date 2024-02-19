@@ -44,28 +44,40 @@ class PaintEditViewModel(
                 .first()
                 .toList()
             if(imageList.isNotEmpty()) {
-                miniaturePaintUiState =
-                    MiniaturePaintUiState(
-                        miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails,
-                        isEntryValid = miniaturePaintUiState.isEntryValid,
-                        imageList = imageList
-                    )
+                miniaturePaintUiState = miniaturePaintUiState.copy(imageList = imageList, originalImageList = imageList)
             }
         }
     }
 
     fun updateUiState(miniaturePaintDetails: MiniaturePaintDetails) {
         miniaturePaintUiState =
-            MiniaturePaintUiState(miniaturePaintDetails, isEntryValid = validateInput(miniaturePaintDetails))
+            miniaturePaintUiState.copy(miniaturePaintDetails, isEntryValid = validateInput(miniaturePaintDetails))
     }
 
     fun removeImageFromList(image: Image) {
+        val imageList: MutableList<Image> = miniaturePaintUiState.imageList.toMutableList()
+        try {
+            imageList.remove(image)
+        } catch (e: Exception) {
+            println(e)
+        }
+        miniaturePaintUiState = miniaturePaintUiState.copy(imageList = imageList)
+    }
 
+    fun switchEditMode() {
+        miniaturePaintUiState = miniaturePaintUiState.copy(canEdit = !miniaturePaintUiState.canEdit)
     }
 
     suspend fun updateMiniaturePaint() {
         if(validateInput(miniaturePaintUiState.miniaturePaintDetails)) {
             paintsRepository.updatePaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())
+
+            miniaturePaintUiState.originalImageList.forEach { image ->
+                if (!miniaturePaintUiState.imageList.contains(image)) {
+                    imagesRepository.deleteImage(image)
+                }
+            }
+
             miniaturePaintUiState.imageList.forEach {image ->
                 if(image.saveState != SaveStateEnum.SAVED) {
                     image.saveState = SaveStateEnum.SAVED

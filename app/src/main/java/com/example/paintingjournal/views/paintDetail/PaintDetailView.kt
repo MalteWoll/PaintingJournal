@@ -119,8 +119,10 @@ private fun MiniaturePaintDetailsBody(
         )
         MiniaturePaintImages(
             imageList = miniaturePaintDetailsUiState.imageList,
-            canEdit = false,
-            onDelete = {}
+            onDelete = {},
+            showEditIcon = false,
+            switchEditMode = {},
+            canEdit = false
         )
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },

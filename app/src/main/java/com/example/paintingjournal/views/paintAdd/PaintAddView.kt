@@ -23,6 +23,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -106,6 +107,9 @@ fun PaintAddView(
                 onRemoveImage = {
                     viewModel.removeImageFromList(it)
                 },
+                switchEditMode = {
+                    viewModel.switchEditMode()
+                },
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -122,6 +126,7 @@ fun PaintEntryBody(
     onSaveClicked: () -> Unit,
     onSaveImage: (Uri?) -> Unit,
     onRemoveImage: (Image) -> Unit,
+    switchEditMode: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -138,8 +143,10 @@ fun PaintEntryBody(
         )
         MiniaturePaintImages(
             imageList = miniaturePaintUiState.imageList,
-            canEdit = true,
-            onDelete = onRemoveImage
+            onDelete = onRemoveImage,
+            showEditIcon = true,
+            switchEditMode = { switchEditMode() },
+            canEdit = miniaturePaintUiState.canEdit
         )
         Button(
             onClick = onSaveClicked,
@@ -257,40 +264,53 @@ fun TakeMiniaturePaintImage(
 @Composable
 fun MiniaturePaintImages(
     imageList: List<Image>,
-    canEdit: Boolean,
     onDelete: (Image) -> Unit,
+    showEditIcon: Boolean,
+    switchEditMode: () -> Unit,
+    canEdit: Boolean,
     modifier: Modifier = Modifier,
 ) {
     if (imageList.isNotEmpty()) {
-        Row(
-            modifier = Modifier
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
-        ) {
-            imageList.forEach { image ->
-                Box {
-                    AsyncImage(
-                        model = image.imageUri,
-                        modifier = Modifier
-                            .width(100.dp),
-                        contentScale = ContentScale.FillBounds,
-                        contentDescription = "Selected image",
-                    )
-                    if (canEdit) {
-                        IconButton(
-                            onClick = { onDelete(image) },
+        Column {
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            ) {
+                imageList.forEach { image ->
+                    Box {
+                        AsyncImage(
+                            model = image.imageUri,
                             modifier = Modifier
-                                .size(100.dp)
-                        ) {
-                            Icon(
-                                Icons.Outlined.Delete,
-                                tint = MaterialTheme.colorScheme.onSurface,
-                                contentDescription = "",
+                                .width(100.dp),
+                            contentScale = ContentScale.FillBounds,
+                            contentDescription = "Selected image",
+                        )
+                        if (canEdit) {
+                            IconButton(
+                                onClick = { onDelete(image) },
                                 modifier = Modifier
-                                    .size(100.dp),
-                            )
+                                    .size(100.dp)
+                            ) {
+                                Icon(
+                                    Icons.Outlined.Delete,
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(100.dp),
+                                )
+                            }
                         }
                     }
+                }
+            }
+            if(showEditIcon) {
+                IconButton(onClick = { switchEditMode() }) {
+                    Icon(
+                        Icons.Outlined.Edit,
+                        contentDescription = "",
+                        modifier = Modifier
+                    )
                 }
             }
         }

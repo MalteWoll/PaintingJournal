@@ -32,16 +32,22 @@ class PaintAddViewModel(
         if(uri != null) {
             val imageList: MutableList<Image> = miniaturePaintUiState.imageList.toMutableList()
             imageList.add(Image(imageUri = uri))
-            miniaturePaintUiState =
-                MiniaturePaintUiState(
-                    miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails,
-                    isEntryValid = miniaturePaintUiState.isEntryValid,
-                    imageList = imageList)
+            miniaturePaintUiState = miniaturePaintUiState.copy(imageList = imageList)
         }
     }
 
     fun removeImageFromList(image: Image) {
+        val imageList: MutableList<Image> = miniaturePaintUiState.imageList.toMutableList()
+        try {
+            imageList.remove(image)
+        } catch (e: Exception) {
+            println(e)
+        }
+        miniaturePaintUiState = miniaturePaintUiState.copy(imageList = imageList)
+    }
 
+    fun switchEditMode() {
+        miniaturePaintUiState = miniaturePaintUiState.copy(canEdit = !miniaturePaintUiState.canEdit)
     }
 
     var miniaturePaintUiState by mutableStateOf(MiniaturePaintUiState())
@@ -66,7 +72,9 @@ class PaintAddViewModel(
 data class MiniaturePaintUiState(
     val miniaturePaintDetails: MiniaturePaintDetails = MiniaturePaintDetails(),
     val isEntryValid: Boolean = false,
-    val imageList: List<Image> = listOf()
+    val imageList: List<Image> = listOf(),
+    val originalImageList: List<Image> = listOf(),
+    val canEdit: Boolean = false
 )
 
 data class MiniaturePaintDetails(
