@@ -1,13 +1,8 @@
 package com.example.paintingjournal.views.paintAdd
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,7 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -47,14 +40,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
-import com.example.paintingjournal.BuildConfig
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
 import com.example.paintingjournal.data.ComposeFileProvider
@@ -62,11 +49,6 @@ import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import kotlinx.coroutines.launch
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.Objects
 
 object PaintAddDestination: NavigationDestination {
     override val route = "paint_add"
@@ -138,10 +120,10 @@ fun PaintEntryBody(
             onValueChanged = onMiniaturePaintValueChanged,
             modifier = Modifier.fillMaxWidth()
         )
-        TakeMiniaturePaintImage(
+        TakeImage(
             onSaveImage = onSaveImage
         )
-        MiniaturePaintImages(
+        ImagesRow(
             imageList = miniaturePaintUiState.imageList,
             onDelete = onRemoveImage,
             showEditIcon = true,
@@ -226,7 +208,7 @@ fun MiniaturePaintInputForm(
 }
 
 @Composable
-fun TakeMiniaturePaintImage(
+fun TakeImage(
     modifier: Modifier = Modifier,
     onSaveImage: (Uri?) -> Unit
 ) {
@@ -262,7 +244,7 @@ fun TakeMiniaturePaintImage(
 }
 
 @Composable
-fun MiniaturePaintImages(
+fun ImagesRow(
     imageList: List<Image>,
     onDelete: (Image) -> Unit,
     showEditIcon: Boolean,

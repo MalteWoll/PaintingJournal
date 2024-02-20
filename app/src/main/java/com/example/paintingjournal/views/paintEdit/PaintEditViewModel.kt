@@ -108,11 +108,7 @@ class PaintEditViewModel(
         if(uri != null) {
             val imageList: MutableList<Image> = miniaturePaintUiState.imageList.toMutableList()
             imageList.add(Image(imageUri = uri))
-            miniaturePaintUiState =
-                MiniaturePaintUiState(
-                    miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails,
-                    isEntryValid = miniaturePaintUiState.isEntryValid,
-                    imageList = imageList)
+            miniaturePaintUiState = miniaturePaintUiState.copy(imageList = imageList)
         }
     }
 

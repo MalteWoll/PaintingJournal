@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MiniatureDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(miniature: Miniature)
+    suspend fun insert(miniature: Miniature) : Long
 
     @Update
     suspend fun update(miniature: Miniature)

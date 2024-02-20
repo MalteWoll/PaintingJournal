@@ -26,7 +26,10 @@ object AppViewModelProvider {
             MiniListViewModel(paintingJournalApplication().container.miniaturesRepository)
         }
         initializer {
-            MiniAddViewModel(paintingJournalApplication().container.miniaturesRepository)
+            MiniAddViewModel(
+                paintingJournalApplication().container.miniaturesRepository,
+                paintingJournalApplication().container.imagesRepository
+            )
         }
         initializer {
             MiniDetailViewModel(
@@ -37,7 +40,8 @@ object AppViewModelProvider {
         initializer {
             MiniEditViewModel(
                 this.createSavedStateHandle(),
-                paintingJournalApplication().container.miniaturesRepository
+                paintingJournalApplication().container.miniaturesRepository,
+                paintingJournalApplication().container.imagesRepository
             )
         }
         initializer {

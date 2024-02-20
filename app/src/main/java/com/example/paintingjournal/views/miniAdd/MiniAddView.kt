@@ -1,5 +1,6 @@
 package com.example.paintingjournal.views.miniAdd
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,8 +24,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
+import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
+import com.example.paintingjournal.views.paintAdd.ImagesRow
+import com.example.paintingjournal.views.paintAdd.TakeImage
 import kotlinx.coroutines.launch
 
 object MiniAddDestination: NavigationDestination {
@@ -60,6 +64,15 @@ fun MiniAddView(
                                     navigateBack()
                                 }
                 },
+                onSaveImage = {
+                    viewModel.addImageToList(it)
+                },
+                onRemoveImage = {
+                    viewModel.removeImageFromList(it)
+                },
+                switchEditMode = {
+                    viewModel.switchEditMode()
+                },
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -74,6 +87,9 @@ fun MiniatureEntryBody(
     miniatureUiState: MiniatureUiState,
     onMiniatureValueChanged: (MiniatureDetails) -> Unit,
     onSaveClicked: () -> Unit,
+    onSaveImage: (Uri?) -> Unit,
+    onRemoveImage: (Image) -> Unit,
+    switchEditMode: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -84,6 +100,16 @@ fun MiniatureEntryBody(
             miniatureDetails = miniatureUiState.miniatureDetails,
             onValueChanged = onMiniatureValueChanged,
             modifier = Modifier.fillMaxWidth()
+        )
+        TakeImage(
+            onSaveImage = onSaveImage
+        )
+        ImagesRow(
+            imageList = miniatureUiState.imageList,
+            onDelete = onRemoveImage,
+            showEditIcon = true,
+            switchEditMode = { switchEditMode() },
+            canEdit = miniatureUiState.canEdit
         )
         Button(
             onClick = onSaveClicked,

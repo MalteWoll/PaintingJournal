@@ -22,7 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -39,7 +38,7 @@ import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import com.example.paintingjournal.views.miniDetail.DeleteConfirmationDialog
-import com.example.paintingjournal.views.paintAdd.MiniaturePaintImages
+import com.example.paintingjournal.views.paintAdd.ImagesRow
 import com.example.paintingjournal.views.paintAdd.MiniaturePaintUiState
 import com.example.paintingjournal.views.paintAdd.toPaint
 import kotlinx.coroutines.launch
@@ -117,7 +116,7 @@ private fun MiniaturePaintDetailsBody(
             paint = miniaturePaintDetailsUiState.miniaturePaintDetails.toPaint(),
             modifier = Modifier.fillMaxWidth()
         )
-        MiniaturePaintImages(
+        ImagesRow(
             imageList = miniaturePaintDetailsUiState.imageList,
             onDelete = {},
             showEditIcon = false,

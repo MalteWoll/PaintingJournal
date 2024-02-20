@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +40,9 @@ import com.example.paintingjournal.R
 import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
+import com.example.paintingjournal.views.miniAdd.MiniatureUiState
 import com.example.paintingjournal.views.miniAdd.toMiniature
+import com.example.paintingjournal.views.paintAdd.ImagesRow
 import kotlinx.coroutines.launch
 
 object MiniatureDetailsDestination : NavigationDestination {
@@ -57,8 +60,12 @@ fun MiniDetailView(
     modifier: Modifier = Modifier,
     viewModel: MiniDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.miniatureDetailsUiState
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        viewModel.getData()
+    }
 
     Scaffold(
         topBar = {
@@ -69,7 +76,7 @@ fun MiniDetailView(
             )
         }, floatingActionButton = {
             FloatingActionButton(
-                onClick = { navigateToEditMiniature(uiState.value.miniatureDetails.id) },
+                onClick = { navigateToEditMiniature(uiState.miniatureDetails.id) },
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
 
@@ -82,7 +89,7 @@ fun MiniDetailView(
         }, modifier = modifier
     ) { innerPadding ->
         MiniatureDetailsBody(
-            miniatureDetailsUiState = uiState.value,
+            miniatureDetailsUiState = uiState,
             onDelete = {
                        coroutineScope.launch {
                            viewModel.deleteMiniature()
@@ -98,7 +105,7 @@ fun MiniDetailView(
 
 @Composable
 private fun MiniatureDetailsBody(
-    miniatureDetailsUiState: MiniatureDetailsUiState,
+    miniatureDetailsUiState: MiniatureUiState,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -111,6 +118,13 @@ private fun MiniatureDetailsBody(
         MiniatureDetails(
             miniature = miniatureDetailsUiState.miniatureDetails.toMiniature(),
             modifier = Modifier.fillMaxWidth()
+        )
+        ImagesRow(
+            imageList = miniatureDetailsUiState.imageList,
+            onDelete = {},
+            showEditIcon = false,
+            switchEditMode = {},
+            canEdit = false
         )
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },

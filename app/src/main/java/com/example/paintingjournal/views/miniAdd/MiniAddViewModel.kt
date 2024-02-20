@@ -5,21 +5,58 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.MiniaturesRepository
+import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.Miniature
+import com.example.paintingjournal.model.MiniatureImageMappingTable
+import com.example.paintingjournal.model.SaveStateEnum
 import java.util.Date
 
 class MiniAddViewModel(
-    private val miniaturesRepository: MiniaturesRepository
+    private val miniaturesRepository: MiniaturesRepository,
+    private val imagesRepository: ImagesRepository
 ) : ViewModel() {
-    suspend fun saveMiniature() {
-        if(validateInput()) {
-            miniaturesRepository.insertMiniature(miniatureUiState.miniatureDetails.toMiniature())
+    var miniatureUiState by mutableStateOf(MiniatureUiState())
+        private set
+
+    fun addImageToList(uri: Uri?) {
+        if(uri != null) {
+            val imageList: MutableList<Image> = miniatureUiState.imageList.toMutableList()
+            imageList.add(Image(imageUri = uri))
+            miniatureUiState = miniatureUiState.copy(imageList = imageList)
         }
     }
 
-    var miniatureUiState by mutableStateOf(MiniatureUiState())
-        private set
+    fun removeImageFromList(image: Image) {
+        val imageList: MutableList<Image> = miniatureUiState.imageList.toMutableList()
+        try {
+            imageList.remove(image)
+        } catch(e: Exception) {
+            println(e)
+        }
+        miniatureUiState = miniatureUiState.copy(imageList = imageList)
+    }
+
+    suspend fun saveMiniature() {
+        if(validateInput()) {
+            if(miniatureUiState.imageList.isNotEmpty()) {
+                val miniatureDetails = miniatureUiState.miniatureDetails
+                miniatureDetails.previewImageUri
+            }
+
+            val miniatureId = miniaturesRepository.insertMiniature(miniatureUiState.miniatureDetails.toMiniature())
+            miniatureUiState.imageList.forEach { image->
+                image.saveState = SaveStateEnum.SAVED
+                val imageId = imagesRepository.insertImage(image)
+                miniaturesRepository.addImageForMiniature(MiniatureImageMappingTable(miniatureId, imageId))
+            }
+        }
+    }
+
+    fun switchEditMode() {
+        miniatureUiState = miniatureUiState.copy(canEdit = !miniatureUiState.canEdit)
+    }
 
     fun updateUiState(miniatureDetails: MiniatureDetails) {
         miniatureUiState =
@@ -35,7 +72,10 @@ class MiniAddViewModel(
 
 data class MiniatureUiState(
     val miniatureDetails: MiniatureDetails = MiniatureDetails(),
-    val isEntryValid: Boolean = false
+    val isEntryValid: Boolean = false,
+    val imageList: List<Image> = listOf(),
+    val originalImageList: List<Image> = listOf(),
+    val canEdit: Boolean = false
 )
 
 data class MiniatureDetails(
@@ -43,7 +83,8 @@ data class MiniatureDetails(
     val name: String = "",
     val manufacturer: String = "",
     val faction: String = "",
-    val createdAt: Date? = null
+    val createdAt: Date? = null,
+    var previewImageUri: Uri? = null
 )
 
 fun MiniatureDetails.toMiniature(): Miniature = Miniature(
@@ -51,7 +92,8 @@ fun MiniatureDetails.toMiniature(): Miniature = Miniature(
     name = name,
     manufacturer = manufacturer,
     faction = faction,
-    createdAt = createdAt
+    createdAt = createdAt,
+    previewImageUri = previewImageUri
 )
 
 fun Miniature.toMiniatureUiState(isEntryValid: Boolean = false): MiniatureUiState = MiniatureUiState(
@@ -64,5 +106,6 @@ fun Miniature.toMiniatureDetails(): MiniatureDetails = MiniatureDetails(
     name = name,
     manufacturer = manufacturer,
     faction = faction,
-    createdAt = createdAt
+    createdAt = createdAt,
+    previewImageUri = previewImageUri
 )
