@@ -171,11 +171,11 @@ private fun PaintItem(
                         )
                         Spacer(Modifier.weight(1f))
                     }
-                    AsyncImage(
+                    /*AsyncImage(
                         model = paint.previewImageUri,
                         contentScale = ContentScale.Fit,
                         contentDescription = "Selected image",
-                    )
+                    )*/
                 }
             }
         }

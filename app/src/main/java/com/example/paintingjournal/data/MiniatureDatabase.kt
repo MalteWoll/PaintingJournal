@@ -9,10 +9,17 @@ import com.example.paintingjournal.converters.DateConverters
 import com.example.paintingjournal.converters.UriConverters
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.Miniature
+import com.example.paintingjournal.model.MiniatureImageMappingTable
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.PaintImageMappingTable
 
-@Database(entities = [Image::class, Miniature::class, MiniaturePaint::class, PaintImageMappingTable::class], version = 10, exportSchema = false)
+@Database(entities = [
+    Image::class,
+    Miniature::class,
+    MiniaturePaint::class,
+    PaintImageMappingTable::class,
+    MiniatureImageMappingTable::class
+    ], version = 11, exportSchema = false)
 @TypeConverters(DateConverters::class, UriConverters::class)
 abstract class MiniatureDatabase : RoomDatabase() {
     abstract fun imageDao(): ImageDao
