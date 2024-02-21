@@ -22,6 +22,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -33,7 +36,6 @@ import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
-import com.example.paintingjournal.views.miniEdit.MiniatureEditDestination
 
 object MiniatureEditPaintsListDestination : NavigationDestination {
     override val route = "mini_edit_paints_list"
@@ -49,10 +51,14 @@ fun MiniEditPaintsListView (
    modifier: Modifier = Modifier,
    viewModel: MiniEditPaintsListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.getData()
+    }
+
     Scaffold(
         topBar = {
             PaintingJournalTopAppBar(
-                title = stringResource(MiniatureEditDestination.titleRes),
+                title = stringResource(MiniatureEditPaintsListDestination.titleRes),
                 canNavigateBack = true
             )
         },
@@ -74,6 +80,7 @@ fun MiniEditPaintsListView (
             selectablePaintList = viewModel.miniatureEditPaintsListUiState.selectablePaintList,
             onPaintClick = {},
             onCheckboxClick = { viewModel.changePaintSelectionState(it) },
+            miniatureEditPaintsListUiState = viewModel.miniatureEditPaintsListUiState,
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -86,6 +93,7 @@ private fun MiniEditPaintsListBody(
     selectablePaintList: List<SelectablePaintDetails>,
     onPaintClick: (Long) -> Unit,
     onCheckboxClick: (SelectablePaintDetails) -> Unit,
+    miniatureEditPaintsListUiState: MiniatureEditPaintsListUiState,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -103,6 +111,7 @@ private fun MiniEditPaintsListBody(
                 selectablePaintList = selectablePaintList,
                 onPaintClick = {onPaintClick(it.id)},
                 onCheckboxClick = { onCheckboxClick(it) },
+                miniatureEditPaintsListUiState = miniatureEditPaintsListUiState,
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             )
         }
@@ -114,10 +123,11 @@ private fun MiniEditPaintList(
     selectablePaintList: List<SelectablePaintDetails>,
     onPaintClick: (SelectablePaintDetails) -> Unit,
     onCheckboxClick: (SelectablePaintDetails) -> Unit,
+    miniatureEditPaintsListUiState: MiniatureEditPaintsListUiState,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
-        items(items = selectablePaintList, key = { it.id }) { paint ->
+        items(items = miniatureEditPaintsListUiState.selectablePaintList, key = { it.id }) { paint ->
             MiniEditPaintItem(
                 selectablePaint = paint,
                 onCheckboxClick = {onCheckboxClick(it) } ,

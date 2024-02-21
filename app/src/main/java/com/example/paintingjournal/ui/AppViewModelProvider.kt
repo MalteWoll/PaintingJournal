@@ -49,7 +49,8 @@ object AppViewModelProvider {
             MiniEditPaintsListViewModel(
                 this.createSavedStateHandle(),
                 paintingJournalApplication().container.paintsRepository,
-                paintingJournalApplication().container.imagesRepository
+                paintingJournalApplication().container.imagesRepository,
+                paintingJournalApplication().container.miniaturesRepository,
             )
         }
         initializer {
