@@ -9,6 +9,8 @@ import androidx.room.Update
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniatureImageMappingTable
+import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.MiniaturePaintMappingTable
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -38,4 +40,15 @@ interface MiniatureDao {
 
     @Delete
     suspend fun deleteMiniatureImageMap(miniatureImageMappingTable: MiniatureImageMappingTable)
+
+    @Query("SELECT * from paints " +
+            "left join miniaturePaintMapping map on paints.paintId = map.paintIdRef " +
+            "where miniatureIdRef = :id")
+    fun getPaintsForMiniature(id: Long): Flow<List<MiniaturePaint>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addPaintToMiniature(miniaturePaintMappingTable: MiniaturePaintMappingTable)
+
+    @Delete
+    suspend fun deletePaintForMiniature(miniaturePaintMappingTable: MiniaturePaintMappingTable)
 }
