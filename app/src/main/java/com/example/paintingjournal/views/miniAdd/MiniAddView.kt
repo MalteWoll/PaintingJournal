@@ -41,6 +41,7 @@ object MiniAddDestination: NavigationDestination {
 fun MiniAddView(
     navigateBack: () -> Unit,
     canNavigateBack: Boolean = true,
+    navigateToPaintList: (Long) -> Unit,
     viewModel: MiniAddViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -73,6 +74,9 @@ fun MiniAddView(
                 switchEditMode = {
                     viewModel.switchEditMode()
                 },
+                navigateToPaintList = {
+
+                },
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -90,6 +94,7 @@ fun MiniatureEntryBody(
     onSaveImage: (Uri?) -> Unit,
     onRemoveImage: (Image) -> Unit,
     switchEditMode: () -> Unit,
+    navigateToPaintList: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -111,6 +116,12 @@ fun MiniatureEntryBody(
             switchEditMode = { switchEditMode() },
             canEdit = miniatureUiState.canEdit
         )
+        Button(
+            onClick = { navigateToPaintList(miniatureUiState.miniatureDetails.id.toInt()) },
+            shape = MaterialTheme.shapes.small
+        ) {
+            Text(text = stringResource(id = R.string.mini_edit_paint_list_button))
+        }
         Button(
             onClick = onSaveClicked,
             enabled = miniatureUiState.isEntryValid,

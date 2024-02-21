@@ -20,6 +20,8 @@
     <string name="mini_add_title">Add Miniature</string>
     <string name="mini_details_title">Miniature Details</string>
     <string name="mini_edit_title">Edit Miniature</string>
+    <string name="mini_edit_paint_list_button">Add/Remove paints</string>
+    <string name="mini_edit_paints_list_title">Paint List</string>
     <string name="mini_list_no_item_description">No miniatures added yet</string>
     <string name="mini_list_title">Miniature List</string>
     <string name="paint">Paint</string>

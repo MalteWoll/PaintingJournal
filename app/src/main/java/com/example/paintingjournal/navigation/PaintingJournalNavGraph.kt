@@ -15,6 +15,8 @@ import com.example.paintingjournal.views.miniDetail.MiniDetailView
 import com.example.paintingjournal.views.miniDetail.MiniatureDetailsDestination
 import com.example.paintingjournal.views.miniEdit.MiniEditView
 import com.example.paintingjournal.views.miniEdit.MiniatureEditDestination
+import com.example.paintingjournal.views.miniEditPaintsList.MiniEditPaintsListView
+import com.example.paintingjournal.views.miniEditPaintsList.MiniatureEditPaintsListDestination
 import com.example.paintingjournal.views.miniList.MiniListDestination
 import com.example.paintingjournal.views.miniList.MiniListView
 import com.example.paintingjournal.views.paintAdd.PaintAddDestination
@@ -45,7 +47,8 @@ fun PaintingJournalNavHost(
 
         composable(route = MiniAddDestination.route) {
             MiniAddView(
-                navigateBack = { navController.popBackStack() }
+                navigateBack = { navController.popBackStack() },
+                navigateToPaintList = { navController.navigate("${MiniatureEditPaintsListDestination.route}/${it}") }
             )
         }
 
@@ -68,7 +71,18 @@ fun PaintingJournalNavHost(
             })
         ) {
             MiniEditView(
-                navigateBack = { navController.navigateUp() }
+                navigateBack = { navController.navigateUp() },
+                navigateToPaintList = { navController.navigate("${MiniatureEditPaintsListDestination.route}/${it}") }
+            )
+        }
+
+        composable(
+            route = MiniatureEditPaintsListDestination.routeWithArgs,
+            arguments = listOf(navArgument(MiniatureEditPaintsListDestination.miniatureArg) {
+                type = NavType.IntType
+            })) {
+            MiniEditPaintsListView(
+                navigateBack = { navController.popBackStack() }
             )
         }
 
