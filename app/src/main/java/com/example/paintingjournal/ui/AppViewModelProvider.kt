@@ -21,7 +21,7 @@ import com.example.paintingjournal.views.paintList.PaintListViewModel
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            MainMenuViewModel()
+            MainMenuViewModel(paintingJournalApplication().container.miniaturesRepository)
         }
         initializer {
             MiniListViewModel(paintingJournalApplication().container.miniaturesRepository)

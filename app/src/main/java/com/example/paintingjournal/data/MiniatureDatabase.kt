@@ -21,7 +21,7 @@ import com.example.paintingjournal.model.PaintImageMappingTable
     PaintImageMappingTable::class,
     MiniatureImageMappingTable::class,
     MiniaturePaintMappingTable::class
-    ], version = 14, exportSchema = false)
+    ], version = 15, exportSchema = false)
 @TypeConverters(DateConverters::class, UriConverters::class)
 abstract class MiniatureDatabase : RoomDatabase() {
     abstract fun imageDao(): ImageDao

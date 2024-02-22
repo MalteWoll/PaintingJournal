@@ -41,7 +41,7 @@ object MiniAddDestination: NavigationDestination {
 fun MiniAddView(
     navigateBack: () -> Unit,
     canNavigateBack: Boolean = true,
-    navigateToPaintList: (Long) -> Unit,
+    navigateToPaintList: (Int) -> Unit,
     viewModel: MiniAddViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -75,7 +75,7 @@ fun MiniAddView(
                     viewModel.switchEditMode()
                 },
                 navigateToPaintList = {
-
+                    navigateToPaintList(it)
                 },
                 modifier = Modifier
                     .padding(innerPadding)

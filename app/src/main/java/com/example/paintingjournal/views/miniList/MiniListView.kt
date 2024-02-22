@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -36,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
 import com.example.paintingjournal.model.Miniature
+import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 
@@ -53,7 +55,10 @@ fun MiniListView(
     canNavigateBack: Boolean = true,
     viewModel: MiniListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val miniListUiState by viewModel.miniListUiState.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.getData()
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -78,7 +83,7 @@ fun MiniListView(
             }
         ) { innerPadding ->
             MiniListBody(
-                miniatureList = miniListUiState.miniatureList,
+                miniatureList = viewModel.miniListUiState.miniatureList,
                 onMiniatureClick = navigateToMiniatureEntry,
                 modifier = Modifier
                     .padding(innerPadding)
@@ -135,31 +140,33 @@ private fun MiniatureItem(
     miniature: Miniature,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+    if(miniature.saveState == SaveStateEnum.SAVED) {
+        Card(
+            modifier = modifier,
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth()
+            Column(
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
             ) {
-                Text(
-                    text = miniature.name,
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(Modifier.weight(1f))
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = miniature.manufacturer,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(Modifier.weight(1f))
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = miniature.name,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Spacer(Modifier.weight(1f))
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = miniature.manufacturer,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(Modifier.weight(1f))
+                }
             }
         }
     }

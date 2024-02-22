@@ -5,12 +5,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.MiniaturesRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniatureImageMappingTable
 import com.example.paintingjournal.model.SaveStateEnum
+import kotlinx.coroutines.launch
 import java.util.Date
 
 class MiniAddViewModel(
@@ -19,6 +21,19 @@ class MiniAddViewModel(
 ) : ViewModel() {
     var miniatureUiState by mutableStateOf(MiniatureUiState())
         private set
+    var miniatureId: Long = 0
+
+    init {
+        createMiniInDb()
+    }
+
+    // Insert an empty miniature into the database allow for creation of mappings for miniature and paints
+    private fun createMiniInDb() {
+        viewModelScope.launch {
+            miniatureId = miniaturesRepository.insertMiniature(MiniatureDetails().toMiniature())
+            miniatureUiState = miniatureUiState.copy(miniatureDetails = miniatureUiState.miniatureDetails.copy(id = miniatureId))
+        }
+    }
 
     fun addImageToList(uri: Uri?) {
         if(uri != null) {
@@ -45,7 +60,9 @@ class MiniAddViewModel(
                 miniatureDetails.previewImageUri
             }
 
-            val miniatureId = miniaturesRepository.insertMiniature(miniatureUiState.miniatureDetails.toMiniature())
+            miniatureUiState = miniatureUiState.copy(miniatureDetails = miniatureUiState.miniatureDetails.copy(saveState = SaveStateEnum.SAVED))
+            miniaturesRepository.updateMiniature(miniatureUiState.miniatureDetails.toMiniature())
+
             miniatureUiState.imageList.forEach { image->
                 image.saveState = SaveStateEnum.SAVED
                 val imageId = imagesRepository.insertImage(image)
@@ -84,7 +101,8 @@ data class MiniatureDetails(
     val manufacturer: String = "",
     val faction: String = "",
     val createdAt: Date? = null,
-    var previewImageUri: Uri? = null
+    var previewImageUri: Uri? = null,
+    val saveState: SaveStateEnum = SaveStateEnum.NEW
 )
 
 fun MiniatureDetails.toMiniature(): Miniature = Miniature(
@@ -93,7 +111,8 @@ fun MiniatureDetails.toMiniature(): Miniature = Miniature(
     manufacturer = manufacturer,
     faction = faction,
     createdAt = createdAt,
-    previewImageUri = previewImageUri
+    previewImageUri = previewImageUri,
+    saveState = saveState
 )
 
 fun Miniature.toMiniatureUiState(isEntryValid: Boolean = false): MiniatureUiState = MiniatureUiState(
@@ -107,5 +126,6 @@ fun Miniature.toMiniatureDetails(): MiniatureDetails = MiniatureDetails(
     manufacturer = manufacturer,
     faction = faction,
     createdAt = createdAt,
-    previewImageUri = previewImageUri
+    previewImageUri = previewImageUri,
+    saveState = saveState
 )
