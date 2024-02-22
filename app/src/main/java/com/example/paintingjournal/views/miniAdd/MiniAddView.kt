@@ -3,9 +3,11 @@ package com.example.paintingjournal.views.miniAdd
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -19,12 +21,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
 import com.example.paintingjournal.model.Image
+import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import com.example.paintingjournal.views.paintAdd.ImagesRow
@@ -116,6 +122,9 @@ fun MiniatureEntryBody(
             switchEditMode = { switchEditMode() },
             canEdit = miniatureUiState.canEdit
         )
+        PaintRow(
+            paintList = miniatureUiState.paintList,
+            removePaint = {})
         Button(
             onClick = { navigateToPaintList(miniatureUiState.miniatureDetails.id.toInt()) },
             shape = MaterialTheme.shapes.small
@@ -130,6 +139,35 @@ fun MiniatureEntryBody(
             ) {
                 Text(text = stringResource(id = R.string.save_action))
             }
+    }
+}
+
+@Composable
+fun PaintRow(
+    paintList: List<MiniaturePaint>,
+    removePaint: (MiniaturePaint) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if(paintList.isNotEmpty()) {
+        Row {
+            paintList.forEach { paint ->
+                Column(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .padding(dimensionResource(id = R.dimen.padding_small))
+                ) {
+                    AsyncImage(
+                        model = paint.previewImageUri,
+                        contentScale = ContentScale.FillBounds,
+                        contentDescription = "",
+                    )
+                    Text(
+                        text = paint.name,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+            }
+        }
     }
 }
 

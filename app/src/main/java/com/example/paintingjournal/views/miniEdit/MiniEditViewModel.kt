@@ -15,10 +15,12 @@ import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.views.miniAdd.MiniatureDetails
 import com.example.paintingjournal.views.miniAdd.MiniatureUiState
 import com.example.paintingjournal.views.miniAdd.toMiniature
+import com.example.paintingjournal.views.miniAdd.toMiniatureDetails
 import com.example.paintingjournal.views.miniAdd.toMiniatureUiState
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MiniEditViewModel(
     savedStateHandle: SavedStateHandle,
@@ -28,17 +30,18 @@ class MiniEditViewModel(
     var miniatureUiState by mutableStateOf(MiniatureUiState())
         private set
 
-    private val miniatureId: Int = checkNotNull(savedStateHandle[MiniatureEditDestination.miniatureArg])
+    val miniatureId: Int = checkNotNull(savedStateHandle[MiniatureEditDestination.miniatureArg])
 
     init {
-        viewModelScope.launch {
+        // runBlocking, otherwise getPaintsForMiniature() messes up UiState object
+        runBlocking {
             miniatureUiState = miniaturesRepository.getMiniatureStream(miniatureId)
                 .filterNotNull()
                 .first()
                 .toMiniatureUiState(true)
         }
 
-        viewModelScope.launch {
+        runBlocking {
             val imageList = miniaturesRepository.getImagesForMiniature(miniatureId)
                 .filterNotNull()
                 .first()
@@ -49,9 +52,20 @@ class MiniEditViewModel(
         }
     }
 
+    fun getPaintsForMiniature() {
+        viewModelScope.launch {
+            miniatureUiState = miniatureUiState.copy(
+                paintList = miniaturesRepository.getPaintsForMiniature(miniatureId.toLong())
+                    .filterNotNull()
+                    .first()
+                    .toList()
+            )
+        }
+    }
+
     fun updateUiState(miniatureDetails: MiniatureDetails) {
         miniatureUiState =
-            MiniatureUiState(miniatureDetails = miniatureDetails, isEntryValid = validateInput(miniatureDetails))
+            miniatureUiState.copy(miniatureDetails = miniatureDetails, isEntryValid = validateInput(miniatureDetails))
     }
 
     fun addImageToList(uri: Uri?) {

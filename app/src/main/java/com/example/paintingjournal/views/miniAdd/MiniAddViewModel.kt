@@ -11,6 +11,7 @@ import com.example.paintingjournal.data.MiniaturesRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniatureImageMappingTable
+import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.SaveStateEnum
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -92,7 +93,8 @@ data class MiniatureUiState(
     val isEntryValid: Boolean = false,
     val imageList: List<Image> = listOf(),
     val originalImageList: List<Image> = listOf(),
-    val canEdit: Boolean = false
+    val canEdit: Boolean = false,
+    val paintList: List<MiniaturePaint> = listOf()
 )
 
 data class MiniatureDetails(
