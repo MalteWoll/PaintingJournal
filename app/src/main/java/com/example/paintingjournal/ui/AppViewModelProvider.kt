@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.paintingjournal.PaintingJournal
+import com.example.paintingjournal.views.imageViewer.ImageViewerViewModel
 import com.example.paintingjournal.views.mainMenu.MainMenuViewModel
 import com.example.paintingjournal.views.miniAdd.MiniAddViewModel
 import com.example.paintingjournal.views.miniDetail.MiniDetailViewModel
@@ -20,6 +21,12 @@ import com.example.paintingjournal.views.paintList.PaintListViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
+        initializer {
+            ImageViewerViewModel(
+                this.createSavedStateHandle(),
+                paintingJournalApplication().container.imagesRepository
+            )
+        }
         initializer {
             MainMenuViewModel(paintingJournalApplication().container.miniaturesRepository)
         }

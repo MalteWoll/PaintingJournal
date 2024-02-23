@@ -3,6 +3,7 @@ package com.example.paintingjournal.views.paintAdd
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -128,7 +129,8 @@ fun PaintEntryBody(
             onDelete = onRemoveImage,
             showEditIcon = true,
             switchEditMode = { switchEditMode() },
-            canEdit = miniaturePaintUiState.canEdit
+            canEdit = miniaturePaintUiState.canEdit,
+            navigateToImageViewer = {}
         )
         Button(
             onClick = onSaveClicked,
@@ -250,6 +252,7 @@ fun ImagesRow(
     showEditIcon: Boolean,
     switchEditMode: () -> Unit,
     canEdit: Boolean,
+    navigateToImageViewer: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (imageList.isNotEmpty()) {
@@ -264,7 +267,8 @@ fun ImagesRow(
                         AsyncImage(
                             model = image.imageUri,
                             modifier = Modifier
-                                .width(100.dp),
+                                .width(100.dp)
+                                .clickable { navigateToImageViewer(image.id) },
                             contentScale = ContentScale.FillBounds,
                             contentDescription = "Selected image",
                         )

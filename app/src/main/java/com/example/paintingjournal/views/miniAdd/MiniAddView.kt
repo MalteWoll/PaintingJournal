@@ -124,7 +124,8 @@ fun MiniatureEntryBody(
             onDelete = onRemoveImage,
             showEditIcon = true,
             switchEditMode = { switchEditMode() },
-            canEdit = miniatureUiState.canEdit
+            canEdit = miniatureUiState.canEdit,
+            navigateToImageViewer = {}
         )
         PaintRow(
             paintList = miniatureUiState.paintList,

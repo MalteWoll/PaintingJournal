@@ -126,7 +126,8 @@ private fun MiniatureDetailsBody(
             onDelete = {},
             showEditIcon = false,
             switchEditMode = {},
-            canEdit = false
+            canEdit = false,
+            navigateToImageViewer = {}
         )
         PaintRow(
             paintList = miniatureDetailsUiState.paintList,

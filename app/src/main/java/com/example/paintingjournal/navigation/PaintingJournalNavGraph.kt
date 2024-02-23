@@ -7,6 +7,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.paintingjournal.views.imageViewer.ImageViewerDestination
+import com.example.paintingjournal.views.imageViewer.ImageViewerView
 import com.example.paintingjournal.views.mainMenu.HomeDestination
 import com.example.paintingjournal.views.mainMenu.MainMenuView
 import com.example.paintingjournal.views.miniAdd.MiniAddDestination
@@ -43,6 +45,15 @@ fun PaintingJournalNavHost(
                 navigateToMiniList = { navController.navigate(MiniListDestination.route) },
                 navigateToPaintList = { navController.navigate(PaintListDestination.route) }
             )
+        }
+
+        composable(
+            route = ImageViewerDestination.routeWithArgs,
+            arguments = listOf(navArgument(ImageViewerDestination.imageArg) {
+                type = NavType.IntType
+            })
+        ) {
+            ImageViewerView(navigateBack = { navController.popBackStack() })
         }
 
         composable(route = MiniAddDestination.route) {
@@ -111,6 +122,7 @@ fun PaintingJournalNavHost(
         ) {
             PaintDetailView(
                 navigateToEditPaint = { navController.navigate("${PaintEditDestination.route}/$it") },
+                navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
                 navigateBack = { navController.navigateUp() }
             )
         }

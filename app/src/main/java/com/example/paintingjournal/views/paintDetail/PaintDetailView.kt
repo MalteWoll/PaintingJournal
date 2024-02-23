@@ -54,6 +54,7 @@ object PaintDetailsDestination : NavigationDestination {
 fun PaintDetailView(
     navigateToEditPaint: (Long) -> Unit,
     navigateBack: () -> Unit,
+    navigateToImageViewer: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PaintDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -93,6 +94,7 @@ fun PaintDetailView(
                     navigateBack()
                 }
             },
+            navigateToImageViewer = navigateToImageViewer,
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
@@ -103,6 +105,7 @@ fun PaintDetailView(
 @Composable
 private fun MiniaturePaintDetailsBody(
     miniaturePaintDetailsUiState: MiniaturePaintUiState,
+    navigateToImageViewer: (Long) -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -121,7 +124,8 @@ private fun MiniaturePaintDetailsBody(
             onDelete = {},
             showEditIcon = false,
             switchEditMode = {},
-            canEdit = false
+            canEdit = false,
+            navigateToImageViewer = navigateToImageViewer
         )
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
