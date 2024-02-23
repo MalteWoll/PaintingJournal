@@ -33,6 +33,7 @@ fun MiniEditView(
     navigateToPaintList: (Int) -> Unit,
     navigateToPaintDetails: (Long) -> Unit,
     navigateToImageViewer: (Long) -> Unit,
+    canNavigateBack: Boolean = false,
     modifier: Modifier = Modifier,
     viewModel: MiniEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -46,7 +47,8 @@ fun MiniEditView(
         topBar = {
             PaintingJournalTopAppBar(
                 title = stringResource(MiniatureEditDestination.titleRes),
-                canNavigateBack = true
+                canNavigateBack = true,
+                navigateUp = navigateBack
             )
         },
         modifier = modifier

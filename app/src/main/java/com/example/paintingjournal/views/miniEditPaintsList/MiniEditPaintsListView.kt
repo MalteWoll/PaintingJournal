@@ -48,6 +48,7 @@ object MiniatureEditPaintsListDestination : NavigationDestination {
 @Composable
 fun MiniEditPaintsListView (
    navigateBack: () -> Unit,
+   canNavigateBack: Boolean = false,
    modifier: Modifier = Modifier,
    viewModel: MiniEditPaintsListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -59,7 +60,8 @@ fun MiniEditPaintsListView (
         topBar = {
             PaintingJournalTopAppBar(
                 title = stringResource(MiniatureEditPaintsListDestination.titleRes),
-                canNavigateBack = true
+                canNavigateBack = canNavigateBack,
+                navigateUp = navigateBack
             )
         },
         floatingActionButton = {

@@ -56,6 +56,7 @@ fun PaintDetailView(
     navigateBack: () -> Unit,
     navigateToImageViewer: (Long) -> Unit,
     modifier: Modifier = Modifier,
+    canNavigateBack: Boolean = false,
     viewModel: PaintDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState = viewModel.miniaturePaintDetailsUiState
@@ -69,7 +70,7 @@ fun PaintDetailView(
         topBar = {
             PaintingJournalTopAppBar(
                 title = stringResource(R.string.mini_details_title),
-                canNavigateBack = true,
+                canNavigateBack = canNavigateBack,
                 navigateUp = navigateBack
             )
         }, floatingActionButton = {

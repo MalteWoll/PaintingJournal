@@ -74,7 +74,8 @@ fun PaintAddView(
             topBar = {
                 PaintingJournalTopAppBar(
                     title = stringResource(id = R.string.paint_add_title),
-                    canNavigateBack = false
+                    canNavigateBack = canNavigateBack,
+                    navigateUp = navigateBack
                 )
             }
         ) { innerPadding ->
@@ -272,7 +273,7 @@ fun ImagesRow(
                             modifier = Modifier
                                 .width(100.dp)
                                 .clickable { navigateToImageViewer(image.id) },
-                            contentScale = ContentScale.FillBounds,
+                            contentScale = ContentScale.Fit,
                             contentDescription = "Selected image",
                         )
                         if (canEdit) {

@@ -43,7 +43,8 @@ fun ImageViewerView(
             topBar = {
                 PaintingJournalTopAppBar(
                     title = "",
-                    canNavigateBack = canNavigateBack
+                    canNavigateBack = canNavigateBack,
+                    navigateUp = navigateBack
                 )
             }
         ) { innerPadding ->

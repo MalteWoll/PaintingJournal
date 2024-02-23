@@ -57,6 +57,7 @@ object MiniatureDetailsDestination : NavigationDestination {
 @Composable
 fun MiniDetailView(
     navigateToEditMiniature: (Long) -> Unit,
+    canNavigateBack: Boolean = false,
     navigateBack: () -> Unit,
     navigateToPaintDetails: (Int) -> Unit,
     navigateToImageViewer: (Long) -> Unit,

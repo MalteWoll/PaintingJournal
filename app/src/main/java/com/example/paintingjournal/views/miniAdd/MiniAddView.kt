@@ -62,7 +62,8 @@ fun MiniAddView(
             topBar = {
                 PaintingJournalTopAppBar(
                     title = stringResource(id = R.string.mini_add_title),
-                    canNavigateBack = false
+                    canNavigateBack = canNavigateBack,
+                    navigateUp = navigateBack
                 )
             }
         ) { innerPadding ->

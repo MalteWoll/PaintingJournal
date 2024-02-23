@@ -65,6 +65,7 @@ fun PaintingJournalNavHost(
                 navigateToPaintList = { navController.navigate("${MiniatureEditPaintsListDestination.route}/${it}") },
                 navigateToPaintDetails = { navController.navigate("${PaintDetailsDestination.route}/${it}")},
                 navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
+                canNavigateBack = true
             )
         }
 
@@ -79,6 +80,7 @@ fun PaintingJournalNavHost(
                 navigateBack = { navController.navigateUp() },
                 navigateToPaintDetails = { navController.navigate("${PaintDetailsDestination.route}/${it}")},
                 navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
+                canNavigateBack = true
             )
         }
 
@@ -93,6 +95,7 @@ fun PaintingJournalNavHost(
                 navigateToPaintList = { navController.navigate("${MiniatureEditPaintsListDestination.route}/${it}") },
                 navigateToPaintDetails = { navController.navigate("${PaintDetailsDestination.route}/${it}")},
                 navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
+                canNavigateBack = true
             )
         }
 
@@ -102,7 +105,8 @@ fun PaintingJournalNavHost(
                 type = NavType.IntType
             })) {
             MiniEditPaintsListView(
-                navigateBack = { navController.popBackStack() }
+                navigateBack = { navController.popBackStack() },
+                canNavigateBack = true
             )
         }
 
@@ -110,7 +114,8 @@ fun PaintingJournalNavHost(
             MiniListView(
                 navigateToMiniatureEntry = { navController.navigate("${MiniatureDetailsDestination.route}/${it}") },
                 navigateToMiniAdd = { navController.navigate(MiniAddDestination.route) },
-                navigateBack = { navController.popBackStack() }
+                navigateBack = { navController.popBackStack() },
+                canNavigateBack = true
             )
         }
 
@@ -118,6 +123,7 @@ fun PaintingJournalNavHost(
             PaintAddView(
                 navigateBack = { navController.popBackStack() },
                 navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
+                canNavigateBack = true
             )
         }
 
@@ -130,7 +136,8 @@ fun PaintingJournalNavHost(
             PaintDetailView(
                 navigateToEditPaint = { navController.navigate("${PaintEditDestination.route}/$it") },
                 navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
-                navigateBack = { navController.navigateUp() }
+                navigateBack = { navController.navigateUp() },
+                canNavigateBack = true
             )
         }
 
@@ -142,7 +149,8 @@ fun PaintingJournalNavHost(
         ) {
             PaintEditView(
                 navigateBack = { navController.popBackStack() },
-                navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") }
+                navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
+                canNavigateBack = true
             )
         }
 
@@ -150,7 +158,8 @@ fun PaintingJournalNavHost(
             PaintListView(
                 navigateToPaintAdd = { navController.navigate(PaintAddDestination.route) },
                 navigateBack = { navController.popBackStack() },
-                navigateToPaintEntry = { navController.navigate("${PaintDetailsDestination.route}/${it}")}
+                navigateToPaintEntry = { navController.navigate("${PaintDetailsDestination.route}/${it}")},
+                canNavigateBack = true
             )
         }
     }

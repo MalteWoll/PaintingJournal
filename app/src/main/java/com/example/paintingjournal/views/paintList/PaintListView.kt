@@ -55,7 +55,7 @@ fun PaintListView(
     navigateToPaintAdd: () -> Unit,
     navigateBack: () -> Unit,
     navigateToPaintEntry: (Long) -> Unit,
-    canNavigateBack: Boolean = true,
+    canNavigateBack: Boolean = false,
     viewModel: PaintListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     LaunchedEffect(Unit) {
@@ -69,7 +69,8 @@ fun PaintListView(
             topBar = {
                 PaintingJournalTopAppBar(
                     title = stringResource(id = R.string.paint_list_title),
-                    canNavigateBack = true
+                    canNavigateBack = canNavigateBack,
+                    navigateUp = navigateBack
                 )
             },
             floatingActionButton = {

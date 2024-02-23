@@ -31,6 +31,7 @@ fun PaintEditView(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     navigateToImageViewer: (Long) -> Unit,
+    canNavigateBack: Boolean = false,
     viewModel: PaintEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -38,7 +39,8 @@ fun PaintEditView(
         topBar = {
             PaintingJournalTopAppBar(
                 title = stringResource(PaintEditDestination.titleRes),
-                canNavigateBack = true
+                canNavigateBack = canNavigateBack,
+                navigateUp = navigateBack
             )
         },
         modifier = modifier
