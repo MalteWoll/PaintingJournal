@@ -48,6 +48,8 @@ import com.example.paintingjournal.data.ComposeFileProvider
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
+import com.example.paintingjournal.ui.composables.ImagePicker
+import com.example.paintingjournal.ui.composables.ImageSelection
 import kotlinx.coroutines.launch
 
 object PaintAddDestination: NavigationDestination {
@@ -120,9 +122,7 @@ fun PaintEntryBody(
             onValueChanged = onMiniaturePaintValueChanged,
             modifier = Modifier.fillMaxWidth()
         )
-        TakeImage(
-            onSaveImage = onSaveImage
-        )
+        ImageSelection(onSaveImage = onSaveImage)
         ImagesRow(
             imageList = miniaturePaintUiState.imageList,
             onDelete = onRemoveImage,
@@ -238,7 +238,7 @@ fun TakeImage(
         },
     ) {
         Text(
-            text = "Take photo"
+            text = stringResource(id = R.string.take_photo)
         )
     }
 }

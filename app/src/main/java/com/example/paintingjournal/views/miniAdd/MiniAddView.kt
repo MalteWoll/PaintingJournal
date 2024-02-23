@@ -34,6 +34,7 @@ import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
+import com.example.paintingjournal.ui.composables.ImageSelection
 import com.example.paintingjournal.views.paintAdd.ImagesRow
 import com.example.paintingjournal.views.paintAdd.TakeImage
 import kotlinx.coroutines.launch
@@ -117,9 +118,7 @@ fun MiniatureEntryBody(
             onValueChanged = onMiniatureValueChanged,
             modifier = Modifier.fillMaxWidth()
         )
-        TakeImage(
-            onSaveImage = onSaveImage
-        )
+        ImageSelection(onSaveImage = onSaveImage)
         ImagesRow(
             imageList = miniatureUiState.imageList,
             onDelete = onRemoveImage,

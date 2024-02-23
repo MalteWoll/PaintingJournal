@@ -24,6 +24,7 @@
     <string name="mini_edit_paints_list_title">Paint List</string>
     <string name="mini_list_no_item_description">No miniatures added yet</string>
     <string name="mini_list_title">Miniature List</string>
+    <string name="open_gallery">Open gallery</string>
     <string name="paint">Paint</string>
     <string name="paint_add_form_description">Description</string>
     <string name="paint_add_form_name">Name</string>
@@ -35,6 +36,7 @@
     <string name="paint_list_title">Paint List</string>
     <string name="paint_list_no_item_description">No paints added yet</string>
     <string name="save_action">Save</string>
+    <string name="take_photo">Take photo</string>
     <string name="type">Type</string>
     <string name="yes">Yes</string>
 </resources>
