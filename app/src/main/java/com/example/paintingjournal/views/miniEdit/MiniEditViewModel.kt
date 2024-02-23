@@ -71,13 +71,25 @@ class MiniEditViewModel(
     fun addImageToList(uri: Uri?) {
         if(uri != null) {
             val imageList: MutableList<Image> = miniatureUiState.imageList.toMutableList()
-            imageList.add(Image(imageUri = uri))
-            miniatureUiState = miniatureUiState.copy(imageList = imageList)
+
+            viewModelScope.launch {
+                val imageId = imagesRepository.insertImage(Image(imageUri = uri, saveState = SaveStateEnum.NEW))
+                imageList.add(Image(id = imageId, imageUri = uri))
+                miniatureUiState = miniatureUiState.copy(imageList = imageList)
+            }
         }
     }
 
     fun removeImageFromList(image: Image) {
         val imageList: MutableList<Image> = miniatureUiState.imageList.toMutableList()
+
+        // New images get deleted without warning, previously added images only after save button is pressed
+        if(image.saveState == SaveStateEnum.NEW) {
+            viewModelScope.launch {
+                imagesRepository.deleteImage(image)
+            }
+        }
+
         try {
             imageList.remove(image)
         } catch(e: Exception) {
@@ -113,11 +125,11 @@ class MiniEditViewModel(
             miniatureUiState.imageList.forEach { image ->
                 if(image.saveState != SaveStateEnum.SAVED) {
                     image.saveState = SaveStateEnum.SAVED
-                    val imageId = imagesRepository.insertImage(image)
+                    imagesRepository.updateImage(image)
                     miniaturesRepository.addImageForMiniature(
                         MiniatureImageMappingTable(
                             miniatureId.toLong(),
-                            imageId
+                            image.id
                         )
                     )
                 }

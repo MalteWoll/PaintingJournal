@@ -39,13 +39,21 @@ class MiniAddViewModel(
     fun addImageToList(uri: Uri?) {
         if(uri != null) {
             val imageList: MutableList<Image> = miniatureUiState.imageList.toMutableList()
-            imageList.add(Image(imageUri = uri))
-            miniatureUiState = miniatureUiState.copy(imageList = imageList)
+
+            viewModelScope.launch {
+                val imageId = imagesRepository.insertImage(Image(imageUri = uri, saveState = SaveStateEnum.NEW))
+
+                imageList.add(Image(id = imageId, imageUri = uri))
+                miniatureUiState = miniatureUiState.copy(imageList = imageList)
+            }
         }
     }
 
     fun removeImageFromList(image: Image) {
         val imageList: MutableList<Image> = miniatureUiState.imageList.toMutableList()
+        viewModelScope.launch {
+            imagesRepository.deleteImage(image)
+        }
         try {
             imageList.remove(image)
         } catch(e: Exception) {
@@ -66,8 +74,8 @@ class MiniAddViewModel(
 
             miniatureUiState.imageList.forEach { image->
                 image.saveState = SaveStateEnum.SAVED
-                val imageId = imagesRepository.insertImage(image)
-                miniaturesRepository.addImageForMiniature(MiniatureImageMappingTable(miniatureId, imageId))
+                imagesRepository.updateImage(image)
+                miniaturesRepository.addImageForMiniature(MiniatureImageMappingTable(miniatureId, image.id))
             }
         }
     }

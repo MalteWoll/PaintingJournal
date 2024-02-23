@@ -31,8 +31,8 @@ class PaintAddViewModel(
             val paintId = paintsRepository.insertPaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())
             miniaturePaintUiState.imageList.forEach {image ->
                 image.saveState = SaveStateEnum.SAVED
-                val imageId = imagesRepository.insertImage(image)
-                paintsRepository.addImageForPaint(PaintImageMappingTable(paintId, imageId))
+                imagesRepository.updateImage(image)
+                paintsRepository.addImageForPaint(PaintImageMappingTable(paintId, image.id))
             }
         }
     }
@@ -40,13 +40,21 @@ class PaintAddViewModel(
     fun addImageToList(uri: Uri?) {
         if(uri != null) {
             val imageList: MutableList<Image> = miniaturePaintUiState.imageList.toMutableList()
-            imageList.add(Image(imageUri = uri))
-            miniaturePaintUiState = miniaturePaintUiState.copy(imageList = imageList)
+
+            viewModelScope.launch {
+                val imageId = imagesRepository.insertImage(Image(imageUri = uri, saveState = SaveStateEnum.NEW))
+
+                imageList.add(Image(id = imageId, imageUri = uri))
+                miniaturePaintUiState = miniaturePaintUiState.copy(imageList = imageList)
+            }
         }
     }
 
     fun removeImageFromList(image: Image) {
         val imageList: MutableList<Image> = miniaturePaintUiState.imageList.toMutableList()
+        viewModelScope.launch {
+            imagesRepository.deleteImage(image)
+        }
         try {
             imageList.remove(image)
         } catch (e: Exception) {
