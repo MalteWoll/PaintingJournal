@@ -31,6 +31,7 @@ object MiniatureEditDestination : NavigationDestination {
 fun MiniEditView(
     navigateBack: () -> Unit,
     navigateToPaintList: (Int) -> Unit,
+    navigateToPaintDetails: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MiniEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -62,6 +63,7 @@ fun MiniEditView(
             onRemoveImage = { viewModel.removeImageFromList(it) },
             switchEditMode = { viewModel.switchEditMode() },
             navigateToPaintList = { navigateToPaintList(it) },
+            navigateToPaint = navigateToPaintDetails,
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())

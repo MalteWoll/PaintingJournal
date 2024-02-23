@@ -48,7 +48,8 @@ fun PaintingJournalNavHost(
         composable(route = MiniAddDestination.route) {
             MiniAddView(
                 navigateBack = { navController.popBackStack() },
-                navigateToPaintList = { navController.navigate("${MiniatureEditPaintsListDestination.route}/${it}") }
+                navigateToPaintList = { navController.navigate("${MiniatureEditPaintsListDestination.route}/${it}") },
+                navigateToPaintDetails = { navController.navigate("${PaintDetailsDestination.route}/${it}")}
             )
         }
 
@@ -60,7 +61,8 @@ fun PaintingJournalNavHost(
             ) {
             MiniDetailView(
                 navigateToEditMiniature = { navController.navigate("${MiniatureEditDestination.route}/$it") },
-                navigateBack = { navController.navigateUp() }
+                navigateBack = { navController.navigateUp() },
+                navigateToPaintDetails = { navController.navigate("${PaintDetailsDestination.route}/${it}")}
             )
         }
 
@@ -72,7 +74,8 @@ fun PaintingJournalNavHost(
         ) {
             MiniEditView(
                 navigateBack = { navController.navigateUp() },
-                navigateToPaintList = { navController.navigate("${MiniatureEditPaintsListDestination.route}/${it}") }
+                navigateToPaintList = { navController.navigate("${MiniatureEditPaintsListDestination.route}/${it}") },
+                navigateToPaintDetails = { navController.navigate("${PaintDetailsDestination.route}/${it}")}
             )
         }
 

@@ -46,6 +46,16 @@ class MiniDetailViewModel(
                 miniatureDetailsUiState = miniatureDetailsUiState.copy(imageList = imageList)
             }
         }
+
+        viewModelScope.launch {
+            val paintList = miniaturesRepository.getPaintsForMiniature(miniatureId.toLong())
+                .filterNotNull()
+                .first()
+                .toList()
+            if(paintList.isNotEmpty()) {
+                miniatureDetailsUiState = miniatureDetailsUiState.copy(paintList = paintList)
+            }
+        }
     }
 
     suspend fun deleteMiniature() {

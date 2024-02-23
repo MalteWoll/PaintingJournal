@@ -41,6 +41,7 @@ import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import com.example.paintingjournal.views.miniAdd.MiniatureUiState
+import com.example.paintingjournal.views.miniAdd.PaintRow
 import com.example.paintingjournal.views.miniAdd.toMiniature
 import com.example.paintingjournal.views.paintAdd.ImagesRow
 import kotlinx.coroutines.launch
@@ -57,6 +58,7 @@ object MiniatureDetailsDestination : NavigationDestination {
 fun MiniDetailView(
     navigateToEditMiniature: (Long) -> Unit,
     navigateBack: () -> Unit,
+    navigateToPaintDetails: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MiniDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -126,6 +128,10 @@ private fun MiniatureDetailsBody(
             switchEditMode = {},
             canEdit = false
         )
+        PaintRow(
+            paintList = miniatureDetailsUiState.paintList,
+            removePaint = {},
+            onPaintClick = {})
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
             shape = MaterialTheme.shapes.small,

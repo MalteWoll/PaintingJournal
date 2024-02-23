@@ -1,6 +1,7 @@
 package com.example.paintingjournal.views.miniAdd
 
 import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,6 +49,7 @@ fun MiniAddView(
     navigateBack: () -> Unit,
     canNavigateBack: Boolean = true,
     navigateToPaintList: (Int) -> Unit,
+    navigateToPaintDetails: (Long) -> Unit,
     viewModel: MiniAddViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -83,6 +85,8 @@ fun MiniAddView(
                 navigateToPaintList = {
                     navigateToPaintList(it)
                 },
+                navigateToPaint =
+                    navigateToPaintDetails,
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -101,6 +105,7 @@ fun MiniatureEntryBody(
     onRemoveImage: (Image) -> Unit,
     switchEditMode: () -> Unit,
     navigateToPaintList: (Int) -> Unit,
+    navigateToPaint: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -124,7 +129,8 @@ fun MiniatureEntryBody(
         )
         PaintRow(
             paintList = miniatureUiState.paintList,
-            removePaint = {})
+            removePaint = {},
+            onPaintClick = {navigateToPaint(it.id)})
         Button(
             onClick = { navigateToPaintList(miniatureUiState.miniatureDetails.id.toInt()) },
             shape = MaterialTheme.shapes.small
@@ -146,6 +152,7 @@ fun MiniatureEntryBody(
 fun PaintRow(
     paintList: List<MiniaturePaint>,
     removePaint: (MiniaturePaint) -> Unit,
+    onPaintClick: (MiniaturePaint) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if(paintList.isNotEmpty()) {
@@ -155,6 +162,7 @@ fun PaintRow(
                     modifier = Modifier
                         .width(100.dp)
                         .padding(dimensionResource(id = R.dimen.padding_small))
+                        .clickable { onPaintClick(paint) }
                 ) {
                     AsyncImage(
                         model = paint.previewImageUri,
