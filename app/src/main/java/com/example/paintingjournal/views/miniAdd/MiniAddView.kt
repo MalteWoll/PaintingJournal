@@ -130,7 +130,6 @@ fun MiniatureEntryBody(
             onValueChanged = onMiniatureValueChanged,
             modifier = Modifier.fillMaxWidth()
         )
-        Divider()
         ImageSelection(onSaveImage = onSaveImage)
         ImagesRow(
             imageList = miniatureUiState.imageList,
@@ -140,18 +139,14 @@ fun MiniatureEntryBody(
             canEdit = miniatureUiState.canEdit,
             navigateToImageViewer = {navigateToImageViewer(it)}
         )
-        Divider()
         PaintRow(
             paintList = miniatureUiState.paintList,
             removePaint = {},
-            onPaintClick = {navigateToPaint(it.id)})
-        Button(
-            onClick = { navigateToPaintList(miniatureUiState.miniatureDetails.id.toInt()) },
-            shape = MaterialTheme.shapes.small
-        ) {
-            Text(text = stringResource(id = R.string.mini_edit_paint_list_button))
-        }
-        Divider()
+            onPaintClick = {navigateToPaint(it.id)},
+            navigateToPaintList = navigateToPaintList,
+            miniatureUiState = miniatureUiState,
+            canEdit = true
+            )
         Button(
             onClick = onSaveClicked,
             enabled = miniatureUiState.isEntryValid,
@@ -166,28 +161,48 @@ fun MiniatureEntryBody(
 @Composable
 fun PaintRow(
     paintList: List<MiniaturePaint>,
+    miniatureUiState: MiniatureUiState,
     removePaint: (MiniaturePaint) -> Unit,
     onPaintClick: (MiniaturePaint) -> Unit,
+    navigateToPaintList: (Int) -> Unit,
+    canEdit: Boolean,
     modifier: Modifier = Modifier
 ) {
-    if(paintList.isNotEmpty()) {
-        Row {
-            paintList.forEach { paint ->
-                Column(
-                    modifier = Modifier
-                        .width(100.dp)
-                        .padding(dimensionResource(id = R.dimen.padding_small))
-                        .clickable { onPaintClick(paint) }
-                ) {
-                    AsyncImage(
-                        model = paint.previewImageUri,
-                        contentScale = ContentScale.FillBounds,
-                        contentDescription = "",
-                    )
-                    Text(
-                        text = paint.name,
-                        style = MaterialTheme.typography.titleLarge
-                    )
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
+    ) {
+        Text(
+            text = stringResource(id = R.string.mini_section_paints),
+            style = MaterialTheme.typography.bodyLarge
+        )
+        if(canEdit) {
+            Button(
+                onClick = { navigateToPaintList(miniatureUiState.miniatureDetails.id.toInt()) },
+                shape = MaterialTheme.shapes.small
+            ) {
+                Text(text = stringResource(id = R.string.mini_edit_paint_list_button))
+            }
+        }
+        if (paintList.isNotEmpty()) {
+            Row {
+                paintList.forEach { paint ->
+                    Column(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .padding(dimensionResource(id = R.dimen.padding_small))
+                            .clickable { onPaintClick(paint) }
+                    ) {
+                        AsyncImage(
+                            model = paint.previewImageUri,
+                            contentScale = ContentScale.FillBounds,
+                            contentDescription = "",
+                        )
+                        Text(
+                            text = paint.name,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
                 }
             }
         }
@@ -205,6 +220,10 @@ fun MiniatureInputForm(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
+        Text(
+            text = stringResource(id = R.string.mini_section_general),
+            style = MaterialTheme.typography.bodyLarge
+        )
         OutlinedTextField(
             value = miniatureDetails.name,
             onValueChange = { onValueChanged(miniatureDetails.copy(name = it)) },
@@ -244,5 +263,6 @@ fun MiniatureInputForm(
             enabled = enabled,
             singleLine = true
         )
+        Divider()
     }
 }

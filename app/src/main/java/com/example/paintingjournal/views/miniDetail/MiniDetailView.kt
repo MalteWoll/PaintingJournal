@@ -134,9 +134,12 @@ private fun MiniatureDetailsBody(
             navigateToImageViewer = {navigateToImageViewer(it)}
         )
         PaintRow(
+            miniatureUiState = miniatureDetailsUiState,
             paintList = miniatureDetailsUiState.paintList,
             removePaint = {},
-            onPaintClick = {})
+            onPaintClick = {},
+            navigateToPaintList = {},
+            canEdit = false)
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
             shape = MaterialTheme.shapes.small,

@@ -14,6 +14,10 @@
     <string name="main_menu_paint_list_button">Paint List</string>
     <string name="main_menu_title">Main Menu</string>
     <string name="manufacturer">Manufacturer</string>
+    <string name="mini_section_general">General information</string>
+    <string name="mini_section_images">Images</string>
+    <string name="mini_section_paints">Paints</string>
+    <string name="mini_section_steps">Painting steps</string>
     <string name="miniature">Miniature</string>
     <string name="mini_add_form_name">Name</string>
     <string name="mini_add_form_manufacturer">Manufacturer</string>
@@ -27,6 +31,7 @@
     <string name="mini_list_title">Miniature List</string>
     <string name="open_gallery">Open gallery</string>
     <string name="paint">Paint</string>
+    <string name="paint_section_general">General Information</string>
     <string name="paint_add_form_description">Description</string>
     <string name="paint_add_form_name">Name</string>
     <string name="paint_add_form_manufacturer">Manufacturer</string>

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -158,6 +160,10 @@ fun MiniaturePaintInputForm(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
+        Text(
+            text = stringResource(id = R.string.paint_section_general),
+            style = MaterialTheme.typography.bodyLarge
+        )
         OutlinedTextField(
             value = miniaturePaintDetails.name,
             onValueChange = { onValueChanged(miniaturePaintDetails.copy(name = it)) },
@@ -210,6 +216,7 @@ fun MiniaturePaintInputForm(
             enabled = enabled,
             singleLine = true
         )
+        Divider()
     }
 }
 
@@ -271,7 +278,7 @@ fun ImagesRow(
                         AsyncImage(
                             model = image.imageUri,
                             modifier = Modifier
-                                .width(100.dp)
+                                .height(100.dp)
                                 .clickable { navigateToImageViewer(image.id) },
                             contentScale = ContentScale.Fit,
                             contentDescription = "Selected image",
@@ -305,4 +312,5 @@ fun ImagesRow(
             }
         }
     }
+    Divider()
 }

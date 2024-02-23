@@ -4,9 +4,11 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,13 +24,22 @@ fun ImageSelection(
     onSaveImage: (Uri?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))) {
-        TakeImage(
-            onSaveImage = onSaveImage
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
+    ) {
+        Text(
+            text = stringResource(id = R.string.mini_section_images),
+            style = MaterialTheme.typography.bodyLarge
         )
-        ImagePicker(
-            onSaveImage = onSaveImage
-        )
+        Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))) {
+            TakeImage(
+                onSaveImage = onSaveImage
+            )
+            ImagePicker(
+                onSaveImage = onSaveImage
+            )
+        }
     }
 }
 
