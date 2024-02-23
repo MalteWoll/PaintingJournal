@@ -48,8 +48,9 @@ object MiniatureEditPaintsListDestination : NavigationDestination {
 @Composable
 fun MiniEditPaintsListView (
    navigateBack: () -> Unit,
-   canNavigateBack: Boolean = false,
+   navigateToPaintAdd: () -> Unit,
    modifier: Modifier = Modifier,
+   canNavigateBack: Boolean = false,
    viewModel: MiniEditPaintsListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     LaunchedEffect(Unit) {
@@ -66,7 +67,7 @@ fun MiniEditPaintsListView (
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {  },
+                onClick = { navigateToPaintAdd() },
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
             ) {

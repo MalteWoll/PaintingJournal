@@ -236,7 +236,7 @@ fun TakeImage(
     }
 
     Button(
-        modifier = Modifier.padding(top = 16.dp),
+        modifier = Modifier,
         onClick = {
             val uri = ComposeFileProvider.getImageUri(context)
             imageUri = uri

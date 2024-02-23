@@ -45,7 +45,7 @@ fun ImagePicker(
     )
 
     Button(
-        modifier = Modifier.padding(top = 16.dp),
+        modifier = Modifier,
         onClick = {
             imagePicker.launch("image/*")
         },

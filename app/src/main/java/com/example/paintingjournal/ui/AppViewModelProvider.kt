@@ -36,6 +36,7 @@ object AppViewModelProvider {
         initializer {
             MiniAddViewModel(
                 paintingJournalApplication().container.miniaturesRepository,
+                paintingJournalApplication().container.paintsRepository,
                 paintingJournalApplication().container.imagesRepository
             )
         }

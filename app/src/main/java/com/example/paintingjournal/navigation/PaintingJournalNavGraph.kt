@@ -106,7 +106,8 @@ fun PaintingJournalNavHost(
             })) {
             MiniEditPaintsListView(
                 navigateBack = { navController.popBackStack() },
-                canNavigateBack = true
+                canNavigateBack = true,
+                navigateToPaintAdd = { navController.navigate(PaintAddDestination.route) },
             )
         }
 

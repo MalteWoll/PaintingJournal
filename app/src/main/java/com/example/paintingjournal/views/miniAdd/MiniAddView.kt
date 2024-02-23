@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -55,6 +57,11 @@ fun MiniAddView(
     viewModel: MiniAddViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        viewModel.getPaintsForMiniature()
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -123,6 +130,7 @@ fun MiniatureEntryBody(
             onValueChanged = onMiniatureValueChanged,
             modifier = Modifier.fillMaxWidth()
         )
+        Divider()
         ImageSelection(onSaveImage = onSaveImage)
         ImagesRow(
             imageList = miniatureUiState.imageList,
@@ -132,6 +140,7 @@ fun MiniatureEntryBody(
             canEdit = miniatureUiState.canEdit,
             navigateToImageViewer = {navigateToImageViewer(it)}
         )
+        Divider()
         PaintRow(
             paintList = miniatureUiState.paintList,
             removePaint = {},
@@ -142,6 +151,7 @@ fun MiniatureEntryBody(
         ) {
             Text(text = stringResource(id = R.string.mini_edit_paint_list_button))
         }
+        Divider()
         Button(
             onClick = onSaveClicked,
             enabled = miniatureUiState.isEntryValid,

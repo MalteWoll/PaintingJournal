@@ -8,16 +8,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.MiniaturesRepository
+import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniatureImageMappingTable
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.SaveStateEnum
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Date
 
 class MiniAddViewModel(
     private val miniaturesRepository: MiniaturesRepository,
+    private val paintsRepository: PaintsRepository,
     private val imagesRepository: ImagesRepository
 ) : ViewModel() {
     var miniatureUiState by mutableStateOf(MiniatureUiState())
@@ -26,6 +30,17 @@ class MiniAddViewModel(
 
     init {
         createMiniInDb()
+    }
+
+    fun getPaintsForMiniature() {
+        viewModelScope.launch {
+            miniatureUiState = miniatureUiState.copy(
+                paintList = miniaturesRepository.getPaintsForMiniature(miniatureId.toLong())
+                    .filterNotNull()
+                    .first()
+                    .toList()
+            )
+        }
     }
 
     // Insert an empty miniature into the database allow for creation of mappings for miniature and paints
