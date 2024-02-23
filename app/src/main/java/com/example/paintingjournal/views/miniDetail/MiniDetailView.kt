@@ -59,6 +59,7 @@ fun MiniDetailView(
     navigateToEditMiniature: (Long) -> Unit,
     navigateBack: () -> Unit,
     navigateToPaintDetails: (Int) -> Unit,
+    navigateToImageViewer: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MiniDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -98,6 +99,7 @@ fun MiniDetailView(
                            navigateBack()
                        }
             },
+            navigateToImageViewer = navigateToImageViewer,
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
@@ -108,6 +110,7 @@ fun MiniDetailView(
 @Composable
 private fun MiniatureDetailsBody(
     miniatureDetailsUiState: MiniatureUiState,
+    navigateToImageViewer: (Long) -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -127,7 +130,7 @@ private fun MiniatureDetailsBody(
             showEditIcon = false,
             switchEditMode = {},
             canEdit = false,
-            navigateToImageViewer = {}
+            navigateToImageViewer = {navigateToImageViewer(it)}
         )
         PaintRow(
             paintList = miniatureDetailsUiState.paintList,

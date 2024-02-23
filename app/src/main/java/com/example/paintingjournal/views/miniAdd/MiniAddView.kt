@@ -51,6 +51,7 @@ fun MiniAddView(
     canNavigateBack: Boolean = true,
     navigateToPaintList: (Int) -> Unit,
     navigateToPaintDetails: (Long) -> Unit,
+    navigateToImageViewer: (Long) -> Unit,
     viewModel: MiniAddViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -88,6 +89,8 @@ fun MiniAddView(
                 },
                 navigateToPaint =
                     navigateToPaintDetails,
+                navigateToImageViewer =
+                    navigateToImageViewer,
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -107,6 +110,7 @@ fun MiniatureEntryBody(
     switchEditMode: () -> Unit,
     navigateToPaintList: (Int) -> Unit,
     navigateToPaint: (Long) -> Unit,
+    navigateToImageViewer: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -125,7 +129,7 @@ fun MiniatureEntryBody(
             showEditIcon = true,
             switchEditMode = { switchEditMode() },
             canEdit = miniatureUiState.canEdit,
-            navigateToImageViewer = {}
+            navigateToImageViewer = {navigateToImageViewer(it)}
         )
         PaintRow(
             paintList = miniatureUiState.paintList,

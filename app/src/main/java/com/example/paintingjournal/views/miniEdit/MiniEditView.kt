@@ -32,6 +32,7 @@ fun MiniEditView(
     navigateBack: () -> Unit,
     navigateToPaintList: (Int) -> Unit,
     navigateToPaintDetails: (Long) -> Unit,
+    navigateToImageViewer: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MiniEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -64,6 +65,7 @@ fun MiniEditView(
             switchEditMode = { viewModel.switchEditMode() },
             navigateToPaintList = { navigateToPaintList(it) },
             navigateToPaint = navigateToPaintDetails,
+            navigateToImageViewer = navigateToImageViewer,
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())

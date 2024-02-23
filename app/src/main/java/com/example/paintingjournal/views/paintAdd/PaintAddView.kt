@@ -63,6 +63,7 @@ object PaintAddDestination: NavigationDestination {
 fun PaintAddView(
     navigateBack: () -> Unit,
     canNavigateBack: Boolean = true,
+    navigateToImageViewer: (Long) -> Unit,
     viewModel: PaintAddViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -95,6 +96,7 @@ fun PaintAddView(
                 switchEditMode = {
                     viewModel.switchEditMode()
                 },
+                navigateToImageViewer = navigateToImageViewer,
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -112,6 +114,7 @@ fun PaintEntryBody(
     onSaveImage: (Uri?) -> Unit,
     onRemoveImage: (Image) -> Unit,
     switchEditMode: () -> Unit,
+    navigateToImageViewer: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -130,7 +133,7 @@ fun PaintEntryBody(
             showEditIcon = true,
             switchEditMode = { switchEditMode() },
             canEdit = miniaturePaintUiState.canEdit,
-            navigateToImageViewer = {}
+            navigateToImageViewer = {navigateToImageViewer(it)}
         )
         Button(
             onClick = onSaveClicked,

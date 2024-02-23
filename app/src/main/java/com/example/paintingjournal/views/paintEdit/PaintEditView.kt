@@ -30,6 +30,7 @@ object PaintEditDestination : NavigationDestination {
 fun PaintEditView(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    navigateToImageViewer: (Long) -> Unit,
     viewModel: PaintEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -54,6 +55,7 @@ fun PaintEditView(
             onSaveImage = { viewModel.addImageToList(it)},
             onRemoveImage = { viewModel.removeImageFromList(it) },
             switchEditMode = { viewModel.switchEditMode() },
+            navigateToImageViewer = {navigateToImageViewer(it)},
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
