@@ -5,6 +5,8 @@ import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniatureImageMappingTable
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.MiniaturePaintMappingTable
+import com.example.paintingjournal.model.MiniaturePaintingStepMappingTable
+import com.example.paintingjournal.model.PaintingStep
 import kotlinx.coroutines.flow.Flow
 
 class MiniaturesRepositoryImpl(private val miniatureDao: MiniatureDao) : MiniaturesRepository {
@@ -19,4 +21,12 @@ class MiniaturesRepositoryImpl(private val miniatureDao: MiniatureDao) : Miniatu
     override suspend fun getPaintsForMiniature(id: Long): Flow<List<MiniaturePaint>> = miniatureDao.getPaintsForMiniature(id)
     override suspend fun addPaintForMiniature(miniaturePaintMappingTable: MiniaturePaintMappingTable) = miniatureDao.addPaintToMiniature(miniaturePaintMappingTable)
     override suspend fun deletePaintForMiniature(miniaturePaintMappingTable: MiniaturePaintMappingTable) = miniatureDao.deletePaintForMiniature(miniaturePaintMappingTable)
+    override suspend fun insertPaintingStep(paintingStep: PaintingStep): Long = miniatureDao.insertPaintingStep(paintingStep)
+    override suspend fun updatePaintingStep(paintingStep: PaintingStep) = miniatureDao.updatePaintingStep(paintingStep)
+    override suspend fun deletePaintingStep(paintingStep: PaintingStep) = miniatureDao.deletePaintingStep(paintingStep)
+    override suspend fun getPaintingStep(id: Long): Flow<PaintingStep> = miniatureDao.getPaintingStep(id)
+    override suspend fun getAllPaintingSteps(): Flow<List<PaintingStep>> = miniatureDao.getAllPaintingSteps()
+    override suspend fun getPaintingStepsForMiniature(id: Long): Flow<List<PaintingStep>> = miniatureDao.getPaintingStepsForMiniature(id)
+    override suspend fun addPaintingStepForMiniature(miniaturePaintingStepMappingTable: MiniaturePaintingStepMappingTable) = miniatureDao.addPaintingStepForMiniature(miniaturePaintingStepMappingTable)
+    override suspend fun deletePaintingStepForMiniature(miniaturePaintingStepMappingTable: MiniaturePaintingStepMappingTable) = miniatureDao.deletePaintingStepForMiniature(miniaturePaintingStepMappingTable)
 }

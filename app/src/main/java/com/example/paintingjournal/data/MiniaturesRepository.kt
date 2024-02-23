@@ -5,6 +5,8 @@ import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniatureImageMappingTable
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.MiniaturePaintMappingTable
+import com.example.paintingjournal.model.MiniaturePaintingStepMappingTable
+import com.example.paintingjournal.model.PaintingStep
 import kotlinx.coroutines.flow.Flow
 
 interface MiniaturesRepository {
@@ -19,4 +21,12 @@ interface MiniaturesRepository {
     suspend fun getPaintsForMiniature(id: Long): Flow<List<MiniaturePaint>>
     suspend fun addPaintForMiniature(miniaturePaintMappingTable: MiniaturePaintMappingTable)
     suspend fun deletePaintForMiniature(miniaturePaintMappingTable: MiniaturePaintMappingTable)
+    suspend fun insertPaintingStep(paintingStep: PaintingStep) : Long
+    suspend fun updatePaintingStep(paintingStep: PaintingStep)
+    suspend fun deletePaintingStep(paintingStep: PaintingStep)
+    suspend fun getAllPaintingSteps(): Flow<List<PaintingStep>>
+    suspend fun getPaintingStep(id: Long): Flow<PaintingStep>
+    suspend fun getPaintingStepsForMiniature(id: Long): Flow<List<PaintingStep>>
+    suspend fun addPaintingStepForMiniature(miniaturePaintingStepMappingTable: MiniaturePaintingStepMappingTable)
+    suspend fun deletePaintingStepForMiniature(miniaturePaintingStepMappingTable: MiniaturePaintingStepMappingTable)
 }

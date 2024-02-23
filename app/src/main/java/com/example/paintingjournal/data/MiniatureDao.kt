@@ -11,6 +11,8 @@ import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniatureImageMappingTable
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.MiniaturePaintMappingTable
+import com.example.paintingjournal.model.MiniaturePaintingStepMappingTable
+import com.example.paintingjournal.model.PaintingStep
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -51,4 +53,30 @@ interface MiniatureDao {
 
     @Delete
     suspend fun deletePaintForMiniature(miniaturePaintMappingTable: MiniaturePaintMappingTable)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertPaintingStep(paintingStep: PaintingStep) : Long
+
+    @Update
+    suspend fun updatePaintingStep(paintingStep: PaintingStep)
+
+    @Delete
+    suspend fun deletePaintingStep(paintingStep: PaintingStep)
+
+    @Query("SELECT * from painting_steps WHERE stepId = :id")
+    fun getPaintingStep(id: Long): Flow<PaintingStep>
+
+    @Query("SELECT * from painting_steps ORDER BY stepTitle ASC")
+    fun getAllPaintingSteps(): Flow<List<PaintingStep>>
+
+    @Query("SELECT * from painting_steps " +
+            "left join miniaturePaintingStepMappingTable map on painting_steps.stepId = map.paintingStepIdRef " +
+            "where miniatureIdRef = :id")
+    fun getPaintingStepsForMiniature(id: Long): Flow<List<PaintingStep>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addPaintingStepForMiniature(miniaturePaintingStepMappingTable: MiniaturePaintingStepMappingTable)
+
+    @Delete
+    suspend fun deletePaintingStepForMiniature(miniaturePaintingStepMappingTable: MiniaturePaintingStepMappingTable)
 }
