@@ -7,6 +7,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.paintingjournal.data.MiniaturesRepository
+import com.example.paintingjournal.model.PaintingStep
+import com.example.paintingjournal.views.miniAdd.ExpandablePaintingStep
 import com.example.paintingjournal.views.miniAdd.MiniatureDetails
 import com.example.paintingjournal.views.miniAdd.MiniatureUiState
 import com.example.paintingjournal.views.miniAdd.toMiniature
@@ -56,10 +58,36 @@ class MiniDetailViewModel(
                 miniatureDetailsUiState = miniatureDetailsUiState.copy(paintList = paintList)
             }
         }
+
+        viewModelScope.launch {
+            val paintingStepList = miniaturesRepository.getPaintingStepsForMiniature(miniatureId.toLong())
+                .filterNotNull()
+                .first()
+                .toList()
+            if(paintingStepList.isNotEmpty()) {
+                miniatureDetailsUiState = miniatureDetailsUiState.copy(expandablePaintingStepList = createExpandablePaintingStepList(paintingStepList))
+            }
+        }
     }
 
     suspend fun deleteMiniature() {
         miniaturesRepository.deleteMiniature(miniatureDetailsUiState.miniatureDetails.toMiniature())
+    }
+
+    private fun createExpandablePaintingStepList(paintingStepList: List<PaintingStep>) : List<ExpandablePaintingStep> {
+        val expandablePaintingStepList: MutableList<ExpandablePaintingStep> = mutableListOf()
+        paintingStepList.forEach { paintingStep ->
+            expandablePaintingStepList.add(
+                ExpandablePaintingStep(
+                    id = paintingStep.id,
+                    stepTitle = paintingStep.stepTitle,
+                    stepDescription = paintingStep.stepDescription,
+                    stepOrder = paintingStep.stepOrder,
+                    isExpanded = false
+                )
+            )
+        }
+        return expandablePaintingStepList
     }
 
     companion object {
