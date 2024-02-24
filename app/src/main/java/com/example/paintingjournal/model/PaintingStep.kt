@@ -14,5 +14,6 @@ data class PaintingStep (
     @ColumnInfo(name = "stepDescription")
     val stepDescription: String,
     @ColumnInfo(name = "stepOrder")
-    val stepOrder: Int
+    val stepOrder: Int,
+    val saveState: SaveStateEnum = SaveStateEnum.NEW
 )

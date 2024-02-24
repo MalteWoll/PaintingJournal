@@ -37,6 +37,7 @@ import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import com.example.paintingjournal.ui.composables.ImageSelection
+import com.example.paintingjournal.ui.composables.MiniPaintingSteps
 import com.example.paintingjournal.views.paintAdd.ImagesRow
 import com.example.paintingjournal.views.paintAdd.TakeImage
 import kotlinx.coroutines.launch
@@ -99,6 +100,9 @@ fun MiniAddView(
                     navigateToPaintDetails,
                 navigateToImageViewer =
                     navigateToImageViewer,
+                onAddPaintingStep = { viewModel.addPaintingStepToList() },
+                onTogglePaintingStepExpand = { viewModel.togglePaintingStepExpand(it) },
+                onPaintingStepValueChanged = viewModel::updateUiState,
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -119,6 +123,9 @@ fun MiniatureEntryBody(
     navigateToPaintList: (Int) -> Unit,
     navigateToPaint: (Long) -> Unit,
     navigateToImageViewer: (Long) -> Unit,
+    onAddPaintingStep: () -> Unit,
+    onTogglePaintingStepExpand: (ExpandablePaintingStep) -> Unit,
+    onPaintingStepValueChanged: (ExpandablePaintingStep) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -146,7 +153,14 @@ fun MiniatureEntryBody(
             navigateToPaintList = navigateToPaintList,
             miniatureUiState = miniatureUiState,
             canEdit = true
-            )
+        )
+        MiniPaintingSteps(
+            paintingStepList = miniatureUiState.expandablePaintingStepList,
+            isEditable = true,
+            onToggleExpand = onTogglePaintingStepExpand,
+            onPaintingStepValueChanged = onPaintingStepValueChanged,
+            addPaintingStep = onAddPaintingStep
+        )
         Button(
             onClick = onSaveClicked,
             enabled = miniatureUiState.isEntryValid,

@@ -78,6 +78,50 @@ class MiniAddViewModel(
         miniatureUiState = miniatureUiState.copy(imageList = imageList)
     }
 
+    fun addPaintingStepToList() {
+        viewModelScope.launch {
+            val paintingStepId = miniaturesRepository.insertPaintingStep(
+                PaintingStep(
+                    stepTitle = "",
+                    stepDescription = "",
+                    stepOrder = 0,
+                    saveState = SaveStateEnum.NEW
+                )
+            )
+
+            val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
+            expandablePaintingStepList.add(
+                ExpandablePaintingStep(
+                    id = paintingStepId,
+                    stepTitle = "",
+                    stepDescription = "",
+                    stepOrder = 0,
+                    isExpanded = true
+                )
+            )
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList.toList())
+        }
+    }
+
+    fun updateUiState(expandablePaintingStep: ExpandablePaintingStep) {
+        val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
+        //val index = miniatureUiState.expandablePaintingStepList.indexOf(expandablePaintingStep)
+        val index = miniatureUiState.expandablePaintingStepList.indexOfFirst { it.id == expandablePaintingStep.id }
+        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+        expandablePaintingStepList[index] = expandablePaintingStep
+        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList.toList())
+    }
+
+    fun togglePaintingStepExpand(paintingStep: ExpandablePaintingStep) {
+        val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList
+        //val expandablePaint = expandablePaintingStepList.find { it.id == paintingStep.id }
+        val index = miniatureUiState.expandablePaintingStepList.indexOf(paintingStep)
+        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+        expandablePaintingStepList[index].isExpanded = !expandablePaintingStepList[index].isExpanded
+        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
+    }
+
     suspend fun saveMiniature() {
         if(validateInput()) {
             if(miniatureUiState.imageList.isNotEmpty()) {
@@ -194,5 +238,5 @@ data class ExpandablePaintingStep(
     val stepTitle: String,
     val stepDescription: String,
     val stepOrder: Int,
-    val isExpanded: Boolean = false
+    var isExpanded: Boolean = false
 )

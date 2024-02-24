@@ -42,9 +42,6 @@ class MiniEditPaintsListViewModel(
         miniatureEditPaintsListUiState =
             miniatureEditPaintsListUiState.copy(selectablePaintList = listOf())
 
-        /*if (selectablePaint != null) {
-            selectablePaint.isSelected = !selectablePaint.isSelected
-        }*/
         selectablePaintList[index].isSelected = !selectablePaintList[index].isSelected
 
         miniatureEditPaintsListUiState =
