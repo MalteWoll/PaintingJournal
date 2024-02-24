@@ -13,6 +13,7 @@ import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniatureImageMappingTable
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.MiniaturePaintingStepMappingTable
 import com.example.paintingjournal.model.PaintingStep
 import com.example.paintingjournal.model.SaveStateEnum
 import kotlinx.coroutines.flow.filterNotNull
@@ -44,7 +45,7 @@ class MiniAddViewModel(
         }
     }
 
-    // Insert an empty miniature into the database allow for creation of mappings for miniature and paints
+    // Insert an empty miniature into the database to allow for creation of mappings for miniature and paints
     private fun createMiniInDb() {
         viewModelScope.launch {
             miniatureId = miniaturesRepository.insertMiniature(MiniatureDetails().toMiniature())
@@ -106,20 +107,25 @@ class MiniAddViewModel(
 
     fun updateUiState(expandablePaintingStep: ExpandablePaintingStep) {
         val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
-        //val index = miniatureUiState.expandablePaintingStepList.indexOf(expandablePaintingStep)
         val index = miniatureUiState.expandablePaintingStepList.indexOfFirst { it.id == expandablePaintingStep.id }
-        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
-        expandablePaintingStepList[index] = expandablePaintingStep
-        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList.toList())
+        if(index >= 0) {
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+            expandablePaintingStepList[index] = expandablePaintingStep
+            miniatureUiState =
+                miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList.toList())
+        }
     }
 
     fun togglePaintingStepExpand(paintingStep: ExpandablePaintingStep) {
         val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList
-        //val expandablePaint = expandablePaintingStepList.find { it.id == paintingStep.id }
         val index = miniatureUiState.expandablePaintingStepList.indexOf(paintingStep)
-        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
-        expandablePaintingStepList[index].isExpanded = !expandablePaintingStepList[index].isExpanded
-        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
+        if(index >= 0) {
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+            expandablePaintingStepList[index].isExpanded =
+                !expandablePaintingStepList[index].isExpanded
+            miniatureUiState =
+                miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
+        }
     }
 
     suspend fun saveMiniature() {
@@ -136,6 +142,13 @@ class MiniAddViewModel(
                 image.saveState = SaveStateEnum.SAVED
                 imagesRepository.updateImage(image)
                 miniaturesRepository.addImageForMiniature(MiniatureImageMappingTable(miniatureId, image.id))
+            }
+            
+            val paintingStepList = createPaintingStepList(miniatureUiState.expandablePaintingStepList)
+            paintingStepList.forEach { paintingStep ->
+                val savedPaintingStep = paintingStep.copy(saveState = SaveStateEnum.SAVED)
+                miniaturesRepository.updatePaintingStep(savedPaintingStep)
+                miniaturesRepository.addPaintingStepForMiniature(MiniaturePaintingStepMappingTable(miniatureIdRef = miniatureId, paintingStepIdRef = savedPaintingStep.id))
             }
         }
     }
@@ -157,7 +170,7 @@ class MiniAddViewModel(
 
     private fun createExpandablePaintingStepList() {
         val expandablePaintingStepList: MutableList<ExpandablePaintingStep> = mutableListOf()
-        miniatureUiState.PaintingStepList.forEach { paintingStep ->
+        miniatureUiState.paintingStepList.forEach { paintingStep ->
             expandablePaintingStepList.add(
                 ExpandablePaintingStep(
                     id = paintingStep.id,
@@ -194,7 +207,7 @@ data class MiniatureUiState(
     val originalImageList: List<Image> = listOf(),
     val canEdit: Boolean = false,
     val paintList: List<MiniaturePaint> = listOf(),
-    val PaintingStepList: List<PaintingStep> = listOf(),
+    val paintingStepList: List<PaintingStep> = listOf(),
     val expandablePaintingStepList: List<ExpandablePaintingStep> = listOf()
 )
 

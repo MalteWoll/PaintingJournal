@@ -2,6 +2,8 @@ package com.example.paintingjournal.views.mainMenu
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.MiniaturesRepository
 import com.example.paintingjournal.model.SaveStateEnum
 import kotlinx.coroutines.flow.filterNotNull
@@ -9,7 +11,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainMenuViewModel(
-    private val miniaturesRepository: MiniaturesRepository
+    private val miniaturesRepository: MiniaturesRepository,
 ) : ViewModel() {
     init {
         removeCancelledEntries()
@@ -27,5 +29,19 @@ class MainMenuViewModel(
                 }
             }
         }
+
+        viewModelScope.launch {
+            val paintingStepsList = miniaturesRepository.getAllPaintingSteps()
+                .filterNotNull()
+                .first()
+                .toList()
+            paintingStepsList.forEach { paintingStep ->
+                if(paintingStep.saveState == SaveStateEnum.NEW) {
+                    miniaturesRepository.deletePaintingStep(paintingStep)
+                }
+            }
+        }
+
+        // TODO: Cleanup images
     }
 }
