@@ -13,6 +13,7 @@ import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniatureImageMappingTable
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.PaintingStep
 import com.example.paintingjournal.model.SaveStateEnum
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -109,6 +110,37 @@ class MiniAddViewModel(
             name.isNotBlank()
         }
     }
+
+    private fun createExpandablePaintingStepList() {
+        val expandablePaintingStepList: MutableList<ExpandablePaintingStep> = mutableListOf()
+        miniatureUiState.PaintingStepList.forEach { paintingStep ->
+            expandablePaintingStepList.add(
+                ExpandablePaintingStep(
+                    id = paintingStep.id,
+                    stepTitle = paintingStep.stepTitle,
+                    stepDescription = paintingStep.stepDescription,
+                    stepOrder = paintingStep.stepOrder,
+                    isExpanded = false
+                )
+            )
+        }
+        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
+    }
+
+    private fun createPaintingStepList(expandablePaintingStepList: List<ExpandablePaintingStep>) : List<PaintingStep> {
+        val paintingStepList: MutableList<PaintingStep> = mutableListOf()
+        expandablePaintingStepList.forEach { expandablePaintingStep ->
+            paintingStepList.add(
+                PaintingStep(
+                    id = expandablePaintingStep.id,
+                    stepTitle = expandablePaintingStep.stepTitle,
+                    stepDescription = expandablePaintingStep.stepDescription,
+                    stepOrder = expandablePaintingStep.stepOrder
+                )
+            )
+        }
+        return paintingStepList.toList()
+    }
 }
 
 data class MiniatureUiState(
@@ -117,7 +149,9 @@ data class MiniatureUiState(
     val imageList: List<Image> = listOf(),
     val originalImageList: List<Image> = listOf(),
     val canEdit: Boolean = false,
-    val paintList: List<MiniaturePaint> = listOf()
+    val paintList: List<MiniaturePaint> = listOf(),
+    val PaintingStepList: List<PaintingStep> = listOf(),
+    val expandablePaintingStepList: List<ExpandablePaintingStep> = listOf()
 )
 
 data class MiniatureDetails(
@@ -153,4 +187,12 @@ fun Miniature.toMiniatureDetails(): MiniatureDetails = MiniatureDetails(
     createdAt = createdAt,
     previewImageUri = previewImageUri,
     saveState = saveState
+)
+
+data class ExpandablePaintingStep(
+    val id: Long = 0,
+    val stepTitle: String,
+    val stepDescription: String,
+    val stepOrder: Int,
+    val isExpanded: Boolean = false
 )

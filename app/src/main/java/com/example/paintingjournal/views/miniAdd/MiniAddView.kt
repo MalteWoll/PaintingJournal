@@ -207,6 +207,7 @@ fun PaintRow(
             }
         }
     }
+    Divider()
 }
 
 @Composable
