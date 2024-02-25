@@ -12,6 +12,7 @@ import com.example.paintingjournal.data.MiniaturesRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniatureImageMappingTable
 import com.example.paintingjournal.model.SaveStateEnum
+import com.example.paintingjournal.services.MiniaturesService
 import com.example.paintingjournal.views.miniAdd.MiniatureDetails
 import com.example.paintingjournal.views.miniAdd.MiniatureUiState
 import com.example.paintingjournal.views.miniAdd.toMiniature
@@ -24,9 +25,10 @@ import kotlinx.coroutines.runBlocking
 
 class MiniEditViewModel(
     savedStateHandle: SavedStateHandle,
-    val miniaturesRepository: MiniaturesRepository,
-    private val imagesRepository: ImagesRepository
-) : ViewModel() {
+    private val miniaturesRepository: MiniaturesRepository,
+    private val imagesRepository: ImagesRepository,
+    private val miniaturesService: MiniaturesService
+    ) : ViewModel() {
     var miniatureUiState by mutableStateOf(MiniatureUiState())
         private set
 
@@ -50,8 +52,21 @@ class MiniEditViewModel(
                 miniatureUiState = miniatureUiState.copy(imageList = imageList, originalImageList = imageList)
             }
         }
+
+        runBlocking {
+            val paintingStepList = miniaturesRepository.getPaintingStepsForMiniature(miniatureId.toLong())
+                .filterNotNull()
+                .first()
+                .toList()
+            if(paintingStepList.isNotEmpty()) {
+                miniatureUiState = miniatureUiState.copy(
+                    expandablePaintingStepList = miniaturesService.createExpandablePaintingStepList(paintingStepList)
+                )
+            }
+        }
     }
 
+    // Gets called every time user navigates back from paint list
     fun getPaintsForMiniature() {
         viewModelScope.launch {
             miniatureUiState = miniatureUiState.copy(

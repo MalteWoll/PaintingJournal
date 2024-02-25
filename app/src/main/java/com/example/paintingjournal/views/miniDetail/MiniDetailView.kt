@@ -40,6 +40,8 @@ import com.example.paintingjournal.R
 import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
+import com.example.paintingjournal.ui.composables.MiniPaintingSteps
+import com.example.paintingjournal.views.miniAdd.ExpandablePaintingStep
 import com.example.paintingjournal.views.miniAdd.MiniatureUiState
 import com.example.paintingjournal.views.miniAdd.PaintRow
 import com.example.paintingjournal.views.miniAdd.toMiniature
@@ -101,6 +103,7 @@ fun MiniDetailView(
                        }
             },
             navigateToImageViewer = navigateToImageViewer,
+            togglePaintingStepExpand = {viewModel.togglePaintingStepExpand(it)},
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
@@ -112,6 +115,7 @@ fun MiniDetailView(
 private fun MiniatureDetailsBody(
     miniatureDetailsUiState: MiniatureUiState,
     navigateToImageViewer: (Long) -> Unit,
+    togglePaintingStepExpand: (ExpandablePaintingStep) -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -140,6 +144,12 @@ private fun MiniatureDetailsBody(
             onPaintClick = {},
             navigateToPaintList = {},
             canEdit = false)
+        MiniPaintingSteps(
+            paintingStepList = miniatureDetailsUiState.expandablePaintingStepList,
+            isEditable = false,
+            onToggleExpand = togglePaintingStepExpand,
+            onPaintingStepValueChanged = {},
+            addPaintingStep = {})
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
             shape = MaterialTheme.shapes.small,

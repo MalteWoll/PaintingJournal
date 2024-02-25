@@ -129,7 +129,6 @@ fun PaintingStepEntry(
                     IconButton(
                         onClick = { onToggleExpand(paintingStep) },
                         modifier = Modifier
-                            .size(100.dp)
                     ) {
                         Icon(
                             Icons.Filled.KeyboardArrowDown,
@@ -166,7 +165,6 @@ fun PaintingStepEntry(
                     IconButton(
                         onClick = { onToggleExpand(paintingStep) },
                         modifier = Modifier
-                            .size(100.dp)
                     ) {
                         Icon(
                             Icons.Filled.KeyboardArrowUp,

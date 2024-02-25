@@ -70,6 +70,18 @@ class MiniDetailViewModel(
         }
     }
 
+    fun togglePaintingStepExpand(paintingStep: ExpandablePaintingStep) {
+        val expandablePaintingStepList = miniatureDetailsUiState.expandablePaintingStepList
+        val index = miniatureDetailsUiState.expandablePaintingStepList.indexOf(paintingStep)
+        if(index >= 0) {
+            miniatureDetailsUiState = miniatureDetailsUiState.copy(expandablePaintingStepList = listOf())
+            expandablePaintingStepList[index].isExpanded =
+                !expandablePaintingStepList[index].isExpanded
+            miniatureDetailsUiState =
+                miniatureDetailsUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
+        }
+    }
+
     suspend fun deleteMiniature() {
         miniaturesRepository.deleteMiniature(miniatureDetailsUiState.miniatureDetails.toMiniature())
     }
