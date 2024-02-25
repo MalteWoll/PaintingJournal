@@ -15,6 +15,7 @@ import com.example.paintingjournal.model.MiniaturePaintMappingTable
 import com.example.paintingjournal.model.MiniaturePaintingStepMappingTable
 import com.example.paintingjournal.model.PaintImageMappingTable
 import com.example.paintingjournal.model.PaintingStep
+import com.example.paintingjournal.model.PaintingStepImageMappingTable
 
 @Database(entities = [
     Image::class,
@@ -24,8 +25,9 @@ import com.example.paintingjournal.model.PaintingStep
     MiniatureImageMappingTable::class,
     MiniaturePaintMappingTable::class,
     PaintingStep::class,
-    MiniaturePaintingStepMappingTable::class
-    ], version = 19, exportSchema = false)
+    MiniaturePaintingStepMappingTable::class,
+    PaintingStepImageMappingTable::class
+    ], version = 20, exportSchema = false)
 @TypeConverters(DateConverters::class, UriConverters::class)
 abstract class MiniatureDatabase : RoomDatabase() {
     abstract fun imageDao(): ImageDao

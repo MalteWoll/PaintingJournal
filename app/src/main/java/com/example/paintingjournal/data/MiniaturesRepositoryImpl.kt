@@ -7,6 +7,7 @@ import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.MiniaturePaintMappingTable
 import com.example.paintingjournal.model.MiniaturePaintingStepMappingTable
 import com.example.paintingjournal.model.PaintingStep
+import com.example.paintingjournal.model.PaintingStepImageMappingTable
 import kotlinx.coroutines.flow.Flow
 
 class MiniaturesRepositoryImpl(private val miniatureDao: MiniatureDao) : MiniaturesRepository {
@@ -29,4 +30,7 @@ class MiniaturesRepositoryImpl(private val miniatureDao: MiniatureDao) : Miniatu
     override suspend fun getPaintingStepsForMiniature(id: Long): Flow<List<PaintingStep>> = miniatureDao.getPaintingStepsForMiniature(id)
     override suspend fun addPaintingStepForMiniature(miniaturePaintingStepMappingTable: MiniaturePaintingStepMappingTable) = miniatureDao.addPaintingStepForMiniature(miniaturePaintingStepMappingTable)
     override suspend fun deletePaintingStepForMiniature(miniaturePaintingStepMappingTable: MiniaturePaintingStepMappingTable) = miniatureDao.deletePaintingStepForMiniature(miniaturePaintingStepMappingTable)
+    override suspend fun getImagesForPaintingStep(id: Long): Flow<List<Image>> = miniatureDao.getImagesForPaintingStep(id)
+    override suspend fun insertImageForPaintingStep(paintingStepImageMappingTable: PaintingStepImageMappingTable): Long = miniatureDao.insertImageForPaintingStep(paintingStepImageMappingTable)
+    override suspend fun deleteImageForPaintingStep(paintingStepImageMappingTable: PaintingStepImageMappingTable) = miniatureDao.deleteImageForPaintingStep(paintingStepImageMappingTable)
 }

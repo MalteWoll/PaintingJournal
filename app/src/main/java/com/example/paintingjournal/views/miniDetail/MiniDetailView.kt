@@ -150,7 +150,11 @@ private fun MiniatureDetailsBody(
             onToggleExpand = togglePaintingStepExpand,
             onPaintingStepValueChanged = {},
             addPaintingStep = {},
-            removePaintingStep = {}
+            removePaintingStep = {},
+            navigateToImageViewer = {},
+            onDeleteImage = {},
+            onSwitchImageEditMode = {},
+            onSaveImage = {}
         )
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },

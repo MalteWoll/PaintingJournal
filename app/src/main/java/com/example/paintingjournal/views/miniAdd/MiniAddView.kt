@@ -102,8 +102,9 @@ fun MiniAddView(
                     navigateToImageViewer,
                 onAddPaintingStep = { viewModel.addPaintingStepToList() },
                 onTogglePaintingStepExpand = { viewModel.togglePaintingStepExpand(it) },
-                onPaintingStepValueChanged = viewModel::updateUiState,
+                onPaintingStepValueChanged = viewModel::updatePaintStepUiState,
                 onRemovePaintingStep = { viewModel.removePaintingStepFromList(it) },
+                onSavePaintingStepImage = { viewModel.addImageToPaintingStep(it) },
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -128,6 +129,7 @@ fun MiniatureEntryBody(
     onRemovePaintingStep: (ExpandablePaintingStep) -> Unit,
     onTogglePaintingStepExpand: (ExpandablePaintingStep) -> Unit,
     onPaintingStepValueChanged: (ExpandablePaintingStep) -> Unit,
+    onSavePaintingStepImage: (PaintingStepIdAndUri) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -162,7 +164,11 @@ fun MiniatureEntryBody(
             onToggleExpand = onTogglePaintingStepExpand,
             onPaintingStepValueChanged = onPaintingStepValueChanged,
             addPaintingStep = onAddPaintingStep,
-            removePaintingStep = onRemovePaintingStep
+            removePaintingStep = onRemovePaintingStep,
+            navigateToImageViewer = {},
+            onDeleteImage = {},
+            onSwitchImageEditMode = {},
+            onSaveImage = onSavePaintingStepImage
         )
         Button(
             onClick = onSaveClicked,

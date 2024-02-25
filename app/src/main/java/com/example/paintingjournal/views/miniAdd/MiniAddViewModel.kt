@@ -79,6 +79,30 @@ class MiniAddViewModel(
         miniatureUiState = miniatureUiState.copy(imageList = imageList)
     }
 
+    fun addImageToPaintingStep(stepIdAndUri: PaintingStepIdAndUri) {
+        if(stepIdAndUri.uri != null) {
+            var expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
+            val expandablePaintingStep = expandablePaintingStepList.find { it.id == stepIdAndUri.id }
+            val index = miniatureUiState.expandablePaintingStepList.indexOf(expandablePaintingStep)
+            if(expandablePaintingStep != null) {
+                val imageList: MutableList<Image> = expandablePaintingStep.imageList.toMutableList()
+
+                viewModelScope.launch {
+                    val imageId = imagesRepository.insertImage(Image(imageUri = stepIdAndUri.uri, saveState = SaveStateEnum.NEW))
+                    imageList.add(Image(id = imageId, imageUri = stepIdAndUri.uri))
+                    expandablePaintingStep.imageList = imageList
+                }
+            }
+
+            if (expandablePaintingStep != null) {
+                expandablePaintingStepList[index] = expandablePaintingStep
+            }
+
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
+        }
+    }
+
     fun addPaintingStepToList() {
         viewModelScope.launch {
             val paintingStepId = miniaturesRepository.insertPaintingStep(
@@ -117,7 +141,7 @@ class MiniAddViewModel(
         }
     }
 
-    fun updateUiState(expandablePaintingStep: ExpandablePaintingStep) {
+    fun updatePaintStepUiState(expandablePaintingStep: ExpandablePaintingStep) {
         val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
         val index = miniatureUiState.expandablePaintingStepList.indexOfFirst { it.id == expandablePaintingStep.id }
         if(index >= 0) {
@@ -250,5 +274,11 @@ data class ExpandablePaintingStep(
     val stepOrder: Int,
     var isExpanded: Boolean = false,
     val saveState: SaveStateEnum,
-    var hasChanged: Boolean = false
+    var hasChanged: Boolean = false,
+    var imageList: List<Image> = listOf()
+)
+
+data class PaintingStepIdAndUri(
+    val uri: Uri?,
+    val id: Long
 )

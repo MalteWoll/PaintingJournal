@@ -13,6 +13,7 @@ import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.MiniaturePaintMappingTable
 import com.example.paintingjournal.model.MiniaturePaintingStepMappingTable
 import com.example.paintingjournal.model.PaintingStep
+import com.example.paintingjournal.model.PaintingStepImageMappingTable
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -79,4 +80,15 @@ interface MiniatureDao {
 
     @Delete
     suspend fun deletePaintingStepForMiniature(miniaturePaintingStepMappingTable: MiniaturePaintingStepMappingTable)
+
+    @Query("SELECT * from images " +
+            "left join paintingStepImageMappingTable map on images.imageId = map.imageIdRef " +
+            "where paintingStepIdRef = :id")
+    fun getImagesForPaintingStep(id: Long): Flow<List<Image>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertImageForPaintingStep(paintingStepImageMappingTable: PaintingStepImageMappingTable) : Long
+
+    @Delete
+    suspend fun deleteImageForPaintingStep(paintingStepImageMappingTable: PaintingStepImageMappingTable)
 }
