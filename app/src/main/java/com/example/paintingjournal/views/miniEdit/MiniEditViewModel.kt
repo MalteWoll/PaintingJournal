@@ -11,8 +11,11 @@ import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.MiniaturesRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniatureImageMappingTable
+import com.example.paintingjournal.model.MiniaturePaintingStepMappingTable
+import com.example.paintingjournal.model.PaintingStep
 import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.services.MiniaturesService
+import com.example.paintingjournal.views.miniAdd.ExpandablePaintingStep
 import com.example.paintingjournal.views.miniAdd.MiniatureDetails
 import com.example.paintingjournal.views.miniAdd.MiniatureUiState
 import com.example.paintingjournal.views.miniAdd.toMiniature
@@ -60,7 +63,9 @@ class MiniEditViewModel(
                 .toList()
             if(paintingStepList.isNotEmpty()) {
                 miniatureUiState = miniatureUiState.copy(
-                    expandablePaintingStepList = miniaturesService.createExpandablePaintingStepList(paintingStepList)
+                    expandablePaintingStepList = miniaturesService.createExpandablePaintingStepList(paintingStepList),
+                    paintingStepList = paintingStepList,
+                    originalPaintingStepList = paintingStepList
                 )
             }
         }
@@ -117,37 +122,130 @@ class MiniEditViewModel(
         miniatureUiState = miniatureUiState.copy(canEdit = !miniatureUiState.canEdit)
     }
 
+    fun addPaintingStepToList() {
+        viewModelScope.launch {
+            val paintingStepId = miniaturesRepository.insertPaintingStep(
+                PaintingStep(
+                    stepTitle = "",
+                    stepDescription = "",
+                    stepOrder = 0,
+                    saveState = SaveStateEnum.NEW
+                )
+            )
+
+            val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
+            expandablePaintingStepList.add(
+                ExpandablePaintingStep(
+                    id = paintingStepId,
+                    stepTitle = "",
+                    stepDescription = "",
+                    stepOrder = 0,
+                    isExpanded = true,
+                    saveState = SaveStateEnum.NEW
+                )
+            )
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList.toList())
+        }
+    }
+
+    fun togglePaintingStepExpand(paintingStep: ExpandablePaintingStep) {
+        val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList
+        val index = miniatureUiState.expandablePaintingStepList.indexOf(paintingStep)
+        if(index >= 0) {
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+            expandablePaintingStepList[index].isExpanded =
+                !expandablePaintingStepList[index].isExpanded
+            miniatureUiState =
+                miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
+        }
+    }
+
+    fun updateUiState(expandablePaintingStep: ExpandablePaintingStep) {
+        val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
+        val index = miniatureUiState.expandablePaintingStepList.indexOfFirst { it.id == expandablePaintingStep.id }
+        if(index >= 0) {
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+            expandablePaintingStep.hasChanged = true
+            expandablePaintingStepList[index] = expandablePaintingStep
+            miniatureUiState =
+                miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList.toList())
+        }
+    }
+
     suspend fun updateMiniature() {
         if(validateInput(miniatureUiState.miniatureDetails)) {
-            if(miniatureUiState.imageList.isNotEmpty()) {
-                val miniatureDetails = miniatureUiState.miniatureDetails
-                miniatureDetails.previewImageUri = miniatureUiState.imageList[0].imageUri
-                miniatureUiState = miniatureUiState.copy(miniatureDetails = miniatureDetails)
-            } else {
-                val miniatureDetails = miniatureUiState.miniatureDetails
-                miniatureDetails.previewImageUri = null
-                miniatureUiState = miniatureUiState.copy(miniatureDetails = miniatureDetails)
+            updateMiniatureDetails()
+            deleteDeletedImage()
+            saveNewImages()
+            miniatureUiState = miniatureUiState.copy(
+                paintingStepList = miniaturesService.createPaintingStepList(miniatureUiState.expandablePaintingStepList)
+            )
+            deleteDeletedPaintingSteps()
+            updatePaintingSteps()
+        }
+    }
+
+    private suspend fun updateMiniatureDetails() {
+        if(miniatureUiState.imageList.isNotEmpty()) {
+            val miniatureDetails = miniatureUiState.miniatureDetails
+            miniatureDetails.previewImageUri = miniatureUiState.imageList[0].imageUri
+            miniatureUiState = miniatureUiState.copy(miniatureDetails = miniatureDetails)
+        } else {
+            val miniatureDetails = miniatureUiState.miniatureDetails
+            miniatureDetails.previewImageUri = null
+            miniatureUiState = miniatureUiState.copy(miniatureDetails = miniatureDetails)
+        }
+
+        miniaturesRepository.updateMiniature(miniatureUiState.miniatureDetails.toMiniature())
+    }
+
+    private suspend fun deleteDeletedImage() {
+        miniatureUiState.originalImageList.forEach { image ->
+            if(!miniatureUiState.imageList.contains(image)) {
+                imagesRepository.deleteImage(image)
             }
+        }
+    }
 
-            miniaturesRepository.updateMiniature(miniatureUiState.miniatureDetails.toMiniature())
-
-            miniatureUiState.originalImageList.forEach { image ->
-                if(!miniatureUiState.imageList.contains(image)) {
-                    imagesRepository.deleteImage(image)
-                }
-            }
-
-            miniatureUiState.imageList.forEach { image ->
-                if(image.saveState != SaveStateEnum.SAVED) {
-                    image.saveState = SaveStateEnum.SAVED
-                    imagesRepository.updateImage(image)
-                    miniaturesRepository.addImageForMiniature(
-                        MiniatureImageMappingTable(
-                            miniatureId.toLong(),
-                            image.id
-                        )
+    private suspend fun saveNewImages() {
+        miniatureUiState.imageList.forEach { image ->
+            if(image.saveState != SaveStateEnum.SAVED) {
+                image.saveState = SaveStateEnum.SAVED
+                imagesRepository.updateImage(image)
+                miniaturesRepository.addImageForMiniature(
+                    MiniatureImageMappingTable(
+                        miniatureId.toLong(),
+                        image.id
                     )
-                }
+                )
+            }
+        }
+    }
+
+    private suspend fun deleteDeletedPaintingSteps() {
+        miniatureUiState.originalPaintingStepList.forEach { paintingStep ->
+            if(miniatureUiState.paintingStepList.find { it.id == paintingStep.id } == null) {
+                miniaturesRepository.deletePaintingStep(paintingStep)
+            }
+        }
+    }
+
+    private suspend fun updatePaintingSteps() {
+        miniatureUiState.paintingStepList.forEach { paintingStep ->
+            if(paintingStep.saveState == SaveStateEnum.NEW) {
+                paintingStep.saveState = SaveStateEnum.SAVED
+                miniaturesRepository.updatePaintingStep(paintingStep)
+                miniaturesRepository.addPaintingStepForMiniature(
+                    MiniaturePaintingStepMappingTable(
+                        miniatureId.toLong(),
+                        paintingStep.id
+                    )
+                )
+            }
+            if(paintingStep.saveState == SaveStateEnum.SAVED && paintingStep.hasChanged) {
+                paintingStep.hasChanged = false
+                miniaturesRepository.updatePaintingStep(paintingStep)
             }
         }
     }

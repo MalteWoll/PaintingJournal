@@ -27,6 +27,6 @@ import androidx.room.ForeignKey
 data class MiniaturePaintingStepMappingTable (
     @ColumnInfo(name = "miniatureIdRef")
     val miniatureIdRef: Long,
-    @ColumnInfo(name = "paintingStepIdRef")
+    @ColumnInfo(index = true, name = "paintingStepIdRef")
     val paintingStepIdRef: Long
 )

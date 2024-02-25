@@ -13,10 +13,29 @@ class MiniaturesServiceImpl : MiniaturesService {
                     stepTitle = paintingStep.stepTitle,
                     stepDescription = paintingStep.stepDescription,
                     stepOrder = paintingStep.stepOrder,
-                    isExpanded = false
+                    isExpanded = false,
+                    hasChanged = paintingStep.hasChanged,
+                    saveState = paintingStep.saveState
                 )
             )
         }
         return expandablePaintingStepList
+    }
+
+    override fun createPaintingStepList(expandablePaintingStepList: List<ExpandablePaintingStep>): List<PaintingStep> {
+        val paintingStepList: MutableList<PaintingStep> = mutableListOf()
+        expandablePaintingStepList.forEach { expandablePaintingStep ->
+            paintingStepList.add(
+                PaintingStep(
+                    id = expandablePaintingStep.id,
+                    stepTitle = expandablePaintingStep.stepTitle,
+                    stepDescription = expandablePaintingStep.stepDescription,
+                    stepOrder = expandablePaintingStep.stepOrder,
+                    hasChanged = expandablePaintingStep.hasChanged,
+                    saveState = expandablePaintingStep.saveState
+                )
+            )
+        }
+        return paintingStepList.toList()
     }
 }

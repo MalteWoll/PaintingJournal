@@ -95,7 +95,8 @@ class MiniDetailViewModel(
                     stepTitle = paintingStep.stepTitle,
                     stepDescription = paintingStep.stepDescription,
                     stepOrder = paintingStep.stepOrder,
-                    isExpanded = false
+                    isExpanded = false,
+                    saveState = paintingStep.saveState
                 )
             )
         }

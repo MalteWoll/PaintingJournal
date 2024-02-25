@@ -97,7 +97,8 @@ class MiniAddViewModel(
                     stepTitle = "",
                     stepDescription = "",
                     stepOrder = 0,
-                    isExpanded = true
+                    isExpanded = true,
+                    saveState = SaveStateEnum.NEW
                 )
             )
             miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
@@ -168,22 +169,6 @@ class MiniAddViewModel(
         }
     }
 
-    private fun createExpandablePaintingStepList() {
-        val expandablePaintingStepList: MutableList<ExpandablePaintingStep> = mutableListOf()
-        miniatureUiState.paintingStepList.forEach { paintingStep ->
-            expandablePaintingStepList.add(
-                ExpandablePaintingStep(
-                    id = paintingStep.id,
-                    stepTitle = paintingStep.stepTitle,
-                    stepDescription = paintingStep.stepDescription,
-                    stepOrder = paintingStep.stepOrder,
-                    isExpanded = false
-                )
-            )
-        }
-        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
-    }
-
     private fun createPaintingStepList(expandablePaintingStepList: List<ExpandablePaintingStep>) : List<PaintingStep> {
         val paintingStepList: MutableList<PaintingStep> = mutableListOf()
         expandablePaintingStepList.forEach { expandablePaintingStep ->
@@ -207,6 +192,7 @@ data class MiniatureUiState(
     val originalImageList: List<Image> = listOf(),
     val canEdit: Boolean = false,
     val paintList: List<MiniaturePaint> = listOf(),
+    val originalPaintingStepList: List<PaintingStep> = listOf(),
     val paintingStepList: List<PaintingStep> = listOf(),
     val expandablePaintingStepList: List<ExpandablePaintingStep> = listOf()
 )
@@ -251,5 +237,7 @@ data class ExpandablePaintingStep(
     val stepTitle: String,
     val stepDescription: String,
     val stepOrder: Int,
-    var isExpanded: Boolean = false
+    var isExpanded: Boolean = false,
+    val saveState: SaveStateEnum,
+    var hasChanged: Boolean = false
 )
