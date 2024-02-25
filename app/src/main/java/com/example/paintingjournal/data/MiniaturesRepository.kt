@@ -23,7 +23,7 @@ interface MiniaturesRepository {
     suspend fun deletePaintForMiniature(miniaturePaintMappingTable: MiniaturePaintMappingTable)
     suspend fun insertPaintingStep(paintingStep: PaintingStep) : Long
     suspend fun updatePaintingStep(paintingStep: PaintingStep)
-    suspend fun deletePaintingStep(paintingStep: PaintingStep)
+    suspend fun deletePaintingStep(id: Long)
     suspend fun getAllPaintingSteps(): Flow<List<PaintingStep>>
     suspend fun getPaintingStep(id: Long): Flow<PaintingStep>
     suspend fun getPaintingStepsForMiniature(id: Long): Flow<List<PaintingStep>>

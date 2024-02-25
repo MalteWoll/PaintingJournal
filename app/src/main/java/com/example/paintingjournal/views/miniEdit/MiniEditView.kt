@@ -71,6 +71,7 @@ fun MiniEditView(
             onAddPaintingStep = { viewModel.addPaintingStepToList() },
             onTogglePaintingStepExpand = { viewModel.togglePaintingStepExpand(it) },
             onPaintingStepValueChanged =  viewModel::updateUiState,
+            onRemovePaintingStep = { viewModel.removePaintingStepFromList(it) },
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())

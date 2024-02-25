@@ -106,6 +106,17 @@ class MiniAddViewModel(
         }
     }
 
+    fun removePaintingStepFromList(expandablePaintingStep: ExpandablePaintingStep) {
+        viewModelScope.launch {
+            val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
+            expandablePaintingStepList.remove(expandablePaintingStep)
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList.toList())
+
+            miniaturesRepository.deletePaintingStep(expandablePaintingStep.id)
+        }
+    }
+
     fun updateUiState(expandablePaintingStep: ExpandablePaintingStep) {
         val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
         val index = miniatureUiState.expandablePaintingStepList.indexOfFirst { it.id == expandablePaintingStep.id }

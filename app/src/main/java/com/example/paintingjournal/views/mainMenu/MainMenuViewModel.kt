@@ -37,7 +37,7 @@ class MainMenuViewModel(
                 .toList()
             paintingStepsList.forEach { paintingStep ->
                 if(paintingStep.saveState == SaveStateEnum.NEW) {
-                    miniaturesRepository.deletePaintingStep(paintingStep)
+                    miniaturesRepository.deletePaintingStep(paintingStep.id)
                 }
             }
         }

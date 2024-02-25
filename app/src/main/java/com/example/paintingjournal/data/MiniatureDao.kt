@@ -60,8 +60,8 @@ interface MiniatureDao {
     @Update
     suspend fun updatePaintingStep(paintingStep: PaintingStep)
 
-    @Delete
-    suspend fun deletePaintingStep(paintingStep: PaintingStep)
+    @Query("DELETE from painting_steps where stepId = :id")
+    suspend fun deletePaintingStep(id: Long)
 
     @Query("SELECT * from painting_steps WHERE stepId = :id")
     fun getPaintingStep(id: Long): Flow<PaintingStep>

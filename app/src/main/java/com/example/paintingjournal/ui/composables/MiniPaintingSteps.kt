@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.AddCircle
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -21,6 +22,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -36,6 +38,7 @@ fun MiniPaintingSteps(
     onToggleExpand: (ExpandablePaintingStep) -> Unit,
     onPaintingStepValueChanged: (ExpandablePaintingStep) -> Unit,
     addPaintingStep: () -> Unit,
+    removePaintingStep: (ExpandablePaintingStep) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -50,7 +53,8 @@ fun MiniPaintingSteps(
             paintingStepList = paintingStepList,
             isEditable = isEditable,
             onToggleExpand = onToggleExpand,
-            onValueChanged = onPaintingStepValueChanged
+            onValueChanged = onPaintingStepValueChanged,
+            onRemoveStep = removePaintingStep
         )
         if(isEditable) {
             IconButton(
@@ -73,6 +77,7 @@ fun PaintingStepsList(
     isEditable: Boolean,
     onToggleExpand: (ExpandablePaintingStep) -> Unit,
     onValueChanged: (ExpandablePaintingStep) -> Unit,
+    onRemoveStep: (ExpandablePaintingStep) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column {
@@ -81,7 +86,8 @@ fun PaintingStepsList(
                 paintingStep = paintingStep,
                 isEditable = isEditable,
                 onToggleExpand = onToggleExpand,
-                onValueChanged = onValueChanged
+                onValueChanged = onValueChanged,
+                onRemove = onRemoveStep
             )
         }
     }
@@ -92,6 +98,7 @@ fun PaintingStepEntry(
     paintingStep: ExpandablePaintingStep,
     isEditable: Boolean,
     onToggleExpand: (ExpandablePaintingStep) -> Unit,
+    onRemove: (ExpandablePaintingStep) -> Unit,
     modifier: Modifier = Modifier,
     onValueChanged: (ExpandablePaintingStep) -> Unit
 ) {
@@ -160,7 +167,17 @@ fun PaintingStepEntry(
                 }
             }
             if(paintingStep.isExpanded) {
-                Row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if(isEditable) {
+                        IconButton(
+                            onClick = { onRemove(paintingStep) }
+                        ) {
+                            Icon(
+                                Icons.Outlined.Delete,
+                                contentDescription = null
+                            )
+                        }
+                    }
                     Spacer(modifier = Modifier.weight(1f))
                     IconButton(
                         onClick = { onToggleExpand(paintingStep) },
@@ -168,7 +185,7 @@ fun PaintingStepEntry(
                     ) {
                         Icon(
                             Icons.Filled.KeyboardArrowUp,
-                            contentDescription = ""
+                            contentDescription = null
                         )
                     }
                 }

@@ -23,7 +23,7 @@ class MiniaturesRepositoryImpl(private val miniatureDao: MiniatureDao) : Miniatu
     override suspend fun deletePaintForMiniature(miniaturePaintMappingTable: MiniaturePaintMappingTable) = miniatureDao.deletePaintForMiniature(miniaturePaintMappingTable)
     override suspend fun insertPaintingStep(paintingStep: PaintingStep): Long = miniatureDao.insertPaintingStep(paintingStep)
     override suspend fun updatePaintingStep(paintingStep: PaintingStep) = miniatureDao.updatePaintingStep(paintingStep)
-    override suspend fun deletePaintingStep(paintingStep: PaintingStep) = miniatureDao.deletePaintingStep(paintingStep)
+    override suspend fun deletePaintingStep(id: Long) = miniatureDao.deletePaintingStep(id)
     override suspend fun getPaintingStep(id: Long): Flow<PaintingStep> = miniatureDao.getPaintingStep(id)
     override suspend fun getAllPaintingSteps(): Flow<List<PaintingStep>> = miniatureDao.getAllPaintingSteps()
     override suspend fun getPaintingStepsForMiniature(id: Long): Flow<List<PaintingStep>> = miniatureDao.getPaintingStepsForMiniature(id)

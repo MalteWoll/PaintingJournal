@@ -149,6 +149,17 @@ class MiniEditViewModel(
         }
     }
 
+    fun removePaintingStepFromList(expandablePaintingStep: ExpandablePaintingStep) {
+        viewModelScope.launch {
+            val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
+            expandablePaintingStepList.remove(expandablePaintingStep)
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+            miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList.toList())
+
+            miniaturesRepository.deletePaintingStep(expandablePaintingStep.id)
+        }
+    }
+
     fun togglePaintingStepExpand(paintingStep: ExpandablePaintingStep) {
         val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList
         val index = miniatureUiState.expandablePaintingStepList.indexOf(paintingStep)
@@ -226,7 +237,7 @@ class MiniEditViewModel(
     private suspend fun deleteDeletedPaintingSteps() {
         miniatureUiState.originalPaintingStepList.forEach { paintingStep ->
             if(miniatureUiState.paintingStepList.find { it.id == paintingStep.id } == null) {
-                miniaturesRepository.deletePaintingStep(paintingStep)
+                miniaturesRepository.deletePaintingStep(paintingStep.id)
             }
         }
     }

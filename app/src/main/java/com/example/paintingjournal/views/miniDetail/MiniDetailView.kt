@@ -149,7 +149,9 @@ private fun MiniatureDetailsBody(
             isEditable = false,
             onToggleExpand = togglePaintingStepExpand,
             onPaintingStepValueChanged = {},
-            addPaintingStep = {})
+            addPaintingStep = {},
+            removePaintingStep = {}
+        )
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
             shape = MaterialTheme.shapes.small,
