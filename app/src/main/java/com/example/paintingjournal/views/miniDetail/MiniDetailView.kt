@@ -151,7 +151,7 @@ private fun MiniatureDetailsBody(
             onPaintingStepValueChanged = {},
             addPaintingStep = {},
             removePaintingStep = {},
-            navigateToImageViewer = {},
+            navigateToImageViewer = navigateToImageViewer,
             onDeleteImage = {},
             onSwitchImageEditMode = {},
             onSaveImage = {}

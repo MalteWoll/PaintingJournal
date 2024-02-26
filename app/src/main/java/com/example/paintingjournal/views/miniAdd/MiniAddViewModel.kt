@@ -326,6 +326,7 @@ data class ExpandablePaintingStep(
     val saveState: SaveStateEnum,
     var hasChanged: Boolean = false,
     var imageList: List<Image> = listOf(),
+    var originalImageList: List<Image> = listOf(),
     var canEditImageList: Boolean = false
 )
 

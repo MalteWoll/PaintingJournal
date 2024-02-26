@@ -210,10 +210,12 @@ fun PaintingStepEntry(
                 }
             }
             if(paintingStep.isExpanded) {
-                PaintingStepsImageSelection(
-                    onSaveImage = onSaveImage,
-                    expandablePaintingStep = paintingStep,
-                )
+                if(isEditable) {
+                    PaintingStepsImageSelection(
+                        onSaveImage = onSaveImage,
+                        expandablePaintingStep = paintingStep,
+                    )
+                }
                 PaintingStepImagesRow(
                     paintingStep = paintingStep,
                     imageList = paintingStep.imageList,
@@ -400,5 +402,4 @@ fun PaintingStepImagesRow(
             }
         }
     }
-    Divider()
 }
