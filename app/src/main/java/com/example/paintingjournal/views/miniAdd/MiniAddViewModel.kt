@@ -125,6 +125,20 @@ class MiniAddViewModel(
         miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
     }
 
+    fun togglePaintingStepImageEditMode(id: Long) {
+        val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
+        val expandablePaintingStep =
+            expandablePaintingStepList.find { it.id == id }
+        val index = miniatureUiState.expandablePaintingStepList.indexOf(expandablePaintingStep)
+        if (expandablePaintingStep != null) {
+            expandablePaintingStep.canEditImageList = !expandablePaintingStep.canEditImageList
+            expandablePaintingStepList[index] = expandablePaintingStep
+        }
+
+        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
+    }
+
     fun addPaintingStepToList() {
         viewModelScope.launch {
             val paintingStepId = miniaturesRepository.insertPaintingStep(
@@ -297,7 +311,8 @@ data class ExpandablePaintingStep(
     var isExpanded: Boolean = false,
     val saveState: SaveStateEnum,
     var hasChanged: Boolean = false,
-    var imageList: List<Image> = listOf()
+    var imageList: List<Image> = listOf(),
+    var canEditImageList: Boolean = false
 )
 
 data class PaintingStepIdAndUri(

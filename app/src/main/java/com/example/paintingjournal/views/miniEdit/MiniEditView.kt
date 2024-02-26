@@ -74,6 +74,7 @@ fun MiniEditView(
             onRemovePaintingStep = { viewModel.removePaintingStepFromList(it) },
             onSavePaintingStepImage = {  },
             onDeletePaintingStepImage = {},
+            onSwitchPaintingStepImageEditMode = {},
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())

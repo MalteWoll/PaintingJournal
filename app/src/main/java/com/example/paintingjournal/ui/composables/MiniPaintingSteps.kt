@@ -369,7 +369,7 @@ fun PaintingStepImagesRow(
                             contentScale = ContentScale.Fit,
                             contentDescription = "Selected image",
                         )
-                        if (canEdit) {
+                        if (paintingStep.canEditImageList) {
                             IconButton(
                                 onClick = { onDelete(
                                     PaintingStepIdAndImage(image, paintingStep.id)
