@@ -69,7 +69,7 @@ fun PaintDetailView(
     Scaffold(
         topBar = {
             PaintingJournalTopAppBar(
-                title = stringResource(R.string.mini_details_title),
+                title = stringResource(R.string.paint_details_title),
                 canNavigateBack = canNavigateBack,
                 navigateUp = navigateBack
             )

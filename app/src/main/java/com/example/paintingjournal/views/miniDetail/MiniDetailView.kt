@@ -61,7 +61,7 @@ fun MiniDetailView(
     navigateToEditMiniature: (Long) -> Unit,
     canNavigateBack: Boolean = false,
     navigateBack: () -> Unit,
-    navigateToPaintDetails: (Int) -> Unit,
+    navigateToPaintDetails: (Long) -> Unit,
     navigateToImageViewer: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MiniDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -104,6 +104,7 @@ fun MiniDetailView(
             },
             navigateToImageViewer = navigateToImageViewer,
             togglePaintingStepExpand = {viewModel.togglePaintingStepExpand(it)},
+            navigateToPaint = navigateToPaintDetails,
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
@@ -115,6 +116,7 @@ fun MiniDetailView(
 private fun MiniatureDetailsBody(
     miniatureDetailsUiState: MiniatureUiState,
     navigateToImageViewer: (Long) -> Unit,
+    navigateToPaint: (Long) -> Unit,
     togglePaintingStepExpand: (ExpandablePaintingStep) -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
@@ -141,7 +143,7 @@ private fun MiniatureDetailsBody(
             miniatureUiState = miniatureDetailsUiState,
             paintList = miniatureDetailsUiState.paintList,
             removePaint = {},
-            onPaintClick = {},
+            onPaintClick = {navigateToPaint(it.id)},
             navigateToPaintList = {},
             canEdit = false)
         MiniPaintingSteps(

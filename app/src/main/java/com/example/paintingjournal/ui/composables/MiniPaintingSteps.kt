@@ -150,6 +150,7 @@ fun PaintingStepEntry(
             .padding(dimensionResource(id = R.dimen.padding_small))
     ) {
         Column(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large)),
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_small))
         ) {
@@ -264,10 +265,6 @@ fun PaintingStepsImageSelection(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
-        Text(
-            text = stringResource(id = R.string.mini_section_images),
-            style = MaterialTheme.typography.bodyLarge
-        )
         Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))) {
             TakePaintingStepImage(
                 onSaveImage = onSaveImage,
