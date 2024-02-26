@@ -67,6 +67,19 @@ class MiniDetailViewModel(
             if(paintingStepList.isNotEmpty()) {
                 miniatureDetailsUiState = miniatureDetailsUiState.copy(expandablePaintingStepList = createExpandablePaintingStepList(paintingStepList))
             }
+
+            val expandablePaintingStepList = miniatureDetailsUiState.expandablePaintingStepList.toMutableList()
+            expandablePaintingStepList.forEach {expandablePaintingStep ->
+                val imageList = miniaturesRepository.getImagesForPaintingStep(expandablePaintingStep.id)
+                    .filterNotNull()
+                    .first()
+                    .toList()
+                if(imageList.isNotEmpty()) {
+                    expandablePaintingStep.imageList = imageList
+                }
+            }
+            miniatureDetailsUiState = miniatureDetailsUiState.copy(expandablePaintingStepList = listOf())
+            miniatureDetailsUiState = miniatureDetailsUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
         }
     }
 
@@ -91,7 +104,7 @@ class MiniDetailViewModel(
         paintingStepList.forEach { paintingStep ->
             expandablePaintingStepList.add(
                 ExpandablePaintingStep(
-                    id = paintingStep.id,
+                     id = paintingStep.id,
                     stepTitle = paintingStep.stepTitle,
                     stepDescription = paintingStep.stepDescription,
                     stepOrder = paintingStep.stepOrder,
