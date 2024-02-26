@@ -15,6 +15,7 @@ import com.example.paintingjournal.model.MiniatureImageMappingTable
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.MiniaturePaintingStepMappingTable
 import com.example.paintingjournal.model.PaintingStep
+import com.example.paintingjournal.model.PaintingStepImageMappingTable
 import com.example.paintingjournal.model.SaveStateEnum
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -215,12 +216,26 @@ class MiniAddViewModel(
                 imagesRepository.updateImage(image)
                 miniaturesRepository.addImageForMiniature(MiniatureImageMappingTable(miniatureId, image.id))
             }
-            
+
             val paintingStepList = createPaintingStepList(miniatureUiState.expandablePaintingStepList)
             paintingStepList.forEach { paintingStep ->
                 val savedPaintingStep = paintingStep.copy(saveState = SaveStateEnum.SAVED)
                 miniaturesRepository.updatePaintingStep(savedPaintingStep)
                 miniaturesRepository.addPaintingStepForMiniature(MiniaturePaintingStepMappingTable(miniatureIdRef = miniatureId, paintingStepIdRef = savedPaintingStep.id))
+            }
+
+            val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList
+            expandablePaintingStepList.forEach { expandablePaintingStep ->
+                expandablePaintingStep.imageList.forEach { image ->
+                    image.saveState = SaveStateEnum.SAVED
+                    miniaturesRepository.insertImageForPaintingStep(
+                        PaintingStepImageMappingTable(
+                            expandablePaintingStep.id,
+                            image.id
+                        )
+                    )
+                    imagesRepository.updateImage(image)
+                }
             }
         }
     }
@@ -230,8 +245,7 @@ class MiniAddViewModel(
     }
 
     fun updateUiState(miniatureDetails: MiniatureDetails) {
-        miniatureUiState =
-            MiniatureUiState(miniatureDetails = miniatureDetails, isEntryValid = validateInput(miniatureDetails))
+        miniatureUiState = miniatureUiState.copy(miniatureDetails = miniatureDetails, isEntryValid = validateInput(miniatureDetails))
     }
 
     private fun validateInput(uiState: MiniatureDetails = miniatureUiState.miniatureDetails) : Boolean {

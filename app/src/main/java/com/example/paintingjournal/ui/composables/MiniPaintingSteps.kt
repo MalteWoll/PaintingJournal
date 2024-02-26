@@ -375,14 +375,14 @@ fun PaintingStepImagesRow(
                                     PaintingStepIdAndImage(image, paintingStep.id)
                                 ) },
                                 modifier = Modifier
-                                    .size(100.dp)
+                                    .size(80.dp)
                             ) {
                                 Icon(
                                     Icons.Outlined.Delete,
                                     tint = MaterialTheme.colorScheme.onSurface,
                                     contentDescription = "",
                                     modifier = Modifier
-                                        .size(100.dp),
+                                        .size(80.dp),
                                 )
                             }
                         }

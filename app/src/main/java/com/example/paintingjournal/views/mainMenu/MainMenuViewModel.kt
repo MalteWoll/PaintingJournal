@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class MainMenuViewModel(
     private val miniaturesRepository: MiniaturesRepository,
+    private val imagesRepository: ImagesRepository
 ) : ViewModel() {
     init {
         removeCancelledEntries()
@@ -42,6 +43,17 @@ class MainMenuViewModel(
             }
         }
 
-        // TODO: Cleanup images
+        viewModelScope.launch {
+            val imageList = imagesRepository.getAllImagesStream()
+                .filterNotNull()
+                .first()
+                .toList()
+            imageList.forEach { image ->
+                if(image.saveState == SaveStateEnum.NEW) {
+                    imagesRepository.deleteImage(image)
+                    // TODO: Remove image file
+                }
+            }
+        }
     }
 }

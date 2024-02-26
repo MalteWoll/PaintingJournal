@@ -169,7 +169,7 @@ fun MiniatureEntryBody(
             onPaintingStepValueChanged = onPaintingStepValueChanged,
             addPaintingStep = onAddPaintingStep,
             removePaintingStep = onRemovePaintingStep,
-            navigateToImageViewer = {},
+            navigateToImageViewer = navigateToImageViewer,
             onDeleteImage = onDeletePaintingStepImage,
             onSwitchImageEditMode = onSwitchPaintingStepImageEditMode,
             onSaveImage = onSavePaintingStepImage
