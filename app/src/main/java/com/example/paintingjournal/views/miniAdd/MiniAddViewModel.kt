@@ -81,7 +81,7 @@ class MiniAddViewModel(
 
     fun addImageToPaintingStep(stepIdAndUri: PaintingStepIdAndUri) {
         if(stepIdAndUri.uri != null) {
-            var expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
+            val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
             val expandablePaintingStep = expandablePaintingStepList.find { it.id == stepIdAndUri.id }
             val index = miniatureUiState.expandablePaintingStepList.indexOf(expandablePaintingStep)
             if(expandablePaintingStep != null) {
@@ -101,6 +101,28 @@ class MiniAddViewModel(
             miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
             miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
         }
+    }
+
+    fun removeImageFromPaintingStep(paintingStepIdAndImage: PaintingStepIdAndImage) {
+        val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList.toMutableList()
+        val expandablePaintingStep = expandablePaintingStepList.find { it.id == paintingStepIdAndImage.id }
+        val index = miniatureUiState.expandablePaintingStepList.indexOf(expandablePaintingStep)
+        if(expandablePaintingStep != null) {
+            val imageList: MutableList<Image> = expandablePaintingStep.imageList.toMutableList()
+
+            viewModelScope.launch {
+                imagesRepository.deleteImage(paintingStepIdAndImage.image)
+                imageList.remove(paintingStepIdAndImage.image)
+                expandablePaintingStep.imageList = imageList
+            }
+        }
+
+        if (expandablePaintingStep != null) {
+            expandablePaintingStepList[index] = expandablePaintingStep
+        }
+
+        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = listOf())
+        miniatureUiState = miniatureUiState.copy(expandablePaintingStepList = expandablePaintingStepList)
     }
 
     fun addPaintingStepToList() {
@@ -280,5 +302,10 @@ data class ExpandablePaintingStep(
 
 data class PaintingStepIdAndUri(
     val uri: Uri?,
+    val id: Long
+)
+
+data class PaintingStepIdAndImage(
+    val image: Image,
     val id: Long
 )

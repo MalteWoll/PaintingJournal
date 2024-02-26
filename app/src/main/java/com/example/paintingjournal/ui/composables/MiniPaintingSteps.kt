@@ -3,21 +3,28 @@ package com.example.paintingjournal.ui.composables
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,15 +38,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.paintingjournal.R
 import com.example.paintingjournal.data.ComposeFileProvider
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.PaintingStep
 import com.example.paintingjournal.views.miniAdd.ExpandablePaintingStep
+import com.example.paintingjournal.views.miniAdd.PaintingStepIdAndImage
 import com.example.paintingjournal.views.miniAdd.PaintingStepIdAndUri
 import com.example.paintingjournal.views.paintAdd.ImagesRow
 import com.example.paintingjournal.views.paintAdd.TakeImage
@@ -52,8 +62,8 @@ fun MiniPaintingSteps(
     onPaintingStepValueChanged: (ExpandablePaintingStep) -> Unit,
     addPaintingStep: () -> Unit,
     removePaintingStep: (ExpandablePaintingStep) -> Unit,
-    onDeleteImage: (Image) -> Unit,
-    onSwitchImageEditMode: () -> Unit,
+    onDeleteImage: (PaintingStepIdAndImage) -> Unit,
+    onSwitchImageEditMode: (Long) -> Unit,
     navigateToImageViewer: (Long) -> Unit,
     onSaveImage: (PaintingStepIdAndUri) -> Unit,
     modifier: Modifier = Modifier
@@ -99,8 +109,8 @@ fun PaintingStepsList(
     onToggleExpand: (ExpandablePaintingStep) -> Unit,
     onValueChanged: (ExpandablePaintingStep) -> Unit,
     onRemoveStep: (ExpandablePaintingStep) -> Unit,
-    onDeleteImage: (Image) -> Unit,
-    onSwitchImageEditMode: () -> Unit,
+    onDeleteImage: (PaintingStepIdAndImage) -> Unit,
+    onSwitchImageEditMode: (Long) -> Unit,
     navigateToImageViewer: (Long) -> Unit,
     onSaveImage: (PaintingStepIdAndUri) -> Unit,
     modifier: Modifier = Modifier
@@ -128,8 +138,8 @@ fun PaintingStepEntry(
     isEditable: Boolean,
     onToggleExpand: (ExpandablePaintingStep) -> Unit,
     onRemove: (ExpandablePaintingStep) -> Unit,
-    onDeleteImage: (Image) -> Unit,
-    onSwitchImageEditMode: () -> Unit,
+    onDeleteImage: (PaintingStepIdAndImage) -> Unit,
+    onSwitchImageEditMode: (Long) -> Unit,
     navigateToImageViewer: (Long) -> Unit,
     onSaveImage: (PaintingStepIdAndUri) -> Unit,
     modifier: Modifier = Modifier,
@@ -204,7 +214,8 @@ fun PaintingStepEntry(
                     onSaveImage = onSaveImage,
                     expandablePaintingStep = paintingStep,
                 )
-                ImagesRow(
+                PaintingStepImagesRow(
+                    paintingStep = paintingStep,
                     imageList = paintingStep.imageList,
                     onDelete = onDeleteImage,
                     showEditIcon = isEditable,
@@ -328,4 +339,66 @@ fun PaintingStepImagePicker(
             text = stringResource(id = R.string.open_gallery)
         )
     }
+}
+
+@Composable
+fun PaintingStepImagesRow(
+    paintingStep: ExpandablePaintingStep,
+    imageList: List<Image>,
+    onDelete: (PaintingStepIdAndImage) -> Unit,
+    showEditIcon: Boolean,
+    switchEditMode: (Long) -> Unit,
+    canEdit: Boolean,
+    navigateToImageViewer: (Long) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (imageList.isNotEmpty()) {
+        Column {
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            ) {
+                imageList.forEach { image ->
+                    Box {
+                        AsyncImage(
+                            model = image.imageUri,
+                            modifier = Modifier
+                                .height(100.dp)
+                                .clickable { navigateToImageViewer(image.id) },
+                            contentScale = ContentScale.Fit,
+                            contentDescription = "Selected image",
+                        )
+                        if (canEdit) {
+                            IconButton(
+                                onClick = { onDelete(
+                                    PaintingStepIdAndImage(image, paintingStep.id)
+                                ) },
+                                modifier = Modifier
+                                    .size(100.dp)
+                            ) {
+                                Icon(
+                                    Icons.Outlined.Delete,
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(100.dp),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            if(showEditIcon) {
+                IconButton(onClick = { switchEditMode(paintingStep.id) }) {
+                    Icon(
+                        Icons.Outlined.Edit,
+                        contentDescription = "",
+                        modifier = Modifier
+                    )
+                }
+            }
+        }
+    }
+    Divider()
 }
