@@ -20,6 +20,7 @@ import com.example.paintingjournal.model.SaveStateEnum
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.Date
 
 class MiniAddViewModel(
@@ -48,7 +49,7 @@ class MiniAddViewModel(
 
     // Insert an empty miniature into the database to allow for creation of mappings for miniature and paints
     private fun createMiniInDb() {
-        viewModelScope.launch {
+        runBlocking {
             miniatureId = miniaturesRepository.insertMiniature(MiniatureDetails().toMiniature())
             miniatureUiState = miniatureUiState.copy(miniatureDetails = miniatureUiState.miniatureDetails.copy(id = miniatureId))
         }
@@ -203,38 +204,62 @@ class MiniAddViewModel(
 
     suspend fun saveMiniature() {
         if(validateInput()) {
-            if(miniatureUiState.imageList.isNotEmpty()) {
-                val miniatureDetails = miniatureUiState.miniatureDetails
-                miniatureDetails.previewImageUri
+            runBlocking {
+                if (miniatureUiState.imageList.isNotEmpty()) {
+                    val miniatureDetails = miniatureUiState.miniatureDetails
+                    miniatureDetails.previewImageUri
+                }
             }
 
-            miniatureUiState = miniatureUiState.copy(miniatureDetails = miniatureUiState.miniatureDetails.copy(saveState = SaveStateEnum.SAVED))
-            miniaturesRepository.updateMiniature(miniatureUiState.miniatureDetails.toMiniature())
-
-            miniatureUiState.imageList.forEach { image->
-                image.saveState = SaveStateEnum.SAVED
-                imagesRepository.updateImage(image)
-                miniaturesRepository.addImageForMiniature(MiniatureImageMappingTable(miniatureId, image.id))
+            runBlocking {
+                miniatureUiState = miniatureUiState.copy(
+                    miniatureDetails = miniatureUiState.miniatureDetails.copy(
+                        id = miniatureId, // Works without this on emulator, but not on physical device
+                        saveState = SaveStateEnum.SAVED
+                    )
+                )
+                miniaturesRepository.updateMiniature(miniatureUiState.miniatureDetails.toMiniature())
             }
 
-            val paintingStepList = createPaintingStepList(miniatureUiState.expandablePaintingStepList)
-            paintingStepList.forEach { paintingStep ->
-                val savedPaintingStep = paintingStep.copy(saveState = SaveStateEnum.SAVED)
-                miniaturesRepository.updatePaintingStep(savedPaintingStep)
-                miniaturesRepository.addPaintingStepForMiniature(MiniaturePaintingStepMappingTable(miniatureIdRef = miniatureId, paintingStepIdRef = savedPaintingStep.id))
-            }
-
-            val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList
-            expandablePaintingStepList.forEach { expandablePaintingStep ->
-                expandablePaintingStep.imageList.forEach { image ->
+            runBlocking {
+                miniatureUiState.imageList.forEach { image ->
                     image.saveState = SaveStateEnum.SAVED
-                    miniaturesRepository.insertImageForPaintingStep(
-                        PaintingStepImageMappingTable(
-                            expandablePaintingStep.id,
+                    imagesRepository.updateImage(image)
+                    miniaturesRepository.addImageForMiniature(
+                        MiniatureImageMappingTable(
+                            miniatureId,
                             image.id
                         )
                     )
-                    imagesRepository.updateImage(image)
+                }
+            }
+
+            runBlocking {
+                val paintingStepList =
+                    createPaintingStepList(miniatureUiState.expandablePaintingStepList)
+                paintingStepList.forEach { paintingStep ->
+                    val savedPaintingStep = paintingStep.copy(saveState = SaveStateEnum.SAVED)
+                    miniaturesRepository.updatePaintingStep(savedPaintingStep)
+                    miniaturesRepository.addPaintingStepForMiniature(
+                        MiniaturePaintingStepMappingTable(
+                            miniatureIdRef = miniatureId,
+                            paintingStepIdRef = savedPaintingStep.id
+                        )
+                    )
+                }
+
+                val expandablePaintingStepList = miniatureUiState.expandablePaintingStepList
+                expandablePaintingStepList.forEach { expandablePaintingStep ->
+                    expandablePaintingStep.imageList.forEach { image ->
+                        image.saveState = SaveStateEnum.SAVED
+                        miniaturesRepository.insertImageForPaintingStep(
+                            PaintingStepImageMappingTable(
+                                expandablePaintingStep.id,
+                                image.id
+                            )
+                        )
+                        imagesRepository.updateImage(image)
+                    }
                 }
             }
         }
