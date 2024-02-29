@@ -80,7 +80,8 @@ fun MiniDetailView(
                 canNavigateBack = true,
                 navigateUp = navigateBack
             )
-        }, floatingActionButton = {
+        },
+        floatingActionButton = {
             FloatingActionButton(
                 onClick = { navigateToEditMiniature(uiState.miniatureDetails.id) },
                 shape = MaterialTheme.shapes.medium,
@@ -92,7 +93,8 @@ fun MiniDetailView(
                     contentDescription = stringResource(R.string.edit_title),
                 )
             }
-        }, modifier = modifier
+        },
+        modifier = modifier
     ) { innerPadding ->
         MiniatureDetailsBody(
             miniatureDetailsUiState = uiState,

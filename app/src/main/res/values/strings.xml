@@ -2,6 +2,7 @@
     <string name="app_name">PaintingJournal</string>
     <string name="attention">Attention</string>
     <string name="back_button">Back</string>
+    <string name="close">Close</string>
     <string name="capture_image">Capture image</string>
     <string name="delete">Delete</string>
     <string name="delete_question">Are you sure you want to delete?</string>
@@ -9,6 +10,7 @@
     <string name="edit_title">Edit</string>
     <string name="faction">Faction</string>
     <string name="image_viewer">Image Viewer</string>
+    <string name="image_viewer_popup_title">Chose image manipulation</string>
     <string name="no">No</string>
     <string name="main_menu_mini_list_button">Miniature List</string>
     <string name="main_menu_paint_list_button">Paint List</string>
