@@ -14,7 +14,7 @@ data class Miniature (
     val name: String,
     val manufacturer: String,
     val faction: String,
-    val createdAt: Date?,
+    val createdAt: Long,
     var previewImageUri: Uri?,
     val saveState: SaveStateEnum
 )

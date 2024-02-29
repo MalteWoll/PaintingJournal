@@ -33,6 +33,7 @@ class MiniListViewModel(
                     .filterNotNull()
                     .first()
                     .toList()
+                    .sortedByDescending { it.createdAt }
             )
         }
     }

@@ -1,6 +1,8 @@
 package com.example.paintingjournal.views.miniAdd
 
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -21,6 +23,10 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDate.now
+import java.time.LocalDateTime
 import java.util.Date
 
 class MiniAddViewModel(
@@ -202,6 +208,7 @@ class MiniAddViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun saveMiniature() {
         if(validateInput()) {
             runBlocking {
@@ -212,10 +219,12 @@ class MiniAddViewModel(
             }
 
             runBlocking {
+                val currentInstant = Instant.now()
                 miniatureUiState = miniatureUiState.copy(
                     miniatureDetails = miniatureUiState.miniatureDetails.copy(
-                        id = miniatureId, // Works without this on emulator, but not on physical device
-                        saveState = SaveStateEnum.SAVED
+                        id = miniatureId,
+                        saveState = SaveStateEnum.SAVED,
+                        createdAt = currentInstant.toEpochMilli()
                     )
                 )
                 miniaturesRepository.updateMiniature(miniatureUiState.miniatureDetails.toMiniature())
@@ -312,7 +321,7 @@ data class MiniatureDetails(
     val name: String = "",
     val manufacturer: String = "",
     val faction: String = "",
-    val createdAt: Date? = null,
+    val createdAt: Long = 0,
     var previewImageUri: Uri? = null,
     val saveState: SaveStateEnum = SaveStateEnum.NEW
 )
