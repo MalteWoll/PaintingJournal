@@ -10,6 +10,7 @@
     <string name="edit_title">Edit</string>
     <string name="faction">Faction</string>
     <string name="image_viewer">Image Viewer</string>
+    <string name="image_viewer_popup_apply_grayscale">Apply grayscale</string>
     <string name="image_viewer_popup_title">Chose image manipulation</string>
     <string name="no">No</string>
     <string name="main_menu_mini_list_button">Miniature List</string>

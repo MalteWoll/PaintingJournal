@@ -114,7 +114,8 @@ fun ImageViewerView(
                     }
                     ImageViewerPopup(
                         imageViewerUiState = viewModel.imageViewerUiState,
-                        onClosePopup = { viewModel.togglePopupState() }
+                        onClosePopup = { viewModel.togglePopupState() },
+                        onApplyGrayScale = { viewModel.applyGrayScale() }
                     )
                 }
             }
@@ -126,6 +127,7 @@ fun ImageViewerView(
 fun ImageViewerPopup(
     imageViewerUiState: ImageViewerUiState,
     onClosePopup: () -> Unit,
+    onApplyGrayScale: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     if(imageViewerUiState.showPopup) {
@@ -141,6 +143,12 @@ fun ImageViewerPopup(
                 text = stringResource(id = R.string.image_viewer_popup_title),
                 style = MaterialTheme.typography.titleMedium
             )
+            Button(onClick = { onApplyGrayScale() }) {
+                Text(text = stringResource(id = R.string.image_viewer_popup_apply_grayscale))
+            }
+            Button(onClick = { /*TODO*/ }) {
+                
+            }
             Button(onClick = { onClosePopup() }) {
                 Text(text = stringResource(id = R.string.close))
             }

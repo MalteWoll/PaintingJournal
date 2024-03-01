@@ -1,11 +1,14 @@
 package com.example.paintingjournal.data
 
 import android.content.Context
+import com.example.paintingjournal.services.ImageManipulationService
+import com.example.paintingjournal.services.ImageManipulationServiceImpl
 import com.example.paintingjournal.services.MiniaturesService
 import com.example.paintingjournal.services.MiniaturesServiceImpl
 
 interface AppContainer {
     val imagesRepository: ImagesRepository
+    val imageManipulationService: ImageManipulationService
     val miniaturesRepository: MiniaturesRepository
     val miniaturesService: MiniaturesService
     val paintsRepository: PaintsRepository
@@ -14,6 +17,9 @@ interface AppContainer {
 class AppDataContainer(private val context: Context) : AppContainer {
     override val imagesRepository: ImagesRepository by lazy {
         ImagesRepositoryImpl(MiniatureDatabase.getDatabase(context).imageDao())
+    }
+    override val imageManipulationService: ImageManipulationService by lazy {
+        ImageManipulationServiceImpl()
     }
     override val miniaturesRepository: MiniaturesRepository by lazy {
         MiniaturesRepositoryImpl(MiniatureDatabase.getDatabase(context).miniatureDao())

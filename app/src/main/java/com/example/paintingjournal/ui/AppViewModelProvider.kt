@@ -24,7 +24,8 @@ object AppViewModelProvider {
         initializer {
             ImageViewerViewModel(
                 this.createSavedStateHandle(),
-                paintingJournalApplication().container.imagesRepository
+                paintingJournalApplication().container.imagesRepository,
+                paintingJournalApplication().container.imageManipulationService
             )
         }
         initializer {

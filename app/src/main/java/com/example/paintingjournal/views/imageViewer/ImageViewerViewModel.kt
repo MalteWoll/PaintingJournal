@@ -16,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.SaveStateEnum
+import com.example.paintingjournal.services.ImageManipulationService
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -23,7 +24,8 @@ import kotlinx.coroutines.runBlocking
 
 class ImageViewerViewModel(
     savedStateHandle: SavedStateHandle,
-    private val imagesRepository: ImagesRepository
+    private val imagesRepository: ImagesRepository,
+    private val imageManipulationService: ImageManipulationService
 ): ViewModel() {
     var imageViewerUiState by mutableStateOf(ImageViewerUiState())
         private set
@@ -46,7 +48,9 @@ class ImageViewerViewModel(
             val source = imageViewerUiState.imageDetails.imageUri?.let {
                 ImageDecoder.createSource(context.contentResolver, it)
             }
-            imageViewerUiState = imageViewerUiState.copy(imageBitmap = source?.let { ImageDecoder.decodeBitmap(it) })
+            imageViewerUiState = imageViewerUiState.copy(
+                imageBitmap = source?.let { ImageDecoder.decodeBitmap(it) },
+                originalImageBitmap = source?.let { ImageDecoder.decodeBitmap(it) })
         }
     }
 
@@ -54,15 +58,26 @@ class ImageViewerViewModel(
         imageViewerUiState = imageViewerUiState.copy(showPopup = !imageViewerUiState.showPopup)
     }
 
-    fun setBitmap(bitmap: Bitmap) {
-        imageViewerUiState = imageViewerUiState.copy(imageBitmap = bitmap)
+    fun applyGrayScale() {
+        viewModelScope.launch {
+            val mutableBitmap = imageViewerUiState.imageBitmap?.copy(Bitmap.Config.ARGB_8888, true)
+            val mat = imageManipulationService.getMatFromBitmap(mutableBitmap)
+            val grayMat = imageManipulationService.createGrayScaleMat(mat)
+            val bitmap = imageManipulationService.getBitmapFromMat(grayMat)
+            imageViewerUiState = imageViewerUiState.copy(imageBitmap = bitmap)
+        }
+    }
+
+    fun resetImage() {
+
     }
 }
 
 data class ImageViewerUiState(
     val imageDetails: ImageDetails = ImageDetails(),
     val showPopup: Boolean = false,
-    val imageBitmap: Bitmap? = null
+    val imageBitmap: Bitmap? = null,
+    val originalImageBitmap : Bitmap? = null
 )
 
 data class ImageDetails(
