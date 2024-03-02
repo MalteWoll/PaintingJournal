@@ -69,7 +69,7 @@ class ImageViewerViewModel(
     }
 
     fun resetImage() {
-
+        imageViewerUiState = imageViewerUiState.copy(imageBitmap = imageViewerUiState.originalImageBitmap)
     }
 }
 
