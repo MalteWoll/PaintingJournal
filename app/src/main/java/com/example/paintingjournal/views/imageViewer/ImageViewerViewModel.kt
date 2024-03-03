@@ -55,10 +55,8 @@ class ImageViewerViewModel(
             val bitmap = source?.let { ImageDecoder.decodeBitmap(it) }
             imageViewerUiState = imageViewerUiState.copy(
                 imageBitmap = bitmap,
-                originalImageBitmap = bitmap)
-            if (bitmap != null) {
-                println("Bitmap size: ${bitmap.width}, ${bitmap.height}")
-            }
+                originalImageBitmap = bitmap
+            )
         }
     }
 
@@ -70,7 +68,6 @@ class ImageViewerViewModel(
             )
             screenToBitmapConversionX = imageConversionFloatArray?.get(0) ?: 0f
             screenToBitmapConversionY = imageConversionFloatArray?.get(1) ?: 0f
-            println("Conversion multiplier: ${screenToBitmapConversionX}, $screenToBitmapConversionY")
         }
         imageViewerUiState = imageViewerUiState.copy(composableImageSize = size)
     }
@@ -82,7 +79,7 @@ class ImageViewerViewModel(
                 imageManipulationService.createBitmapAroundPosition(
                     position,
                     it,
-                    IntSize(10, 10),
+                    IntSize(imageViewerUiState.magnificationPixelSize, imageViewerUiState.magnificationPixelSize),
                     floatArrayOf(screenToBitmapConversionX, screenToBitmapConversionY)
                 )
             }
@@ -98,6 +95,17 @@ class ImageViewerViewModel(
 
     fun togglePreviewState() {
         imageViewerUiState = imageViewerUiState.copy(showMagnifiedPreview = !imageViewerUiState.showMagnifiedPreview)
+        if(imageViewerUiState.magnifiedBitmap == null) {
+            createBitmapAroundPosition(Offset(0f,0f))
+        }
+    }
+
+    fun changeMagnificationPixelSize(change: Int) {
+        val magnificationPixelSize = imageViewerUiState.magnificationPixelSize + change
+        if(magnificationPixelSize < 1 || magnificationPixelSize > 50) {
+            return
+        }
+        imageViewerUiState = imageViewerUiState.copy(magnificationPixelSize = magnificationPixelSize)
     }
 
     fun applyGrayScale() {
@@ -123,6 +131,7 @@ data class ImageViewerUiState(
     val originalImageBitmap: Bitmap? = null,
     val magnifiedBitmap: Bitmap? = null,
     val showMagnifiedPreview: Boolean = false,
+    val magnificationPixelSize: Int = 10
 )
 
 data class ImageDetails(

@@ -23,6 +23,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.KeyboardArrowLeft
+import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -152,7 +155,8 @@ fun ImageViewerView(
                         onClosePopup = { viewModel.togglePopupState() },
                         onApplyGrayScale = { viewModel.applyGrayScale() },
                         onResetImage = { viewModel.resetImage() },
-                        onToggleMagnifier = { viewModel.togglePreviewState() }
+                        onToggleMagnifier = { viewModel.togglePreviewState() },
+                        onChangeMagnificationPixelSize = { viewModel.changeMagnificationPixelSize(it) }
                     )
                 }
             }
@@ -167,6 +171,7 @@ fun ImageViewerPopup(
     onApplyGrayScale: () -> Unit,
     onResetImage: () -> Unit,
     onToggleMagnifier: () -> Unit,
+    onChangeMagnificationPixelSize: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if(imageViewerUiState.showPopup) {
@@ -182,8 +187,27 @@ fun ImageViewerPopup(
                 text = stringResource(id = R.string.image_viewer_popup_title),
                 style = MaterialTheme.typography.titleMedium
             )
-            Button(onClick = { onToggleMagnifier() }) {
-                Text(text = stringResource(id = R.string.image_viewer_popup_show_magnifier))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(onClick = { onToggleMagnifier() }) {
+                    Text(text = stringResource(id = R.string.image_viewer_popup_show_magnifier))
+                }
+                IconButton(onClick = { onChangeMagnificationPixelSize(-1) }) {
+                    Icon(
+                        Icons.Outlined.KeyboardArrowLeft,
+                        contentDescription = "",
+                        modifier = Modifier
+                    )
+                }
+                Text(text = imageViewerUiState.magnificationPixelSize.toString())
+                IconButton(onClick = { onChangeMagnificationPixelSize(+1) }) {
+                    Icon(
+                        Icons.Outlined.KeyboardArrowRight,
+                        contentDescription = "",
+                        modifier = Modifier
+                    )
+                }
             }
             Button(onClick = { onApplyGrayScale() }) {
                 Text(text = stringResource(id = R.string.image_viewer_popup_apply_grayscale))

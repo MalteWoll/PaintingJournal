@@ -48,8 +48,6 @@ class ImageManipulationServiceImpl : ImageManipulationService {
     ): Bitmap {
         val posXConverted = (position.x * screenToBitmapConversion[0]).toInt()
         val posYConverted = (position.y * screenToBitmapConversion[1]).toInt()
-        println("position: ${position.x}, ${position.y}")
-        println("converted: ${posXConverted}, $posYConverted")
 
         var startPositionRectX: Int
         var startPositionRectY: Int
@@ -72,7 +70,6 @@ class ImageManipulationServiceImpl : ImageManipulationService {
             startPositionRectY = 0
         }
 
-        println("start position: ${startPositionRectX}, $startPositionRectY")
 
         return Bitmap.createBitmap(
             originalBitmap,
