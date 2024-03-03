@@ -5,11 +5,12 @@ import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,6 +32,9 @@ class ImageViewerViewModel(
         private set
 
     val imageId: Int = checkNotNull(savedStateHandle[ImageViewerDestination.imageArg])
+    var screenToBitmapConversionX: Float = 0f
+    var screenToBitmapConversionY: Float = 0f
+
 
     fun getImage() {
         runBlocking {
@@ -48,14 +52,52 @@ class ImageViewerViewModel(
             val source = imageViewerUiState.imageDetails.imageUri?.let {
                 ImageDecoder.createSource(context.contentResolver, it)
             }
+            val bitmap = source?.let { ImageDecoder.decodeBitmap(it) }
             imageViewerUiState = imageViewerUiState.copy(
-                imageBitmap = source?.let { ImageDecoder.decodeBitmap(it) },
-                originalImageBitmap = source?.let { ImageDecoder.decodeBitmap(it) })
+                imageBitmap = bitmap,
+                originalImageBitmap = bitmap)
+            if (bitmap != null) {
+                println("Bitmap size: ${bitmap.width}, ${bitmap.height}")
+            }
         }
+    }
+
+    fun setImageSize(size: IntSize) {
+        if(imageViewerUiState.imageBitmap != null) {
+            val imageConversionFloatArray = imageManipulationService.getScreenToBitmapPixelConversion(
+                imageViewerUiState.imageBitmap,
+                size
+            )
+            screenToBitmapConversionX = imageConversionFloatArray?.get(0) ?: 0f
+            screenToBitmapConversionY = imageConversionFloatArray?.get(1) ?: 0f
+            println("Conversion multiplier: ${screenToBitmapConversionX}, $screenToBitmapConversionY")
+        }
+        imageViewerUiState = imageViewerUiState.copy(composableImageSize = size)
+    }
+
+    fun createBitmapAroundPosition(position: Offset) {
+        var newBitmap: Bitmap? = null
+        viewModelScope.launch {
+            newBitmap = imageViewerUiState.imageBitmap?.let {
+                imageManipulationService.createBitmapAroundPosition(
+                    position,
+                    it,
+                    IntSize(10, 10),
+                    floatArrayOf(screenToBitmapConversionX, screenToBitmapConversionY)
+                )
+            }
+        }
+        imageViewerUiState = imageViewerUiState.copy(
+            magnifiedBitmap = newBitmap
+        )
     }
 
     fun togglePopupState() {
         imageViewerUiState = imageViewerUiState.copy(showPopup = !imageViewerUiState.showPopup)
+    }
+
+    fun togglePreviewState() {
+        imageViewerUiState = imageViewerUiState.copy(showMagnifiedPreview = !imageViewerUiState.showMagnifiedPreview)
     }
 
     fun applyGrayScale() {
@@ -77,7 +119,10 @@ data class ImageViewerUiState(
     val imageDetails: ImageDetails = ImageDetails(),
     val showPopup: Boolean = false,
     val imageBitmap: Bitmap? = null,
-    val originalImageBitmap : Bitmap? = null
+    val composableImageSize: IntSize? = null,
+    val originalImageBitmap: Bitmap? = null,
+    val magnifiedBitmap: Bitmap? = null,
+    val showMagnifiedPreview: Boolean = false,
 )
 
 data class ImageDetails(
