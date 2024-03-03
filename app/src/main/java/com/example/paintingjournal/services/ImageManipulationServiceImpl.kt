@@ -1,11 +1,13 @@
 package com.example.paintingjournal.services
 
+import android.R.color
 import android.graphics.Bitmap
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntSize
 import org.opencv.android.Utils
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
+
 
 class ImageManipulationServiceImpl : ImageManipulationService {
     override fun getMatFromBitmap(bitmap: Bitmap?): Mat {
@@ -25,6 +27,8 @@ class ImageManipulationServiceImpl : ImageManipulationService {
         Utils.matToBitmap(mat, bitmap)
         return bitmap
     }
+
+
 
     // Calculates the ratio to determine which point on the screen refers to which pixel on a bitmap image
     override fun getScreenToBitmapPixelConversion(
@@ -76,7 +80,40 @@ class ImageManipulationServiceImpl : ImageManipulationService {
             startPositionRectX,
             startPositionRectY,
             rectSize.width,
-            rectSize.height
+            rectSize.height,
         )
+    }
+
+    override fun calculateAveragePixelValue(mat: Mat?) {
+        if (mat != null) {
+            val value = mat[0,0]
+            println(value.toString())
+        }
+    }
+
+    override fun calculateAveragePixelValue(bitmap: Bitmap?) {
+        var sumOfA = 0
+        var sumOfR = 0
+        var sumOfG = 0
+        var sumOfB = 0
+        if (bitmap != null) {
+            for(x in 0..<bitmap.width) {
+                for(y in 0..<bitmap.height) {
+                    val intColor = bitmap.getPixel(x,y)
+                    sumOfA += intColor shr 24 and 0xff
+                    sumOfR += intColor shr 16 and 0xff
+                    sumOfG += intColor shr 8 and 0xff
+                    sumOfB += intColor and 0xff
+                }
+            }
+            val pixelAmount = bitmap.width * bitmap.height
+            println("Average color: A:${sumOfA/pixelAmount}, R:${sumOfR/pixelAmount}, G:${sumOfG/pixelAmount}, B:${sumOfB/pixelAmount}")
+            val avgA = sumOfA/pixelAmount
+            val avgR = sumOfR/pixelAmount
+            val avgG = sumOfG/pixelAmount
+            val avgB = sumOfB/pixelAmount
+            val hexValue = String.format("#%02x%02x%02x", avgR, avgG, avgB);
+            println("hex value: $hexValue")
+        }
     }
 }

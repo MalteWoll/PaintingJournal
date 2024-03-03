@@ -32,8 +32,8 @@ class ImageViewerViewModel(
         private set
 
     val imageId: Int = checkNotNull(savedStateHandle[ImageViewerDestination.imageArg])
-    var screenToBitmapConversionX: Float = 0f
-    var screenToBitmapConversionY: Float = 0f
+    private var screenToBitmapConversionX: Float = 0f
+    private var screenToBitmapConversionY: Float = 0f
 
 
     fun getImage() {
@@ -73,9 +73,9 @@ class ImageViewerViewModel(
     }
 
     fun createBitmapAroundPosition(position: Offset) {
-        var newBitmap: Bitmap? = null
+        var magnifiedBitmap: Bitmap? = null
         viewModelScope.launch {
-            newBitmap = imageViewerUiState.imageBitmap?.let {
+            magnifiedBitmap = imageViewerUiState.imageBitmap?.let {
                 imageManipulationService.createBitmapAroundPosition(
                     position,
                     it,
@@ -83,9 +83,13 @@ class ImageViewerViewModel(
                     floatArrayOf(screenToBitmapConversionX, screenToBitmapConversionY)
                 )
             }
+            if(magnifiedBitmap != null) {
+                val mutableMagnifiedBitmap = magnifiedBitmap!!.copy(Bitmap.Config.ARGB_8888, true)
+                imageManipulationService.calculateAveragePixelValue(mutableMagnifiedBitmap)
+            }
         }
         imageViewerUiState = imageViewerUiState.copy(
-            magnifiedBitmap = newBitmap
+            magnifiedBitmap = magnifiedBitmap
         )
     }
 
@@ -111,9 +115,7 @@ class ImageViewerViewModel(
     fun applyGrayScale() {
         viewModelScope.launch {
             val mutableBitmap = imageViewerUiState.imageBitmap?.copy(Bitmap.Config.ARGB_8888, true)
-            val mat = imageManipulationService.getMatFromBitmap(mutableBitmap)
-            val grayMat = imageManipulationService.createGrayScaleMat(mat)
-            val bitmap = imageManipulationService.getBitmapFromMat(grayMat)
+            val bitmap = imageManipulationService.getBitmapFromMat(imageManipulationService.createGrayScaleMat(imageManipulationService.getMatFromBitmap(mutableBitmap)))
             imageViewerUiState = imageViewerUiState.copy(imageBitmap = bitmap)
         }
     }

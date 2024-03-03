@@ -11,4 +11,6 @@ interface ImageManipulationService {
     fun getBitmapFromMat(mat: Mat?) : Bitmap?
     fun getScreenToBitmapPixelConversion(bitmap: Bitmap?, screenSize: IntSize): FloatArray?
     fun createBitmapAroundPosition(position: Offset, originalBitmap: Bitmap, rectSize: IntSize, screenToBitmapConversion: FloatArray) : Bitmap
+    fun calculateAveragePixelValue(mat: Mat?)
+    fun calculateAveragePixelValue(bitmap: Bitmap?)
 }
