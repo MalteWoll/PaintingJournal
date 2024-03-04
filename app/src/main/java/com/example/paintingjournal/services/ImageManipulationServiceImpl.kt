@@ -99,11 +99,11 @@ class ImageManipulationServiceImpl : ImageManipulationService {
         if (bitmap != null) {
             for(x in 0..<bitmap.width) {
                 for(y in 0..<bitmap.height) {
-                    val intColor = bitmap.getPixel(x,y)
-                    sumOfA += intColor shr 24 and 0xff
-                    sumOfR += intColor shr 16 and 0xff
-                    sumOfG += intColor shr 8 and 0xff
-                    sumOfB += intColor and 0xff
+                    val intColors = getArgbFromInt(bitmap.getPixel(x,y))
+                    sumOfA += intColors[0]
+                    sumOfR += intColors[1]
+                    sumOfG += intColors[2]
+                    sumOfB += intColors[3]
                 }
             }
             val pixelAmount = bitmap.width * bitmap.height
@@ -112,8 +112,24 @@ class ImageManipulationServiceImpl : ImageManipulationService {
             val avgR = sumOfR/pixelAmount
             val avgG = sumOfG/pixelAmount
             val avgB = sumOfB/pixelAmount
-            val hexValue = String.format("#%02x%02x%02x", avgR, avgG, avgB);
+            val hexValue = getHexFromRgb(intArrayOf(avgR,avgG,avgB))
             println("hex value: $hexValue")
+        }
+    }
+
+    override fun getArgbFromInt(intColor: Int): IntArray {
+        val a = intColor shr 24 and 0xff
+        val r = intColor shr 16 and 0xff
+        val g = intColor shr 8 and 0xff
+        val b = intColor and 0xff
+        return intArrayOf(a,r,g,b)
+    }
+
+    override fun getHexFromRgb(rgbArray: IntArray): String {
+        return if(rgbArray.size == 3) {
+            String.format("#%02x%02x%02x", rgbArray[0], rgbArray[1], rgbArray[2])
+        } else {
+            ""
         }
     }
 }
