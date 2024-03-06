@@ -1,9 +1,10 @@
 package com.example.paintingjournal.services
 
-import android.R.color
 import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntSize
+import okhttp3.internal.toHexString
 import org.opencv.android.Utils
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
@@ -91,7 +92,7 @@ class ImageManipulationServiceImpl : ImageManipulationService {
         }
     }
 
-    override fun calculateAveragePixelValue(bitmap: Bitmap?) {
+    override fun calculateAveragePixelValue(bitmap: Bitmap?) : String {
         var sumOfA = 0
         var sumOfR = 0
         var sumOfG = 0
@@ -113,7 +114,14 @@ class ImageManipulationServiceImpl : ImageManipulationService {
             val avgG = sumOfG/pixelAmount
             val avgB = sumOfB/pixelAmount
             val hexValue = getHexFromRgb(intArrayOf(avgR,avgG,avgB))
+            val intValue = Color.rgb(avgR,avgG,avgB)
+            val hexColor = intValue.toHexString()
             println("hex value: $hexValue")
+            println("int value: $intValue")
+            println("hex value2: $hexColor")
+            return hexValue
+        } else {
+            return ""
         }
     }
 

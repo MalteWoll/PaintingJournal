@@ -12,7 +12,7 @@ interface ImageManipulationService {
     fun getScreenToBitmapPixelConversion(bitmap: Bitmap?, screenSize: IntSize): FloatArray?
     fun createBitmapAroundPosition(position: Offset, originalBitmap: Bitmap, rectSize: IntSize, screenToBitmapConversion: FloatArray) : Bitmap
     fun calculateAveragePixelValue(mat: Mat?)
-    fun calculateAveragePixelValue(bitmap: Bitmap?)
+    fun calculateAveragePixelValue(bitmap: Bitmap?) : String
     fun getArgbFromInt(intColor: Int): IntArray
     fun getHexFromRgb(rgbArray: IntArray): String
 }

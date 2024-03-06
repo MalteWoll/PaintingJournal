@@ -85,7 +85,8 @@ class ImageViewerViewModel(
             }
             if(magnifiedBitmap != null) {
                 val mutableMagnifiedBitmap = magnifiedBitmap!!.copy(Bitmap.Config.ARGB_8888, true)
-                imageManipulationService.calculateAveragePixelValue(mutableMagnifiedBitmap)
+                val avgColorHex = imageManipulationService.calculateAveragePixelValue(mutableMagnifiedBitmap)
+                imageViewerUiState = imageViewerUiState.copy(hexColor = avgColorHex)
             }
         }
         imageViewerUiState = imageViewerUiState.copy(
@@ -112,6 +113,10 @@ class ImageViewerViewModel(
         imageViewerUiState = imageViewerUiState.copy(magnificationPixelSize = magnificationPixelSize)
     }
 
+    fun toggleColorPreview() {
+        imageViewerUiState = imageViewerUiState.copy(showColorPreview = !imageViewerUiState.showColorPreview)
+    }
+
     fun applyGrayScale() {
         viewModelScope.launch {
             val mutableBitmap = imageViewerUiState.imageBitmap?.copy(Bitmap.Config.ARGB_8888, true)
@@ -132,8 +137,10 @@ data class ImageViewerUiState(
     val composableImageSize: IntSize? = null,
     val originalImageBitmap: Bitmap? = null,
     val magnifiedBitmap: Bitmap? = null,
-    val showMagnifiedPreview: Boolean = false,
-    val magnificationPixelSize: Int = 10
+    val showMagnifiedPreview: Boolean = true,
+    val magnificationPixelSize: Int = 10,
+    val showColorPreview: Boolean = true,
+    val hexColor: String = ""
 )
 
 data class ImageDetails(

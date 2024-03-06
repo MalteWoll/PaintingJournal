@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Edit
@@ -43,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.asImageBitmap
@@ -55,6 +57,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.paintingjournal.PaintingJournalTopAppBar
@@ -98,17 +101,15 @@ fun ImageViewerView(
                 )
             },
             floatingActionButton = {
-                if(!viewModel.imageViewerUiState.showPopup) {
-                    FloatingActionButton(
-                        onClick = { viewModel.togglePopupState() },
-                        shape = MaterialTheme.shapes.medium,
-                        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = stringResource(R.string.edit_title),
-                        )
-                    }
+                FloatingActionButton(
+                    onClick = { viewModel.togglePopupState() },
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = stringResource(R.string.edit_title),
+                    )
                 }
             }
         ) { innerPadding ->
@@ -133,12 +134,6 @@ fun ImageViewerView(
                                 .onGloballyPositioned { coordinates ->
                                     size = coordinates.size
                                 }
-                                /*.pointerInput(Unit) {
-                                    detectDragGestures { change, _ ->
-                                        Log.d("location", "${change.position}")
-                                        viewModel.createBitmapAroundPosition(change.position)
-                                    }
-                                }*/
                                 .pointerInput(Unit) {
                                     detectTapGestures {
                                         viewModel.createBitmapAroundPosition(it)
@@ -146,16 +141,20 @@ fun ImageViewerView(
                                 }
                         )
                     }
+                    ColorPreview(
+                        hexColor = viewModel.imageViewerUiState.hexColor,
+                        showPreview = viewModel.imageViewerUiState.showColorPreview
+                    )
                     MagnifiedImage(
                         magnifiedImage = viewModel.imageViewerUiState.magnifiedBitmap,
                         showMagnifier = viewModel.imageViewerUiState.showMagnifiedPreview
                     )
                     ImageViewerPopup(
                         imageViewerUiState = viewModel.imageViewerUiState,
-                        onClosePopup = { viewModel.togglePopupState() },
                         onApplyGrayScale = { viewModel.applyGrayScale() },
                         onResetImage = { viewModel.resetImage() },
                         onToggleMagnifier = { viewModel.togglePreviewState() },
+                        onToggleColorPreview = { viewModel.toggleColorPreview() },
                         onChangeMagnificationPixelSize = { viewModel.changeMagnificationPixelSize(it) }
                     )
                 }
@@ -167,11 +166,11 @@ fun ImageViewerView(
 @Composable
 fun ImageViewerPopup(
     imageViewerUiState: ImageViewerUiState,
-    onClosePopup: () -> Unit,
     onApplyGrayScale: () -> Unit,
     onResetImage: () -> Unit,
     onToggleMagnifier: () -> Unit,
     onChangeMagnificationPixelSize: (Int) -> Unit,
+    onToggleColorPreview: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     if(imageViewerUiState.showPopup) {
@@ -183,10 +182,6 @@ fun ImageViewerPopup(
                 .background(Color.White)
                 .fillMaxWidth()
         ) {
-            Text(
-                text = stringResource(id = R.string.image_viewer_popup_title),
-                style = MaterialTheme.typography.titleMedium
-            )
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -209,14 +204,14 @@ fun ImageViewerPopup(
                     )
                 }
             }
+            Button(onClick = { onToggleColorPreview() }) {
+                Text(text = stringResource(id = R.string.image_viewer_popup_toggle_color_preview))
+            }
             Button(onClick = { onApplyGrayScale() }) {
                 Text(text = stringResource(id = R.string.image_viewer_popup_apply_grayscale))
             }
             Button(onClick = { onResetImage() }) {
                 Text(text = stringResource(id = R.string.image_viewer_popup_reset_image))
-            }
-            Button(onClick = { onClosePopup() }) {
-                Text(text = stringResource(id = R.string.close))
             }
         }
     }
@@ -238,12 +233,36 @@ fun MagnifiedImage(
                         model = magnifiedImage,
                         contentDescription = "Magnified image",
                         modifier = Modifier
-                            .size(150.dp)
                             .padding(dimensionResource(id = R.dimen.padding_small))
+                            .border(BorderStroke(2.dp, Color.White))
+                            .size(150.dp)
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
+        }
+    }
+}
+
+@Composable
+fun ColorPreview(
+    hexColor: String,
+    showPreview: Boolean,
+    modifier: Modifier = Modifier
+) {
+    if(showPreview && hexColor != "") {
+        Column {
+            Row {
+                Box(
+                    modifier = Modifier
+                        .padding(dimensionResource(id = R.dimen.padding_small))
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(Color(hexColor.toColorInt()))
+                )
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
