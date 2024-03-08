@@ -54,7 +54,7 @@ object PaintDetailsDestination : NavigationDestination {
 fun PaintDetailView(
     navigateToEditPaint: (Long) -> Unit,
     navigateBack: () -> Unit,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     modifier: Modifier = Modifier,
     canNavigateBack: Boolean = false,
     viewModel: PaintDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -106,7 +106,7 @@ fun PaintDetailView(
 @Composable
 private fun MiniaturePaintDetailsBody(
     miniaturePaintDetailsUiState: MiniaturePaintUiState,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {

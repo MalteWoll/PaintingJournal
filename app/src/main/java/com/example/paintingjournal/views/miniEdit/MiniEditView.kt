@@ -32,7 +32,7 @@ fun MiniEditView(
     navigateBack: () -> Unit,
     navigateToPaintList: (Int) -> Unit,
     navigateToPaintDetails: (Long) -> Unit,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     canNavigateBack: Boolean = false,
     modifier: Modifier = Modifier,
     viewModel: MiniEditViewModel = viewModel(factory = AppViewModelProvider.Factory)

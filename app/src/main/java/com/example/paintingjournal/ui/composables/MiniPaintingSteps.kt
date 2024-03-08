@@ -64,7 +64,7 @@ fun MiniPaintingSteps(
     removePaintingStep: (ExpandablePaintingStep) -> Unit,
     onDeleteImage: (PaintingStepIdAndImage) -> Unit,
     onSwitchImageEditMode: (Long) -> Unit,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     onSaveImage: (PaintingStepIdAndUri) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -111,7 +111,7 @@ fun PaintingStepsList(
     onRemoveStep: (ExpandablePaintingStep) -> Unit,
     onDeleteImage: (PaintingStepIdAndImage) -> Unit,
     onSwitchImageEditMode: (Long) -> Unit,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     onSaveImage: (PaintingStepIdAndUri) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -140,7 +140,7 @@ fun PaintingStepEntry(
     onRemove: (ExpandablePaintingStep) -> Unit,
     onDeleteImage: (PaintingStepIdAndImage) -> Unit,
     onSwitchImageEditMode: (Long) -> Unit,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     onSaveImage: (PaintingStepIdAndUri) -> Unit,
     modifier: Modifier = Modifier,
     onValueChanged: (ExpandablePaintingStep) -> Unit
@@ -348,7 +348,7 @@ fun PaintingStepImagesRow(
     showEditIcon: Boolean,
     switchEditMode: (Long) -> Unit,
     canEdit: Boolean,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (imageList.isNotEmpty()) {
@@ -364,7 +364,7 @@ fun PaintingStepImagesRow(
                             model = image.imageUri,
                             modifier = Modifier
                                 .height(100.dp)
-                                .clickable { navigateToImageViewer(image.id) },
+                                .clickable { navigateToImageViewer(image.id, -1) },
                             contentScale = ContentScale.Fit,
                             contentDescription = "Selected image",
                         )

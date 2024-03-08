@@ -1,5 +1,7 @@
 package com.example.paintingjournal.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -30,6 +32,7 @@ import com.example.paintingjournal.views.paintEdit.PaintEditView
 import com.example.paintingjournal.views.paintList.PaintListDestination
 import com.example.paintingjournal.views.paintList.PaintListView
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun PaintingJournalNavHost(
     navController: NavHostController,
@@ -42,9 +45,15 @@ fun PaintingJournalNavHost(
     {
         composable(
             route = ImageViewerDestination.routeWithArgs,
-            arguments = listOf(navArgument(ImageViewerDestination.imageArg) {
+            arguments = listOf(
+                navArgument(ImageViewerDestination.imageArg) {
                 type = NavType.IntType
-            })
+            },
+                navArgument("entryType") {
+                    type = NavType.IntType
+                    defaultValue = -1
+                }
+            )
         ) {
             ImageViewerView(
                 navigateBack = { navController.popBackStack() },
@@ -64,7 +73,7 @@ fun PaintingJournalNavHost(
                 navigateBack = { navController.popBackStack() },
                 navigateToPaintList = { navController.navigate("${MiniatureEditPaintsListDestination.route}/${it}") },
                 navigateToPaintDetails = { navController.navigate("${PaintDetailsDestination.route}/${it}")},
-                navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
+                navigateToImageViewer = { l: Long, i: Int -> navController.navigate("${ImageViewerDestination.route}/${l}?entryType=${i}") },
                 canNavigateBack = true
             )
         }
@@ -79,7 +88,7 @@ fun PaintingJournalNavHost(
                 navigateToEditMiniature = { navController.navigate("${MiniatureEditDestination.route}/$it") },
                 navigateBack = { navController.navigateUp() },
                 navigateToPaintDetails = { navController.navigate("${PaintDetailsDestination.route}/${it}")},
-                navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
+                navigateToImageViewer = { l: Long, i: Int -> navController.navigate("${ImageViewerDestination.route}/${l}?entryType=${i}") },
                 canNavigateBack = true
             )
         }
@@ -94,7 +103,7 @@ fun PaintingJournalNavHost(
                 navigateBack = { navController.navigateUp() },
                 navigateToPaintList = { navController.navigate("${MiniatureEditPaintsListDestination.route}/${it}") },
                 navigateToPaintDetails = { navController.navigate("${PaintDetailsDestination.route}/${it}")},
-                navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
+                navigateToImageViewer = { l: Long, i: Int -> navController.navigate("${ImageViewerDestination.route}/${l}?entryType=${i}") },
                 canNavigateBack = true
             )
         }
@@ -123,7 +132,7 @@ fun PaintingJournalNavHost(
         composable(route = PaintAddDestination.route) {
             PaintAddView(
                 navigateBack = { navController.popBackStack() },
-                navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
+                navigateToImageViewer = { l: Long, i: Int -> navController.navigate("${ImageViewerDestination.route}/${l}?entryType=${i}") },
                 canNavigateBack = true
             )
         }
@@ -136,7 +145,7 @@ fun PaintingJournalNavHost(
         ) {
             PaintDetailView(
                 navigateToEditPaint = { navController.navigate("${PaintEditDestination.route}/$it") },
-                navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
+                navigateToImageViewer = { l: Long, i: Int -> navController.navigate("${ImageViewerDestination.route}/${l}?entryType=${i}") },
                 navigateBack = { navController.navigateUp() },
                 canNavigateBack = true
             )
@@ -150,7 +159,7 @@ fun PaintingJournalNavHost(
         ) {
             PaintEditView(
                 navigateBack = { navController.popBackStack() },
-                navigateToImageViewer = { navController.navigate("${ImageViewerDestination.route}/${it}") },
+                navigateToImageViewer = { l: Long, i: Int -> navController.navigate("${ImageViewerDestination.route}/${l}?entryType=${i}") },
                 canNavigateBack = true
             )
         }

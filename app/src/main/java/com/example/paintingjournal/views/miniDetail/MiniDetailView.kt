@@ -59,11 +59,11 @@ object MiniatureDetailsDestination : NavigationDestination {
 @Composable
 fun MiniDetailView(
     navigateToEditMiniature: (Long) -> Unit,
-    canNavigateBack: Boolean = false,
     navigateBack: () -> Unit,
     navigateToPaintDetails: (Long) -> Unit,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     modifier: Modifier = Modifier,
+    canNavigateBack: Boolean = false,
     viewModel: MiniDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState = viewModel.miniatureDetailsUiState
@@ -77,7 +77,7 @@ fun MiniDetailView(
         topBar = {
             PaintingJournalTopAppBar(
                 title = stringResource(R.string.mini_details_title),
-                canNavigateBack = true,
+                canNavigateBack = canNavigateBack,
                 navigateUp = navigateBack
             )
         },
@@ -117,7 +117,7 @@ fun MiniDetailView(
 @Composable
 private fun MiniatureDetailsBody(
     miniatureDetailsUiState: MiniatureUiState,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     navigateToPaint: (Long) -> Unit,
     togglePaintingStepExpand: (ExpandablePaintingStep) -> Unit,
     onDelete: () -> Unit,
@@ -139,7 +139,8 @@ private fun MiniatureDetailsBody(
             showEditIcon = false,
             switchEditMode = {},
             canEdit = false,
-            navigateToImageViewer = {navigateToImageViewer(it)}
+            navigateToImageViewer = navigateToImageViewer,
+            entryType = 0
         )
         PaintRow(
             miniatureUiState = miniatureDetailsUiState,

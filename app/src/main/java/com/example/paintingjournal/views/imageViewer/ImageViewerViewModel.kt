@@ -32,6 +32,8 @@ class ImageViewerViewModel(
         private set
 
     val imageId: Int = checkNotNull(savedStateHandle[ImageViewerDestination.imageArg])
+    val entryType: Int = checkNotNull(savedStateHandle["entryType"])
+
     private var screenToBitmapConversionX: Float = 0f
     private var screenToBitmapConversionY: Float = 0f
 
@@ -44,6 +46,7 @@ class ImageViewerViewModel(
                 .toImageDetails()
             imageViewerUiState = imageViewerUiState.copy(imageDetails = imageDetails)
         }
+        println("Entry tpye: $entryType")
     }
 
     @RequiresApi(Build.VERSION_CODES.P)

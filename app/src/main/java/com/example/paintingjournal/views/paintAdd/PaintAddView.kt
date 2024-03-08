@@ -65,7 +65,7 @@ object PaintAddDestination: NavigationDestination {
 fun PaintAddView(
     navigateBack: () -> Unit,
     canNavigateBack: Boolean = true,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     viewModel: PaintAddViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -117,7 +117,7 @@ fun PaintEntryBody(
     onSaveImage: (Uri?) -> Unit,
     onRemoveImage: (Image) -> Unit,
     switchEditMode: () -> Unit,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -136,7 +136,7 @@ fun PaintEntryBody(
             showEditIcon = true,
             switchEditMode = { switchEditMode() },
             canEdit = miniaturePaintUiState.canEdit,
-            navigateToImageViewer = {navigateToImageViewer(it)}
+            navigateToImageViewer = navigateToImageViewer
         )
         Button(
             onClick = onSaveClicked,
@@ -263,8 +263,9 @@ fun ImagesRow(
     showEditIcon: Boolean,
     switchEditMode: () -> Unit,
     canEdit: Boolean,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     modifier: Modifier = Modifier,
+    entryType: Int = -1,
 ) {
     if (imageList.isNotEmpty()) {
         Column {
@@ -279,7 +280,7 @@ fun ImagesRow(
                             model = image.imageUri,
                             modifier = Modifier
                                 .height(100.dp)
-                                .clickable { navigateToImageViewer(image.id) },
+                                .clickable { navigateToImageViewer(image.id, entryType) },
                             contentScale = ContentScale.Fit,
                             contentDescription = "Selected image",
                         )

@@ -71,7 +71,8 @@ object ImageViewerDestination : NavigationDestination {
     override val route = "image_viewer"
     override val titleRes = R.string.image_viewer
     const val imageArg = "imageId"
-    val routeWithArgs = "$route/{$imageArg}"
+    const val optionalEntryType = "entryType"
+    val routeWithArgs = "$route/{$imageArg}?${optionalEntryType}={${optionalEntryType}}"
 }
 
 @RequiresApi(Build.VERSION_CODES.P)

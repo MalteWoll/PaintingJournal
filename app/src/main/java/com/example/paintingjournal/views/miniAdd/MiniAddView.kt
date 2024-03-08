@@ -1,6 +1,8 @@
 package com.example.paintingjournal.views.miniAdd
 
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,6 +49,7 @@ object MiniAddDestination: NavigationDestination {
     override val titleRes = R.string.mini_add_title
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MiniAddView(
@@ -54,7 +57,7 @@ fun MiniAddView(
     canNavigateBack: Boolean = true,
     navigateToPaintList: (Int) -> Unit,
     navigateToPaintDetails: (Long) -> Unit,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     viewModel: MiniAddViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -126,7 +129,7 @@ fun MiniatureEntryBody(
     switchEditMode: () -> Unit,
     navigateToPaintList: (Int) -> Unit,
     navigateToPaint: (Long) -> Unit,
-    navigateToImageViewer: (Long) -> Unit,
+    navigateToImageViewer: (Long, Int) -> Unit,
     onAddPaintingStep: () -> Unit,
     onRemovePaintingStep: (ExpandablePaintingStep) -> Unit,
     onTogglePaintingStepExpand: (ExpandablePaintingStep) -> Unit,
@@ -152,7 +155,7 @@ fun MiniatureEntryBody(
             showEditIcon = true,
             switchEditMode = { switchEditMode() },
             canEdit = miniatureUiState.canEdit,
-            navigateToImageViewer = {navigateToImageViewer(it)}
+            navigateToImageViewer = navigateToImageViewer
         )
         PaintRow(
             paintList = miniatureUiState.paintList,
