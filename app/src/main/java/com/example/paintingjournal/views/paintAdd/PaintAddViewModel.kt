@@ -4,6 +4,8 @@ import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.core.graphics.toColorInt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.paintingjournal.data.ImagesRepository
@@ -12,12 +14,14 @@ import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.PaintImageMappingTable
 import com.example.paintingjournal.model.SaveStateEnum
+import com.example.paintingjournal.services.ImageManipulationService
 import kotlinx.coroutines.launch
 import java.util.Date
 
 class PaintAddViewModel(
     private val paintsRepository: PaintsRepository,
-    private val imagesRepository: ImagesRepository
+    private val imagesRepository: ImagesRepository,
+    private val imageManipulationService: ImageManipulationService
 ) : ViewModel() {
     suspend fun saveMiniaturePaint() {
         if(validateInput()) {
@@ -80,6 +84,12 @@ class PaintAddViewModel(
             name.isNotBlank()
         }
     }
+
+    fun changeColor(hexColor: String) {
+        val formattedHexColor = "#" + hexColor.substring(2)
+        miniaturePaintUiState = miniaturePaintUiState.copy(miniaturePaintDetails =
+            miniaturePaintUiState.miniaturePaintDetails.copy(hexColor = formattedHexColor))
+    }
 }
 
 data class MiniaturePaintUiState(
@@ -97,7 +107,8 @@ data class MiniaturePaintDetails(
     val description: String = "",
     val type: String = "",
     val createdAt: Date? = null,
-    var previewImageUri: Uri? = null
+    var previewImageUri: Uri? = null,
+    val hexColor: String = "",
 )
 
 fun MiniaturePaintDetails.toPaint(): MiniaturePaint = MiniaturePaint(
@@ -107,7 +118,8 @@ fun MiniaturePaintDetails.toPaint(): MiniaturePaint = MiniaturePaint(
     description = description,
     type = type,
     createdAt = createdAt,
-    previewImageUri = previewImageUri
+    previewImageUri = previewImageUri,
+    hexColor = hexColor
 )
 
 fun MiniaturePaint.toMiniaturePaintUiState(isEntryValid: Boolean = false): MiniaturePaintUiState = MiniaturePaintUiState(
@@ -122,5 +134,6 @@ fun MiniaturePaint.toMiniaturePaintDetails(): MiniaturePaintDetails = MiniatureP
     description = description,
     type = type,
     createdAt = createdAt,
-    previewImageUri = previewImageUri
+    previewImageUri = previewImageUri,
+    hexColor = hexColor
 )

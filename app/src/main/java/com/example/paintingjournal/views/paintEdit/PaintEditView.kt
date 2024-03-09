@@ -58,6 +58,7 @@ fun PaintEditView(
             onRemoveImage = { viewModel.removeImageFromList(it) },
             switchEditMode = { viewModel.switchEditMode() },
             navigateToImageViewer = navigateToImageViewer,
+            onColorChanged = {},
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())

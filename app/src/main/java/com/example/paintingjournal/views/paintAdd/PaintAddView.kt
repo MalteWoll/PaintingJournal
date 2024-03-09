@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
@@ -37,7 +38,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -53,6 +57,10 @@ import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import com.example.paintingjournal.ui.composables.ImagePicker
 import com.example.paintingjournal.ui.composables.ImageSelection
+import com.github.skydoves.colorpicker.compose.AlphaTile
+import com.github.skydoves.colorpicker.compose.BrightnessSlider
+import com.github.skydoves.colorpicker.compose.HsvColorPicker
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import kotlinx.coroutines.launch
 
 object PaintAddDestination: NavigationDestination {
@@ -100,6 +108,9 @@ fun PaintAddView(
                     viewModel.switchEditMode()
                 },
                 navigateToImageViewer = navigateToImageViewer,
+                onColorChanged = {
+                    viewModel.changeColor(it)
+                },
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -116,6 +127,7 @@ fun PaintEntryBody(
     onSaveClicked: () -> Unit,
     onSaveImage: (Uri?) -> Unit,
     onRemoveImage: (Image) -> Unit,
+    onColorChanged: (String) -> Unit,
     switchEditMode: () -> Unit,
     navigateToImageViewer: (Long, Int) -> Unit,
     modifier: Modifier = Modifier
@@ -137,6 +149,10 @@ fun PaintEntryBody(
             switchEditMode = { switchEditMode() },
             canEdit = miniaturePaintUiState.canEdit,
             navigateToImageViewer = navigateToImageViewer
+        )
+        ColorPicker(
+            onColorChanged = { onColorChanged(it) },
+            initialColor = null
         )
         Button(
             onClick = onSaveClicked,
@@ -314,4 +330,43 @@ fun ImagesRow(
         }
     }
     Divider()
+}
+
+@Composable
+fun ColorPicker(
+    onColorChanged: (String) -> Unit,
+    initialColor: Color?,
+    modifier: Modifier = Modifier
+) {
+    val controller = rememberColorPickerController()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HsvColorPicker(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(450.dp)
+                .padding(dimensionResource(id = R.dimen.padding_small)),
+            controller = controller,
+            initialColor = initialColor,
+            onColorChanged = { colorEnvelope ->
+                val color: Color = colorEnvelope.color
+                val hexCode: String = colorEnvelope.hexCode
+                onColorChanged(hexCode)
+            }
+        )
+        BrightnessSlider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+                .height(35.dp),
+            controller = controller
+        )
+        AlphaTile(
+            modifier = Modifier
+                .size(80.dp)
+                .clip(RoundedCornerShape(6.dp)),
+            controller = controller
+        )
+    }
 }

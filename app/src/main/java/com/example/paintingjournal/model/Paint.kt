@@ -16,5 +16,6 @@ data class MiniaturePaint (
     val description: String,
     val type: String,
     val createdAt: Date?,
-    var previewImageUri: Uri?
+    var previewImageUri: Uri?,
+    val hexColor: String,
 )

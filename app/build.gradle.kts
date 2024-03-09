@@ -94,4 +94,7 @@ dependencies {
 
     // Zoomable
     implementation("net.engawapg.lib:zoomable:1.6.0")
+
+    // Color picker
+    implementation("com.github.skydoves:colorpicker-compose:1.0.7")
 }
