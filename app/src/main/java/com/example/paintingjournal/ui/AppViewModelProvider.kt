@@ -25,6 +25,7 @@ object AppViewModelProvider {
             ImageViewerViewModel(
                 this.createSavedStateHandle(),
                 paintingJournalApplication().container.imagesRepository,
+                paintingJournalApplication().container.paintsRepository,
                 paintingJournalApplication().container.imageManipulationService
             )
         }

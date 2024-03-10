@@ -12,6 +12,7 @@ class PaintsRepositoryImpl(private val paintDao: PaintDao) : PaintsRepository {
     override suspend fun deletePaint(paint: MiniaturePaint) = paintDao.delete(paint)
     override suspend fun updatePaint(paint: MiniaturePaint) = paintDao.update(paint)
     override fun getImagesForPaint(id: Int): Flow<List<Image>> = paintDao.getImagesForPaint(id)
+    override fun getPaintForImage(id: Int): Flow<MiniaturePaint> = paintDao.getPaintForImage(id)
     override suspend fun addImageForPaint(paintImageMappingTable: PaintImageMappingTable) = paintDao.addPaintImageMap(paintImageMappingTable)
     override suspend fun deleteImageForPaint(paintImageMappingTable: PaintImageMappingTable) = paintDao.deletePaintImageMap(paintImageMappingTable)
 }

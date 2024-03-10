@@ -47,6 +47,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.paintingjournal.PaintingJournalTopAppBar
@@ -130,7 +131,8 @@ fun PaintEntryBody(
     onColorChanged: (String) -> Unit,
     switchEditMode: () -> Unit,
     navigateToImageViewer: (Long, Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    entryType: Int = -1,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large)),
@@ -148,11 +150,12 @@ fun PaintEntryBody(
             showEditIcon = true,
             switchEditMode = { switchEditMode() },
             canEdit = miniaturePaintUiState.canEdit,
+            entryType = entryType,
             navigateToImageViewer = navigateToImageViewer
         )
         ColorPicker(
             onColorChanged = { onColorChanged(it) },
-            initialColor = null
+            initialColor = miniaturePaintUiState.initialColor
         )
         Button(
             onClick = onSaveClicked,

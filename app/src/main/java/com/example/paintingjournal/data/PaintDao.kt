@@ -33,6 +33,11 @@ interface PaintDao {
             "where paintIdRef = :id")
     fun getImagesForPaint(id: Int): Flow<List<Image>>
 
+    @Query("SELECT * from paints " +
+            "left join paintImageMapping map on paints.paintId = map.paintIdRef " +
+            "where imageIdRef = :id")
+    fun getPaintForImage(id: Int): Flow<MiniaturePaint>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addPaintImageMap(paintImageMappingTable: PaintImageMappingTable)
 

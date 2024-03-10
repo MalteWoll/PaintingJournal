@@ -4,6 +4,8 @@ import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.core.graphics.toColorInt
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +21,7 @@ import com.example.paintingjournal.views.paintAdd.toPaint
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class PaintEditViewModel(
     savedStateHandle: SavedStateHandle,
@@ -30,15 +33,18 @@ class PaintEditViewModel(
 
     private val paintId : Int = checkNotNull(savedStateHandle[PaintEditDestination.paintArg])
 
-    init {
-        viewModelScope.launch {
+    fun getData() {
+        runBlocking {
             miniaturePaintUiState = paintsRepository.getPaintStream(paintId)
                 .filterNotNull()
                 .first()
                 .toMiniaturePaintUiState(true)
+            if(miniaturePaintUiState.miniaturePaintDetails.hexColor != "") {
+                miniaturePaintUiState = miniaturePaintUiState.copy(initialColor = Color(miniaturePaintUiState.miniaturePaintDetails.hexColor.toColorInt()))
+            }
         }
 
-        viewModelScope.launch {
+        runBlocking {
             val imageList = paintsRepository.getImagesForPaint(paintId)
                 .filterNotNull()
                 .first()
@@ -128,5 +134,11 @@ class PaintEditViewModel(
         return with(uiState) {
             name.isNotBlank()
         }
+    }
+
+    fun changeColor(hexColor: String) {
+        val formattedHexColor = "#" + hexColor.substring(2)
+        miniaturePaintUiState = miniaturePaintUiState.copy(miniaturePaintDetails =
+        miniaturePaintUiState.miniaturePaintDetails.copy(hexColor = formattedHexColor))
     }
 }

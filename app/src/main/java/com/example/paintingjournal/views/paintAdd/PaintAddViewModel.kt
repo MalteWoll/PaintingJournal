@@ -97,7 +97,8 @@ data class MiniaturePaintUiState(
     val isEntryValid: Boolean = false,
     val imageList: List<Image> = listOf(),
     val originalImageList: List<Image> = listOf(),
-    val canEdit: Boolean = false
+    val canEdit: Boolean = false,
+    val initialColor: Color? = null
 )
 
 data class MiniaturePaintDetails(

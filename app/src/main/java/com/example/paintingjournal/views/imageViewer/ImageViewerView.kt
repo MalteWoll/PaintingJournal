@@ -1,19 +1,14 @@
 package com.example.paintingjournal.views.imageViewer
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.material3.Button
@@ -46,12 +41,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -86,8 +78,7 @@ fun ImageViewerView(
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.getImage()
-        viewModel.createBitmap(context)
+        viewModel.getData(context)
     }
 
     Surface(
@@ -144,7 +135,10 @@ fun ImageViewerView(
                     }
                     ColorPreview(
                         hexColor = viewModel.imageViewerUiState.hexColor,
-                        showPreview = viewModel.imageViewerUiState.showColorPreview
+                        showPreview = viewModel.imageViewerUiState.showColorPreview,
+                        showAddButton = viewModel.imageViewerUiState.showAddToPaintButton,
+                        addColorToPaint = { viewModel.onUpdateColorForPaint(it) },
+                        onNavigateBack = navigateBack
                     )
                     MagnifiedImage(
                         magnifiedImage = viewModel.imageViewerUiState.magnifiedBitmap,
@@ -249,6 +243,9 @@ fun MagnifiedImage(
 fun ColorPreview(
     hexColor: String,
     showPreview: Boolean,
+    showAddButton: Boolean,
+    addColorToPaint: (String) -> Unit,
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     if(showPreview && hexColor != "") {
@@ -260,7 +257,21 @@ fun ColorPreview(
                         .size(100.dp)
                         .clip(CircleShape)
                         .background(Color(hexColor.toColorInt()))
-                )
+                ) {
+                    if(showAddButton) {
+                        IconButton(onClick = {
+                            addColorToPaint(hexColor)
+                            onNavigateBack()
+                        }) {
+                            Icon(
+                                Icons.Outlined.AddCircle,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(80.dp)
+                            )
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.weight(1f))
             }
             Spacer(modifier = Modifier.weight(1f))

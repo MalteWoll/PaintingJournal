@@ -15,9 +15,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.paintingjournal.data.ImagesRepository
+import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.services.ImageManipulationService
+import com.example.paintingjournal.views.paintAdd.MiniaturePaintDetails
+import com.example.paintingjournal.views.paintAdd.toMiniaturePaintDetails
+import com.example.paintingjournal.views.paintAdd.toPaint
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -26,6 +30,7 @@ import kotlinx.coroutines.runBlocking
 class ImageViewerViewModel(
     savedStateHandle: SavedStateHandle,
     private val imagesRepository: ImagesRepository,
+    private val paintsRepository: PaintsRepository,
     private val imageManipulationService: ImageManipulationService
 ): ViewModel() {
     var imageViewerUiState by mutableStateOf(ImageViewerUiState())
@@ -37,16 +42,38 @@ class ImageViewerViewModel(
     private var screenToBitmapConversionX: Float = 0f
     private var screenToBitmapConversionY: Float = 0f
 
+    @RequiresApi(Build.VERSION_CODES.P)
+    fun getData(context: Context) {
+        getImage()
+        createBitmap(context)
+        if(entryType == 1) {
+            getMiniaturePaint()
+        }
+    }
 
-    fun getImage() {
+    private fun getImage() {
         runBlocking {
             val imageDetails = imagesRepository.getImageStream(imageId)
                 .filterNotNull()
                 .first()
                 .toImageDetails()
-            imageViewerUiState = imageViewerUiState.copy(imageDetails = imageDetails)
+            imageViewerUiState = imageViewerUiState.copy(
+                imageDetails = imageDetails,
+            )
         }
-        println("Entry tpye: $entryType")
+    }
+
+    private fun getMiniaturePaint() {
+        runBlocking {
+            val paint = paintsRepository.getPaintForImage(imageId)
+                .filterNotNull()
+                .first()
+                .toMiniaturePaintDetails()
+            imageViewerUiState = imageViewerUiState.copy(
+                miniaturePaint = paint,
+                showAddToPaintButton = true
+            )
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -131,6 +158,18 @@ class ImageViewerViewModel(
     fun resetImage() {
         imageViewerUiState = imageViewerUiState.copy(imageBitmap = imageViewerUiState.originalImageBitmap)
     }
+
+    fun onUpdateColorForPaint(hexColor: String) {
+        viewModelScope.launch {
+            if(imageViewerUiState.hexColor != "") {
+                imageViewerUiState.miniaturePaint?.copy(hexColor = hexColor)?.let {
+                    paintsRepository.updatePaint(
+                        it.toPaint()
+                    )
+                }
+            }
+        }
+    }
 }
 
 data class ImageViewerUiState(
@@ -143,7 +182,9 @@ data class ImageViewerUiState(
     val showMagnifiedPreview: Boolean = true,
     val magnificationPixelSize: Int = 10,
     val showColorPreview: Boolean = true,
-    val hexColor: String = ""
+    val hexColor: String = "",
+    val showAddToPaintButton: Boolean = false,
+    val miniaturePaint: MiniaturePaintDetails? = null
 )
 
 data class ImageDetails(

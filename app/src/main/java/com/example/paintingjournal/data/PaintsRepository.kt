@@ -12,6 +12,7 @@ interface PaintsRepository {
     suspend fun deletePaint(paint: MiniaturePaint)
     suspend fun updatePaint(paint: MiniaturePaint)
     fun getImagesForPaint(id: Int): Flow<List<Image>>
+    fun getPaintForImage(id: Int): Flow<MiniaturePaint>
     suspend fun addImageForPaint(paintImageMappingTable: PaintImageMappingTable)
     suspend fun deleteImageForPaint(paintImageMappingTable: PaintImageMappingTable)
 }
