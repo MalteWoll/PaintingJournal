@@ -90,6 +90,10 @@ class PaintAddViewModel(
         miniaturePaintUiState = miniaturePaintUiState.copy(miniaturePaintDetails =
             miniaturePaintUiState.miniaturePaintDetails.copy(hexColor = formattedHexColor))
     }
+
+    fun toggleColorPicker() {
+        miniaturePaintUiState = miniaturePaintUiState.copy(showColorPicker = !miniaturePaintUiState.showColorPicker)
+    }
 }
 
 data class MiniaturePaintUiState(
@@ -98,7 +102,8 @@ data class MiniaturePaintUiState(
     val imageList: List<Image> = listOf(),
     val originalImageList: List<Image> = listOf(),
     val canEdit: Boolean = false,
-    val initialColor: Color? = null
+    val initialColor: Color? = null,
+    val showColorPicker: Boolean = false
 )
 
 data class MiniaturePaintDetails(

@@ -66,6 +66,7 @@ fun PaintEditView(
             navigateToImageViewer = navigateToImageViewer,
             onColorChanged = { viewModel.changeColor(it) },
             entryType = 1,
+            onToggleColorPicker = {viewModel.toggleColorPicker()},
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())

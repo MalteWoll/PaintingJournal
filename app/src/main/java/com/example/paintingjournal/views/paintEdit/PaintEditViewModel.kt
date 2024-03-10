@@ -141,4 +141,8 @@ class PaintEditViewModel(
         miniaturePaintUiState = miniaturePaintUiState.copy(miniaturePaintDetails =
         miniaturePaintUiState.miniaturePaintDetails.copy(hexColor = formattedHexColor))
     }
+
+    fun toggleColorPicker() {
+        miniaturePaintUiState = miniaturePaintUiState.copy(showColorPicker = !miniaturePaintUiState.showColorPicker)
+    }
 }

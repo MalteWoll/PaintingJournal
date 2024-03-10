@@ -3,6 +3,7 @@ package com.example.paintingjournal.views.paintAdd
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -112,6 +114,7 @@ fun PaintAddView(
                 onColorChanged = {
                     viewModel.changeColor(it)
                 },
+                onToggleColorPicker = {viewModel.toggleColorPicker()},
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
@@ -131,6 +134,7 @@ fun PaintEntryBody(
     onColorChanged: (String) -> Unit,
     switchEditMode: () -> Unit,
     navigateToImageViewer: (Long, Int) -> Unit,
+    onToggleColorPicker: () -> Unit,
     modifier: Modifier = Modifier,
     entryType: Int = -1,
 ) {
@@ -155,7 +159,9 @@ fun PaintEntryBody(
         )
         ColorPicker(
             onColorChanged = { onColorChanged(it) },
-            initialColor = miniaturePaintUiState.initialColor
+            initialColor = miniaturePaintUiState.initialColor,
+            onToggleColorPicker = onToggleColorPicker,
+            showColorPicker = miniaturePaintUiState.showColorPicker
         )
         Button(
             onClick = onSaveClicked,
@@ -179,10 +185,15 @@ fun MiniaturePaintInputForm(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
-        Text(
-            text = stringResource(id = R.string.paint_section_general),
-            style = MaterialTheme.typography.bodyLarge
-        )
+        if(miniaturePaintDetails.hexColor != "") {
+            Box(
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Color(miniaturePaintDetails.hexColor.toColorInt()))
+            )
+        }
         OutlinedTextField(
             value = miniaturePaintDetails.name,
             onValueChange = { onValueChanged(miniaturePaintDetails.copy(name = it)) },
@@ -339,37 +350,48 @@ fun ImagesRow(
 fun ColorPicker(
     onColorChanged: (String) -> Unit,
     initialColor: Color?,
+    onToggleColorPicker: () -> Unit,
+    showColorPicker: Boolean,
     modifier: Modifier = Modifier
 ) {
     val controller = rememberColorPickerController()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HsvColorPicker(
+        Button(
+            onClick = { onToggleColorPicker() },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(450.dp)
-                .padding(dimensionResource(id = R.dimen.padding_small)),
-            controller = controller,
-            initialColor = initialColor,
-            onColorChanged = { colorEnvelope ->
-                val color: Color = colorEnvelope.color
-                val hexCode: String = colorEnvelope.hexCode
-                onColorChanged(hexCode)
-            }
-        )
-        BrightnessSlider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-                .height(35.dp),
-            controller = controller
-        )
-        AlphaTile(
-            modifier = Modifier
-                .size(80.dp)
-                .clip(RoundedCornerShape(6.dp)),
-            controller = controller
-        )
+        ) {
+            Text(text = stringResource(id = R.string.paint_add_toggle_color_picker))
+        }
+        if(showColorPicker) {
+            HsvColorPicker(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(450.dp)
+                    .padding(dimensionResource(id = R.dimen.padding_small)),
+                controller = controller,
+                initialColor = initialColor,
+                onColorChanged = { colorEnvelope ->
+                    val color: Color = colorEnvelope.color
+                    val hexCode: String = colorEnvelope.hexCode
+                    onColorChanged(hexCode)
+                },
+            )
+            BrightnessSlider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                    .height(35.dp),
+                controller = controller
+            )
+            AlphaTile(
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(RoundedCornerShape(6.dp)),
+                controller = controller
+            )
+        }
     }
 }
