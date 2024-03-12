@@ -183,6 +183,13 @@ fun ImageViewerPopup(
                 Button(onClick = { onToggleMagnifier() }) {
                     Text(text = stringResource(id = R.string.image_viewer_popup_show_magnifier))
                 }
+                IconButton(onClick = { onChangeMagnificationPixelSize(-10) }) {
+                    Icon(
+                        Icons.Outlined.KeyboardArrowLeft,
+                        contentDescription = "",
+                        modifier = Modifier
+                    )
+                }
                 IconButton(onClick = { onChangeMagnificationPixelSize(-1) }) {
                     Icon(
                         Icons.Outlined.KeyboardArrowLeft,
@@ -192,6 +199,13 @@ fun ImageViewerPopup(
                 }
                 Text(text = imageViewerUiState.magnificationPixelSize.toString())
                 IconButton(onClick = { onChangeMagnificationPixelSize(+1) }) {
+                    Icon(
+                        Icons.Outlined.KeyboardArrowRight,
+                        contentDescription = "",
+                        modifier = Modifier
+                    )
+                }
+                IconButton(onClick = { onChangeMagnificationPixelSize(+10) }) {
                     Icon(
                         Icons.Outlined.KeyboardArrowRight,
                         contentDescription = "",

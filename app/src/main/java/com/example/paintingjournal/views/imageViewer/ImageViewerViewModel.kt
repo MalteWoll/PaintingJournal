@@ -137,7 +137,7 @@ class ImageViewerViewModel(
 
     fun changeMagnificationPixelSize(change: Int) {
         val magnificationPixelSize = imageViewerUiState.magnificationPixelSize + change
-        if(magnificationPixelSize < 1 || magnificationPixelSize > 50) {
+        if(magnificationPixelSize < 1 || magnificationPixelSize > 100) {
             return
         }
         imageViewerUiState = imageViewerUiState.copy(magnificationPixelSize = magnificationPixelSize)
