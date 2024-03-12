@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -215,7 +216,11 @@ fun PaintRow(
             }
         }
         if (paintList.isNotEmpty()) {
-            Row {
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            ) {
                 paintList.forEach { paint ->
                     Column(
                         modifier = Modifier
@@ -230,7 +235,7 @@ fun PaintRow(
                         )
                         Text(
                             text = paint.name,
-                            style = MaterialTheme.typography.titleLarge
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 }

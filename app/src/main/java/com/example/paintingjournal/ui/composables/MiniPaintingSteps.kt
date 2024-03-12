@@ -168,11 +168,13 @@ fun PaintingStepEntry(
                     singleLine = true
                 )
             } else {
-                Text(
-                    text = paintingStep.stepTitle,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                if(paintingStep.stepTitle != "") {
+                    Text(
+                        text = paintingStep.stepTitle,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
             if(!paintingStep.isExpanded) {
                 Row {
@@ -203,11 +205,13 @@ fun PaintingStepEntry(
                         singleLine = false
                     )
                 } else {
-                    Text(
-                        text = paintingStep.stepDescription,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                    if(paintingStep.stepDescription != "") {
+                        Text(
+                            text = paintingStep.stepDescription,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
                 }
             }
             if(paintingStep.isExpanded) {
@@ -270,10 +274,11 @@ fun PaintingStepsImageSelection(
                 onSaveImage = onSaveImage,
                 paintingStep = expandablePaintingStep
             )
+            /*
             PaintingStepImagePicker(
                 onSaveImage = onSaveImage,
                 paintingStep = expandablePaintingStep
-            )
+            )*/
         }
     }
 }

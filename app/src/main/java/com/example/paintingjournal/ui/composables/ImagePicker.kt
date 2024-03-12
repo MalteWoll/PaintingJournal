@@ -36,9 +36,9 @@ fun ImageSelection(
             TakeImage(
                 onSaveImage = onSaveImage
             )
-            ImagePicker(
+            /*ImagePicker(
                 onSaveImage = onSaveImage
-            )
+            )*/
         }
     }
 }
