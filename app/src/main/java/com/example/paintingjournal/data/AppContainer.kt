@@ -25,7 +25,7 @@ class AppDataContainer(private val context: Context) : AppContainer {
         MiniaturesRepositoryImpl(MiniatureDatabase.getDatabase(context).miniatureDao())
     }
     override val miniaturesService: MiniaturesService by lazy {
-        MiniaturesServiceImpl()
+        MiniaturesServiceImpl(paintsRepository)
     }
     override val paintsRepository: PaintsRepository by lazy {
         PaintsRepositoryImpl(MiniatureDatabase.getDatabase(context).paintDao())

@@ -1,6 +1,7 @@
 package com.example.paintingjournal.views.paintAdd
 
 import android.net.Uri
+import android.widget.AutoCompleteTextView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -25,7 +26,11 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +39,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +49,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -145,6 +153,7 @@ fun PaintEntryBody(
         MiniaturePaintInputForm(
             miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails,
             onValueChanged = onMiniaturePaintValueChanged,
+            manufacturerNames = miniaturePaintUiState.manufacturerNames,
             modifier = Modifier.fillMaxWidth()
         )
         ImageSelection(onSaveImage = onSaveImage)
@@ -174,9 +183,11 @@ fun PaintEntryBody(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MiniaturePaintInputForm(
     miniaturePaintDetails: MiniaturePaintDetails,
+    manufacturerNames: List<String>,
     modifier: Modifier = Modifier,
     onValueChanged: (MiniaturePaintDetails) -> Unit = {},
     enabled: Boolean = true
@@ -207,19 +218,43 @@ fun MiniaturePaintInputForm(
             enabled = enabled,
             singleLine = true
         )
-        OutlinedTextField(
-            value = miniaturePaintDetails.manufacturer,
-            onValueChange = { onValueChanged(miniaturePaintDetails.copy(manufacturer = it)) },
-            label = { Text(stringResource(id = R.string.paint_add_form_manufacturer)) },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
+        var expanded by remember { mutableStateOf(false) }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.padding_small))
+        ) {
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded }
+            ) {
+                TextField(
+                    value = miniaturePaintDetails.manufacturer,
+                    onValueChange = { onValueChanged(miniaturePaintDetails.copy(manufacturer = it)) },
+                    label = { Text(stringResource(id = R.string.paint_add_form_manufacturer)) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                )
+                val filteredOptions = manufacturerNames.filter { it.contains(miniaturePaintDetails.manufacturer, ignoreCase = true) }
+                if(filteredOptions.isNotEmpty()) {
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        filteredOptions.forEach { manufacturer ->
+                            DropdownMenuItem(
+                                text = { Text(text = manufacturer) },
+                                onClick = {
+                                    onValueChanged(miniaturePaintDetails.copy(manufacturer = manufacturer))
+                                    expanded = false
+                                })
+                        }
+                    }
+                }
+            }
+        }
         OutlinedTextField(
             value = miniaturePaintDetails.description,
             onValueChange = { onValueChanged(miniaturePaintDetails.copy(description = it)) },

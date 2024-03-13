@@ -1,9 +1,14 @@
 package com.example.paintingjournal.services
 
+import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.model.PaintingStep
 import com.example.paintingjournal.views.miniAdd.ExpandablePaintingStep
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 
-class MiniaturesServiceImpl : MiniaturesService {
+class MiniaturesServiceImpl(
+    private val paintsRepository: PaintsRepository
+) : MiniaturesService {
     override fun createExpandablePaintingStepList(paintingStepList: List<PaintingStep>) : List<ExpandablePaintingStep> {
         val expandablePaintingStepList: MutableList<ExpandablePaintingStep> = mutableListOf()
         paintingStepList.forEach { paintingStep ->
@@ -37,5 +42,12 @@ class MiniaturesServiceImpl : MiniaturesService {
             )
         }
         return paintingStepList.toList()
+    }
+
+    override suspend fun getPaintManufacturersNameList(): List<String> {
+        return paintsRepository.getAllManufacturers()
+            .filterNotNull()
+            .first()
+            .toList()
     }
 }

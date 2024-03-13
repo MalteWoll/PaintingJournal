@@ -15,14 +15,29 @@ import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.PaintImageMappingTable
 import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.services.ImageManipulationService
+import com.example.paintingjournal.services.MiniaturesService
 import kotlinx.coroutines.launch
 import java.util.Date
 
 class PaintAddViewModel(
     private val paintsRepository: PaintsRepository,
     private val imagesRepository: ImagesRepository,
-    private val imageManipulationService: ImageManipulationService
+    private val imageManipulationService: ImageManipulationService,
+    private val miniaturesService: MiniaturesService
 ) : ViewModel() {
+
+    init {
+        getManufacturerNames()
+    }
+
+    private fun getManufacturerNames() {
+        viewModelScope.launch {
+            val manufacturers = miniaturesService.getPaintManufacturersNameList()
+            miniaturePaintUiState = miniaturePaintUiState.copy(manufacturerNames = manufacturers)
+        }
+
+    }
+
     suspend fun saveMiniaturePaint() {
         if(validateInput()) {
             if(miniaturePaintUiState.imageList.isNotEmpty()) {
@@ -103,7 +118,8 @@ data class MiniaturePaintUiState(
     val originalImageList: List<Image> = listOf(),
     val canEdit: Boolean = false,
     val initialColor: Color? = null,
-    val showColorPicker: Boolean = false
+    val showColorPicker: Boolean = false,
+    val manufacturerNames: List<String> = listOf()
 )
 
 data class MiniaturePaintDetails(

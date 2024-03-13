@@ -43,4 +43,7 @@ interface PaintDao {
 
     @Delete
     suspend fun deletePaintImageMap(paintImageMappingTable: PaintImageMappingTable)
+
+    @Query("SELECT DISTINCT manufacturer from paints where manufacturer <> ''")
+    fun getAllPaintManufacturers(): Flow<List<String>>
 }

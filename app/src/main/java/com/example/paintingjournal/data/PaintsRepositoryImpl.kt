@@ -15,4 +15,5 @@ class PaintsRepositoryImpl(private val paintDao: PaintDao) : PaintsRepository {
     override fun getPaintForImage(id: Int): Flow<MiniaturePaint> = paintDao.getPaintForImage(id)
     override suspend fun addImageForPaint(paintImageMappingTable: PaintImageMappingTable) = paintDao.addPaintImageMap(paintImageMappingTable)
     override suspend fun deleteImageForPaint(paintImageMappingTable: PaintImageMappingTable) = paintDao.deletePaintImageMap(paintImageMappingTable)
+    override fun getAllManufacturers(): Flow<List<String>> = paintDao.getAllPaintManufacturers()
 }
