@@ -35,7 +35,6 @@ class PaintAddViewModel(
             val manufacturers = miniaturesService.getPaintManufacturersNameList()
             miniaturePaintUiState = miniaturePaintUiState.copy(manufacturerNames = manufacturers)
         }
-
     }
 
     suspend fun saveMiniaturePaint() {

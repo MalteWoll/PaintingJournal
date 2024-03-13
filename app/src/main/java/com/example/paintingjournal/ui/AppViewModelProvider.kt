@@ -85,7 +85,8 @@ object AppViewModelProvider {
             PaintEditViewModel(
                 this.createSavedStateHandle(),
                 paintingJournalApplication().container.paintsRepository,
-                paintingJournalApplication().container.imagesRepository
+                paintingJournalApplication().container.imagesRepository,
+                paintingJournalApplication().container.miniaturesService
             )
         }
         initializer {

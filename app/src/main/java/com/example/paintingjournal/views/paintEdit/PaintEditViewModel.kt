@@ -14,6 +14,7 @@ import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.PaintImageMappingTable
 import com.example.paintingjournal.model.SaveStateEnum
+import com.example.paintingjournal.services.MiniaturesService
 import com.example.paintingjournal.views.paintAdd.MiniaturePaintDetails
 import com.example.paintingjournal.views.paintAdd.MiniaturePaintUiState
 import com.example.paintingjournal.views.paintAdd.toMiniaturePaintUiState
@@ -26,7 +27,8 @@ import kotlinx.coroutines.runBlocking
 class PaintEditViewModel(
     savedStateHandle: SavedStateHandle,
     private val paintsRepository: PaintsRepository,
-    private val imagesRepository: ImagesRepository
+    private val imagesRepository: ImagesRepository,
+    private val miniaturesService: MiniaturesService
 ) : ViewModel() {
     var miniaturePaintUiState by mutableStateOf(MiniaturePaintUiState())
         private set
@@ -53,11 +55,20 @@ class PaintEditViewModel(
                 miniaturePaintUiState = miniaturePaintUiState.copy(imageList = imageList, originalImageList = imageList)
             }
         }
+
+        getManufacturerNames()
     }
 
     fun updateUiState(miniaturePaintDetails: MiniaturePaintDetails) {
         miniaturePaintUiState =
             miniaturePaintUiState.copy(miniaturePaintDetails, isEntryValid = validateInput(miniaturePaintDetails))
+    }
+
+    private fun getManufacturerNames() {
+        viewModelScope.launch {
+            val manufacturers = miniaturesService.getPaintManufacturersNameList()
+            miniaturePaintUiState = miniaturePaintUiState.copy(manufacturerNames = manufacturers)
+        }
     }
 
     fun removeImageFromList(image: Image) {
