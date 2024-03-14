@@ -117,7 +117,7 @@ fun ImageViewerView(
                     viewModel.imageViewerUiState.imageBitmap?.let {
                         AsyncImage(
                             model = viewModel.imageViewerUiState.imageBitmap,
-                            contentScale = ContentScale.FillWidth,
+                            contentScale = ContentScale.FillBounds,
                             contentDescription = "Selected image",
                             onSuccess = { viewModel.setImageSize(size) },
                             modifier = Modifier
