@@ -11,8 +11,8 @@ import com.example.paintingjournal.model.PaintingStepImageMappingTable
 import kotlinx.coroutines.flow.Flow
 
 interface MiniaturesRepository {
-    fun getAllMiniaturesStream(): Flow<List<Miniature>>
-    fun getMiniatureStream(id: Int): Flow<Miniature?>
+    suspend fun getAllMiniaturesStream(): Flow<List<Miniature>>
+    suspend fun getMiniatureStream(id: Int): Flow<Miniature?>
     suspend fun insertMiniature(miniature: Miniature) : Long
     suspend fun deleteMiniature(miniature: Miniature)
     suspend fun updateMiniature(miniature: Miniature)

@@ -6,14 +6,14 @@ import com.example.paintingjournal.model.PaintImageMappingTable
 import kotlinx.coroutines.flow.Flow
 
 interface PaintsRepository {
-    fun getAllPaintsStream(): Flow<List<MiniaturePaint>>
-    fun getPaintStream(id: Int): Flow<MiniaturePaint?>
+    suspend fun getAllPaintsStream(): Flow<List<MiniaturePaint>>
+    suspend fun getPaintStream(id: Int): Flow<MiniaturePaint?>
     suspend fun insertPaint(paint: MiniaturePaint) : Long
     suspend fun deletePaint(paint: MiniaturePaint)
     suspend fun updatePaint(paint: MiniaturePaint)
-    fun getImagesForPaint(id: Int): Flow<List<Image>>
-    fun getPaintForImage(id: Int): Flow<MiniaturePaint>
+    suspend fun getImagesForPaint(id: Int): Flow<List<Image>>
+    suspend fun getPaintForImage(id: Int): Flow<MiniaturePaint>
     suspend fun addImageForPaint(paintImageMappingTable: PaintImageMappingTable)
     suspend fun deleteImageForPaint(paintImageMappingTable: PaintImageMappingTable)
-    fun getAllManufacturers(): Flow<List<String>>
+    suspend fun getAllManufacturers(): Flow<List<String>>
 }
