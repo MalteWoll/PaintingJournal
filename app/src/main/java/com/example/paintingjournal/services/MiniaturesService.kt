@@ -7,4 +7,5 @@ interface MiniaturesService {
     fun createExpandablePaintingStepList(paintingStepList: List<PaintingStep>) : List<ExpandablePaintingStep>
     fun createPaintingStepList(expandablePaintingStepList: List<ExpandablePaintingStep>) : List<PaintingStep>
     suspend fun getPaintManufacturersNameList() : List<String>
+    suspend fun getPaintTypesList(): List<String>
 }

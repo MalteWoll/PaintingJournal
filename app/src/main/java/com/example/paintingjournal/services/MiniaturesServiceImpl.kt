@@ -50,4 +50,11 @@ class MiniaturesServiceImpl(
             .first()
             .toList()
     }
+
+    override suspend fun getPaintTypesList(): List<String> {
+        return paintsRepository.getAllPaintTypes()
+            .filterNotNull()
+            .first()
+            .toList()
+    }
 }

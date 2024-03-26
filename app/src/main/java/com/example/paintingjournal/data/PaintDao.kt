@@ -46,4 +46,7 @@ interface PaintDao {
 
     @Query("SELECT DISTINCT manufacturer from paints where manufacturer <> ''")
     fun getAllPaintManufacturers(): Flow<List<String>>
+
+    @Query("SELECT DISTINCT type from paints where type <> ''")
+    fun getAllPaintTypes(): Flow<List<String>>
 }

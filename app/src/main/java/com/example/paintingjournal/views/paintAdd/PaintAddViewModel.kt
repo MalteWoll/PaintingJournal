@@ -22,18 +22,25 @@ import java.util.Date
 class PaintAddViewModel(
     private val paintsRepository: PaintsRepository,
     private val imagesRepository: ImagesRepository,
-    private val imageManipulationService: ImageManipulationService,
     private val miniaturesService: MiniaturesService
 ) : ViewModel() {
 
     init {
         getManufacturerNames()
+        getPaintTypes()
     }
 
     private fun getManufacturerNames() {
         viewModelScope.launch {
             val manufacturers = miniaturesService.getPaintManufacturersNameList()
             miniaturePaintUiState = miniaturePaintUiState.copy(manufacturerNames = manufacturers)
+        }
+    }
+
+    private fun getPaintTypes() {
+        viewModelScope.launch {
+            val paintTypes = miniaturesService.getPaintTypesList()
+            miniaturePaintUiState = miniaturePaintUiState.copy(paintTypesList = paintTypes)
         }
     }
 
@@ -118,7 +125,8 @@ data class MiniaturePaintUiState(
     val canEdit: Boolean = false,
     val initialColor: Color? = null,
     val showColorPicker: Boolean = false,
-    val manufacturerNames: List<String> = listOf()
+    val manufacturerNames: List<String> = listOf(),
+    val paintTypesList: List<String> = listOf()
 )
 
 data class MiniaturePaintDetails(

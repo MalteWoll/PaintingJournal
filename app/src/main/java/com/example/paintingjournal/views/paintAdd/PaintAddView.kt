@@ -154,6 +154,7 @@ fun PaintEntryBody(
             miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails,
             onValueChanged = onMiniaturePaintValueChanged,
             manufacturerNames = miniaturePaintUiState.manufacturerNames,
+            paintTypes = miniaturePaintUiState.paintTypesList,
             modifier = Modifier.fillMaxWidth()
         )
         ImageSelection(onSaveImage = onSaveImage)
@@ -188,6 +189,7 @@ fun PaintEntryBody(
 fun MiniaturePaintInputForm(
     miniaturePaintDetails: MiniaturePaintDetails,
     manufacturerNames: List<String>,
+    paintTypes: List<String>,
     modifier: Modifier = Modifier,
     onValueChanged: (MiniaturePaintDetails) -> Unit = {},
     enabled: Boolean = true
@@ -218,37 +220,37 @@ fun MiniaturePaintInputForm(
             enabled = enabled,
             singleLine = true
         )
-        var expanded by remember { mutableStateOf(false) }
+        var expandedManufacturer by remember { mutableStateOf(false) }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimensionResource(id = R.dimen.padding_small))
         ) {
             ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
+                expanded = expandedManufacturer,
+                onExpandedChange = { expandedManufacturer = !expandedManufacturer }
             ) {
                 TextField(
                     value = miniaturePaintDetails.manufacturer,
                     onValueChange = { onValueChanged(miniaturePaintDetails.copy(manufacturer = it)) },
                     label = { Text(stringResource(id = R.string.paint_add_form_manufacturer)) },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedManufacturer) },
                     modifier = Modifier
                         .menuAnchor()
                         .fillMaxWidth()
                 )
-                val filteredOptions = manufacturerNames.filter { it.contains(miniaturePaintDetails.manufacturer, ignoreCase = true) }
-                if(filteredOptions.isNotEmpty()) {
+                val filteredManufacturers = manufacturerNames.filter { it.contains(miniaturePaintDetails.manufacturer, ignoreCase = true) }
+                if(filteredManufacturers.isNotEmpty()) {
                     ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
+                        expanded = expandedManufacturer,
+                        onDismissRequest = { expandedManufacturer = false }
                     ) {
-                        filteredOptions.forEach { manufacturer ->
+                        filteredManufacturers.forEach { manufacturer ->
                             DropdownMenuItem(
                                 text = { Text(text = manufacturer) },
                                 onClick = {
                                     onValueChanged(miniaturePaintDetails.copy(manufacturer = manufacturer))
-                                    expanded = false
+                                    expandedManufacturer = false
                                 })
                         }
                     }
@@ -268,19 +270,43 @@ fun MiniaturePaintInputForm(
             enabled = enabled,
             singleLine = true
         )
-        OutlinedTextField(
-            value = miniaturePaintDetails.type,
-            onValueChange = { onValueChanged(miniaturePaintDetails.copy(type = it)) },
-            label = { Text(stringResource(id = R.string.paint_add_form_type)) },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
+        var expandedType by remember { mutableStateOf(false) }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.padding_small))
+        ) {
+            ExposedDropdownMenuBox(
+                expanded = expandedType,
+                onExpandedChange = { expandedType = !expandedType }
+            ) {
+                TextField(
+                    value = miniaturePaintDetails.type,
+                    onValueChange = { onValueChanged(miniaturePaintDetails.copy(type = it)) },
+                    label = { Text(stringResource(id = R.string.paint_add_form_type)) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedType) },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                )
+                val filteredTypes = paintTypes.filter { it.contains(miniaturePaintDetails.type, ignoreCase = true) }
+                if(filteredTypes.isNotEmpty()) {
+                    ExposedDropdownMenu(
+                        expanded = expandedType,
+                        onDismissRequest = { expandedType = false }
+                    ) {
+                        filteredTypes.forEach { type ->
+                            DropdownMenuItem(
+                                text = { Text(text = type) },
+                                onClick = {
+                                    onValueChanged(miniaturePaintDetails.copy(type = type))
+                                    expandedType = false
+                                })
+                        }
+                    }
+                }
+            }
+        }
         Divider()
     }
 }

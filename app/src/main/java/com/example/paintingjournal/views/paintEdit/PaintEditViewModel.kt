@@ -57,6 +57,7 @@ class PaintEditViewModel(
         }
 
         getManufacturerNames()
+        getPaintTypes()
     }
 
     fun updateUiState(miniaturePaintDetails: MiniaturePaintDetails) {
@@ -68,6 +69,13 @@ class PaintEditViewModel(
         viewModelScope.launch {
             val manufacturers = miniaturesService.getPaintManufacturersNameList()
             miniaturePaintUiState = miniaturePaintUiState.copy(manufacturerNames = manufacturers)
+        }
+    }
+
+    private fun getPaintTypes() {
+        viewModelScope.launch {
+            val paintTypes = miniaturesService.getPaintTypesList()
+            miniaturePaintUiState = miniaturePaintUiState.copy(paintTypesList = paintTypes)
         }
     }
 

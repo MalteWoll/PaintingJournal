@@ -71,7 +71,6 @@ object AppViewModelProvider {
             PaintAddViewModel(
                 paintingJournalApplication().container.paintsRepository,
                 paintingJournalApplication().container.imagesRepository,
-                paintingJournalApplication().container.imageManipulationService,
                 paintingJournalApplication().container.miniaturesService
             )
         }

@@ -18,4 +18,5 @@ class PaintsRepositoryImpl(private val paintDao: PaintDao) : PaintsRepository {
     override suspend fun addImageForPaint(paintImageMappingTable: PaintImageMappingTable) = withContext(Dispatchers.IO) { paintDao.addPaintImageMap(paintImageMappingTable) }
     override suspend fun deleteImageForPaint(paintImageMappingTable: PaintImageMappingTable) = withContext(Dispatchers.IO) { paintDao.deletePaintImageMap(paintImageMappingTable) }
     override suspend fun getAllManufacturers(): Flow<List<String>> = withContext(Dispatchers.IO) { paintDao.getAllPaintManufacturers() }
+    override suspend fun getAllPaintTypes(): Flow<List<String>> = withContext(Dispatchers.IO) { paintDao.getAllPaintTypes() }
 }

@@ -16,4 +16,5 @@ interface PaintsRepository {
     suspend fun addImageForPaint(paintImageMappingTable: PaintImageMappingTable)
     suspend fun deleteImageForPaint(paintImageMappingTable: PaintImageMappingTable)
     suspend fun getAllManufacturers(): Flow<List<String>>
+    suspend fun getAllPaintTypes(): Flow<List<String>>
 }
