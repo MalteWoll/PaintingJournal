@@ -18,11 +18,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -46,7 +51,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
+import com.example.paintingjournal.model.FilterSortBy
+import com.example.paintingjournal.model.FilterSortByEnum
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.SelectableManufacturer
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 
@@ -93,8 +101,9 @@ fun PaintListView(
             }
         ) { innerPadding ->
             PaintListBody(
-                paintList = viewModel.paintListUiState.paintList,
+                paintListUiState = viewModel.paintListUiState,
                 onPaintClick = navigateToPaintEntry,
+                viewModel = viewModel,
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
@@ -105,27 +114,151 @@ fun PaintListView(
 
 @Composable
 private fun PaintListBody(
-    paintList: List<MiniaturePaint>,
+    paintListUiState: PaintListUiState,
     onPaintClick: (Long) -> Unit,
+    viewModel: PaintListViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        if(paintList.isEmpty()) {
+        if(paintListUiState.paintList.isEmpty()) {
             Text(
                 text = stringResource(id = R.string.paint_list_no_item_description),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleLarge
             )
         } else {
+            PaintListFilter(
+                paintListUiState = paintListUiState,
+                onToggleFilter = { viewModel.togglePaintListFilter() },
+                onManufacturerCheckboxChange = { viewModel.onManufacturerFilterCheckboxChange(it) },
+                onChangeSorting = { viewModel.onChangeSorting(it)}
+            )
             PaintList(
-                paintList = paintList,
+                paintList = paintListUiState.filteredPaintList,
                 onPaintClick = { onPaintClick(it.id) },
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
-                )
+            )
         }
+    }
+}
+
+@Composable
+private fun PaintListFilter(
+    paintListUiState: PaintListUiState,
+    onToggleFilter: () -> Unit,
+    onChangeSorting: (FilterSortByEnum) -> Unit,
+    onManufacturerCheckboxChange: (SelectableManufacturer) -> Unit
+) {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(id = R.dimen.padding_small))
+    ) {
+        Column(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = stringResource(id = R.string.paint_list_filter),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                if (paintListUiState.showPaintListFilter) {
+                    IconButton(onClick = { onToggleFilter() }) {
+                        Icon(
+                            Icons.Outlined.KeyboardArrowUp,
+                            contentDescription = "",
+                            modifier = Modifier
+                        )
+                    }
+                } else {
+                    IconButton(onClick = { onToggleFilter() }) {
+                        Icon(
+                            Icons.Outlined.KeyboardArrowDown,
+                            contentDescription = "",
+                            modifier = Modifier
+                        )
+                    }
+                }
+            }
+            if (paintListUiState.showPaintListFilter) {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column {
+                        Text(
+                            text = stringResource(id = R.string.paint_list_filter_manufacturer),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        paintListUiState.selectableManufacturers.forEach { manufacturer ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Checkbox(
+                                    checked = manufacturer.isSelected,
+                                    onCheckedChange = { onManufacturerCheckboxChange(manufacturer) }
+                                )
+                                Text(
+                                    text = manufacturer.manufacturer,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+                    }
+                    Column {
+                        Text(
+                            text = stringResource(id = R.string.paint_list_filter_sort_by),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        SortingCheckbox(
+                            isSelected = paintListUiState.sortBy.sortByNameAsc,
+                            sortByEnum = FilterSortByEnum.NAME_ASC,
+                            onStateChange = onChangeSorting,
+                            sortByText = stringResource(id = R.string.paint_list_filter_sort_by_name_asc)
+                        )
+                        SortingCheckbox(
+                            isSelected = paintListUiState.sortBy.sortByNameDesc,
+                            sortByEnum = FilterSortByEnum.NAME_DESC,
+                            onStateChange = onChangeSorting,
+                            sortByText = stringResource(id = R.string.paint_list_filter_sort_by_name_desc)
+                        )
+                        SortingCheckbox(
+                            isSelected = paintListUiState.sortBy.sortByNewest,
+                            sortByEnum = FilterSortByEnum.NEWEST,
+                            onStateChange = onChangeSorting,
+                            sortByText = stringResource(id = R.string.paint_list_filter_sort_by_newest)
+                        )
+                        SortingCheckbox(
+                            isSelected = paintListUiState.sortBy.sortByOldest,
+                            sortByEnum = FilterSortByEnum.OLDEST,
+                            onStateChange = onChangeSorting,
+                            sortByText = stringResource(id = R.string.paint_list_filter_sort_by_oldest)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SortingCheckbox(
+    isSelected: Boolean,
+    sortByEnum: FilterSortByEnum,
+    onStateChange: (FilterSortByEnum) -> Unit,
+    sortByText: String,
+    modifier: Modifier = Modifier
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Checkbox(checked = isSelected, onCheckedChange = { onStateChange(sortByEnum)} )
+        Text(
+            text = sortByText,
+            style = MaterialTheme.typography.bodySmall
+        )
     }
 }
 
@@ -165,8 +298,9 @@ private fun PaintItem(
                             .padding(dimensionResource(id = R.dimen.padding_small))
                             .size(40.dp)
                             .clip(CircleShape)
-                            .background(Color(paint.hexColor.toColorInt ())
-                        )
+                            .background(
+                                Color(paint.hexColor.toColorInt())
+                            )
                     )
                 }
                 Column {

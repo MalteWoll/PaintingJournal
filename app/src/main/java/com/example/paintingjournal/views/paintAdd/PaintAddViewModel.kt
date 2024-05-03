@@ -1,6 +1,8 @@
 package com.example.paintingjournal.views.paintAdd
 
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,6 +19,7 @@ import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.services.ImageManipulationService
 import com.example.paintingjournal.services.MiniaturesService
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.util.Date
 
 class PaintAddViewModel(
@@ -44,6 +47,7 @@ class PaintAddViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun saveMiniaturePaint() {
         if(validateInput()) {
             if(miniaturePaintUiState.imageList.isNotEmpty()) {
@@ -52,6 +56,10 @@ class PaintAddViewModel(
                 miniaturePaintUiState =
                     miniaturePaintUiState.copy(miniaturePaintDetails = paintDetails)
             }
+
+            val currentInstant = Instant.now()
+            miniaturePaintUiState = miniaturePaintUiState.copy(miniaturePaintDetails =
+                miniaturePaintUiState.miniaturePaintDetails.copy(createdAt = currentInstant.toEpochMilli()))
 
             val paintId = paintsRepository.insertPaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())
             miniaturePaintUiState.imageList.forEach {image ->
@@ -135,7 +143,7 @@ data class MiniaturePaintDetails(
     val manufacturer: String = "",
     val description: String = "",
     val type: String = "",
-    val createdAt: Date? = null,
+    val createdAt: Long = 0,
     var previewImageUri: Uri? = null,
     val hexColor: String = "",
 )

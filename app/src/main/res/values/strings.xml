@@ -46,6 +46,13 @@
     <string name="paint_add_toggle_color_picker">Toggle color picker</string>
     <string name="paint_details_title">Paint Details</string>
     <string name="paint_edit_title">Edit Paint</string>
+    <string name="paint_list_filter">Filter</string>
+    <string name="paint_list_filter_manufacturer">Manufacturer</string>
+    <string name="paint_list_filter_sort_by">Sort by</string>
+    <string name="paint_list_filter_sort_by_name_asc">Name ascending</string>
+    <string name="paint_list_filter_sort_by_name_desc">Name descending</string>
+    <string name="paint_list_filter_sort_by_oldest">Oldest</string>
+    <string name="paint_list_filter_sort_by_newest">Newest</string>
     <string name="paint_list_title">Paint List</string>
     <string name="paint_list_no_item_description">No paints added yet</string>
     <string name="painting_step_title">Title</string>

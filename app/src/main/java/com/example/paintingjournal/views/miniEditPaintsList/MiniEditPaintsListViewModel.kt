@@ -20,7 +20,6 @@ import java.util.Date
 class MiniEditPaintsListViewModel(
     savedStateHandle: SavedStateHandle,
     private val paintsRepository: PaintsRepository,
-    private val imagesRepository: ImagesRepository,
     private val miniaturesRepository: MiniaturesRepository
 ) : ViewModel() {
     private val miniatureId: Int = checkNotNull(savedStateHandle[MiniatureEditPaintsListDestination.miniatureArg])
@@ -132,7 +131,7 @@ data class SelectablePaintDetails(
     val manufacturer: String,
     val description: String,
     val type: String,
-    val createdAt: Date?,
+    val createdAt: Long = 0,
     val previewImageUri: Uri?,
     var isSelected: Boolean = false
 )

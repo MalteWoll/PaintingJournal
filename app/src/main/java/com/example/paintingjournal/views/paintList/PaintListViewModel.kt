@@ -6,7 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.paintingjournal.data.PaintsRepository
+import com.example.paintingjournal.model.FilterSortBy
+import com.example.paintingjournal.model.FilterSortByEnum
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.SelectableManufacturer
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -14,6 +17,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class PaintListViewModel(val paintsRepository: PaintsRepository) : ViewModel() {
     companion object {
@@ -24,17 +28,113 @@ class PaintListViewModel(val paintsRepository: PaintsRepository) : ViewModel() {
         private set
 
     fun getData() {
-        viewModelScope.launch {
+        runBlocking {
+            val paintList = paintsRepository.getAllPaintsStream()
+                .filterNotNull()
+                .first()
+                .toList()
             paintListUiState = paintListUiState.copy(
-                paintList = paintsRepository.getAllPaintsStream()
-                    .filterNotNull()
-                    .first()
-                    .toList()
+                paintList = paintList,
+                filteredPaintList = paintList
             )
         }
+        runBlocking {
+            createSelectableManufacturers()
+        }
+    }
+
+    private suspend fun createSelectableManufacturers() {
+        val manufacturers = paintsRepository.getAllManufacturers()
+            .filterNotNull()
+            .first()
+            .toList()
+        val selectableManufacturers: MutableList<SelectableManufacturer> = mutableListOf()
+        manufacturers.forEach { manufacturer ->
+            selectableManufacturers.add(
+                SelectableManufacturer(
+                    manufacturer, false
+                )
+            )
+        }
+        paintListUiState = paintListUiState.copy(selectableManufacturers = selectableManufacturers.toList())
+    }
+
+    fun togglePaintListFilter() {
+        paintListUiState = paintListUiState.copy(
+            showPaintListFilter = !paintListUiState.showPaintListFilter
+        )
+    }
+
+    fun onManufacturerFilterCheckboxChange(manufacturer: SelectableManufacturer) {
+        val selectableManufacturers: List<SelectableManufacturer> = paintListUiState.selectableManufacturers
+
+        val selectableManufacturer = selectableManufacturers.find { it.manufacturer == manufacturer.manufacturer }
+        val index = paintListUiState.selectableManufacturers.indexOf(selectableManufacturer)
+
+        paintListUiState =
+            paintListUiState.copy(selectableManufacturers = listOf())
+
+        selectableManufacturers[index].isSelected = !selectableManufacturers[index].isSelected
+
+        paintListUiState =
+            paintListUiState.copy(selectableManufacturers = selectableManufacturers)
+
+        applyManufacturerFilter()
+    }
+
+    private fun applyManufacturerFilter() {
+        val paintList = paintListUiState.paintList
+        val selectableManufacturers = paintListUiState.selectableManufacturers
+        val filteredPaintList = mutableListOf<MiniaturePaint>()
+
+        if(selectableManufacturers.any { it.isSelected }) { // Only apply filter when at least one is selected
+            paintList.forEach { paint ->
+                selectableManufacturers.forEach { manufacturer ->
+                    if(paint.manufacturer == manufacturer.manufacturer && manufacturer.isSelected) {
+                        filteredPaintList.add(paint)
+                    }
+                }
+            }
+            paintListUiState = paintListUiState.copy(filteredPaintList = filteredPaintList.toList())
+        } else {
+            resetFilters()
+        }
+    }
+
+    private fun resetFilters() {
+        paintListUiState = paintListUiState.copy(filteredPaintList = paintListUiState.paintList)
+    }
+
+    fun onChangeSorting(sortByEnum: FilterSortByEnum) {
+        val filteredPaintList = paintListUiState.filteredPaintList.toMutableList()
+        when(sortByEnum) {
+            FilterSortByEnum.NAME_ASC -> {
+                paintListUiState = paintListUiState.copy(sortBy = FilterSortBy(sortByNameAsc = true))
+                filteredPaintList.sortBy { it.name }
+            }
+            FilterSortByEnum.NAME_DESC -> {
+                paintListUiState = paintListUiState.copy(sortBy = FilterSortBy(sortByNameDesc = true))
+                filteredPaintList.sortByDescending { it.name }
+            }
+            FilterSortByEnum.NEWEST -> {
+                paintListUiState = paintListUiState.copy(sortBy = FilterSortBy(sortByNewest = true))
+                filteredPaintList.sortBy { it.createdAt }
+            }
+            FilterSortByEnum.OLDEST -> {
+                paintListUiState = paintListUiState.copy(sortBy = FilterSortBy(sortByOldest = true))
+                filteredPaintList.sortByDescending { it.createdAt }
+            }
+        }
+        paintListUiState = paintListUiState.copy(filteredPaintList = listOf())
+        paintListUiState = paintListUiState.copy(filteredPaintList = filteredPaintList.toList())
     }
 }
 
 data class PaintListUiState(
-    var paintList: List<MiniaturePaint> = listOf()
+    val paintList: List<MiniaturePaint> = listOf(),
+    val filteredPaintList: List<MiniaturePaint> = listOf(),
+    val paintManufacturers: List<String> = listOf(),
+    val showPaintListFilter: Boolean = false,
+    val selectableManufacturers: List<SelectableManufacturer> = listOf(),
+    val sortBy: FilterSortBy = FilterSortBy()
 )
