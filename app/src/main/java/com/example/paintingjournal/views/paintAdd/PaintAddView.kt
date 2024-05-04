@@ -1,9 +1,11 @@
 package com.example.paintingjournal.views.paintAdd
 
 import android.net.Uri
+import android.os.Build
 import android.widget.AutoCompleteTextView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -79,6 +81,7 @@ object PaintAddDestination: NavigationDestination {
     override val titleRes = R.string.paint_add_title
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaintAddView(

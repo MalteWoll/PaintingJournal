@@ -53,6 +53,7 @@
     <string name="paint_list_filter_sort_by_name_desc">Name descending</string>
     <string name="paint_list_filter_sort_by_oldest">Oldest</string>
     <string name="paint_list_filter_sort_by_newest">Newest</string>
+    <string name="paint_list_search_bar_label">Search</string>
     <string name="paint_list_title">Paint List</string>
     <string name="paint_list_no_item_description">No paints added yet</string>
     <string name="painting_step_title">Title</string>

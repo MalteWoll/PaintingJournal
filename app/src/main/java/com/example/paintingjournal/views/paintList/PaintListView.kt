@@ -29,6 +29,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -130,6 +131,10 @@ private fun PaintListBody(
                 style = MaterialTheme.typography.titleLarge
             )
         } else {
+            SearchBar(
+                onChange = { viewModel.onSearchBarValueChanged(it) },
+                searchBarValue = paintListUiState.searchBarValue
+            )
             PaintListFilter(
                 paintListUiState = paintListUiState,
                 onToggleFilter = { viewModel.togglePaintListFilter() },
@@ -146,6 +151,22 @@ private fun PaintListBody(
 }
 
 @Composable
+private fun SearchBar(
+    onChange: (String) -> Unit,
+    searchBarValue: String
+) {
+    OutlinedTextField(
+        value = searchBarValue,
+        onValueChange = { onChange(it) },
+        label = { Text(stringResource(id = R.string.paint_list_search_bar_label)) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = dimensionResource(id = R.dimen.padding_small)),
+        singleLine = true
+    )
+}
+
+@Composable
 private fun PaintListFilter(
     paintListUiState: PaintListUiState,
     onToggleFilter: () -> Unit,
@@ -159,7 +180,7 @@ private fun PaintListFilter(
             .padding(dimensionResource(id = R.dimen.padding_small))
     ) {
         Column(
-            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+            modifier = Modifier.padding(start =  dimensionResource(id = R.dimen.padding_small)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
