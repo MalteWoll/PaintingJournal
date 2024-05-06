@@ -4,5 +4,7 @@ data class FilterSortBy (
     val sortByNameAsc: Boolean = false,
     val sortByNameDesc: Boolean = false,
     val sortByNewest: Boolean = false,
-    val sortByOldest: Boolean = false
+    val sortByOldest: Boolean = false,
+    val sortByColorAsc: Boolean = false,
+    val sortByColorDesc: Boolean = false
 )

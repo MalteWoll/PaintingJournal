@@ -124,6 +124,15 @@ class PaintListViewModel(val paintsRepository: PaintsRepository) : ViewModel() {
                 paintListUiState = paintListUiState.copy(sortBy = FilterSortBy(sortByOldest = true))
                 filteredPaintList.sortBy { it.createdAt }
             }
+
+            FilterSortByEnum.COLOR_ASC -> {
+                paintListUiState = paintListUiState.copy(sortBy = FilterSortBy(sortByColorAsc = true))
+                filteredPaintList.sortBy { it.hexColor }
+            }
+            FilterSortByEnum.COLOR_DESC -> {
+                paintListUiState = paintListUiState.copy(sortBy = FilterSortBy(sortByColorDesc = true))
+                filteredPaintList.sortByDescending { it.hexColor }
+            }
         }
         paintListUiState = paintListUiState.copy(filteredPaintList = listOf())
         paintListUiState = paintListUiState.copy(filteredPaintList = filteredPaintList.toList())

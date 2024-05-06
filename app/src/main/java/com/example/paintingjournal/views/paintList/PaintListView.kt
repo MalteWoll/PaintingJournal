@@ -260,6 +260,18 @@ private fun PaintListFilter(
                             onStateChange = onChangeSorting,
                             sortByText = stringResource(id = R.string.paint_list_filter_sort_by_oldest)
                         )
+                        SortingCheckbox(
+                            isSelected = paintListUiState.sortBy.sortByColorAsc,
+                            sortByEnum = FilterSortByEnum.COLOR_ASC,
+                            onStateChange = onChangeSorting,
+                            sortByText = stringResource(id = R.string.paint_list_filter_sort_by_color_asc)
+                        )
+                        SortingCheckbox(
+                            isSelected = paintListUiState.sortBy.sortByColorDesc,
+                            sortByEnum = FilterSortByEnum.COLOR_DESC,
+                            onStateChange = onChangeSorting,
+                            sortByText = stringResource(id = R.string.paint_list_filter_sort_by_color_desc)
+                        )
                     }
                 }
             }
