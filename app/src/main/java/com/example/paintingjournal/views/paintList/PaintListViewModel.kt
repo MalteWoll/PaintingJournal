@@ -35,8 +35,7 @@ class PaintListViewModel(val paintsRepository: PaintsRepository) : ViewModel() {
                 .toList()
             paintListUiState = paintListUiState.copy(
                 paintList = paintList,
-                filteredPaintList = paintList,
-                searchedPaintList = paintList
+                filteredPaintList = paintList
             )
         }
         runBlocking {
@@ -132,34 +131,12 @@ class PaintListViewModel(val paintsRepository: PaintsRepository) : ViewModel() {
 
     fun onSearchBarValueChanged(value: String) {
         paintListUiState = paintListUiState.copy(searchBarValue = value)
-        applySearchBarValue()
-    }
-
-    private fun applySearchBarValue() {
-        val searchValue = paintListUiState.searchBarValue
-        val paintList = paintListUiState.paintList
-        var searchedPaintList = mutableListOf<MiniaturePaint>()
-        if(searchValue == "") {
-            searchedPaintList = paintList.toMutableList()
-        } else {
-            paintList.forEach { paint ->
-                if(
-                    paint.name.contains(searchValue, ignoreCase = true) ||
-                    paint.manufacturer.contains(searchValue, ignoreCase = true) ||
-                    paint.description.contains(searchValue, ignoreCase = true) ||
-                    paint.type.contains(searchValue, ignoreCase = true)) {
-                    searchedPaintList.add(paint)
-                }
-            }
-            paintListUiState = paintListUiState.copy(searchedPaintList = searchedPaintList)
-        }
     }
 }
 
 data class PaintListUiState(
     val paintList: List<MiniaturePaint> = listOf(),
     val filteredPaintList: List<MiniaturePaint> = listOf(),
-    val searchedPaintList: List<MiniaturePaint> = listOf(),
     val paintManufacturers: List<String> = listOf(),
     val showPaintListFilter: Boolean = false,
     val selectableManufacturers: List<SelectableManufacturer> = listOf(),

@@ -144,6 +144,7 @@ private fun PaintListBody(
             PaintList(
                 paintList = paintListUiState.filteredPaintList,
                 onPaintClick = { onPaintClick(it.id) },
+                searchBarValue = paintListUiState.searchBarValue,
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             )
         }
@@ -286,15 +287,29 @@ private fun SortingCheckbox(
 @Composable
 private fun PaintList(
     paintList: List<MiniaturePaint>,
+    searchBarValue: String,
     onPaintClick: (MiniaturePaint) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
         items(items = paintList, key = { it.id }) { paint ->
-            PaintItem(paint = paint,
-                modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.padding_small))
-                    .clickable { onPaintClick(paint) })
+            if(searchBarValue == "") {
+                PaintItem(paint = paint,
+                    modifier = Modifier
+                        .padding(dimensionResource(id = R.dimen.padding_small))
+                        .clickable { onPaintClick(paint) })
+            } else {
+                if(
+                    paint.name.contains(searchBarValue, ignoreCase = true) ||
+                    paint.manufacturer.contains(searchBarValue, ignoreCase = true) ||
+                    paint.description.contains(searchBarValue, ignoreCase = true) ||
+                    paint.type.contains(searchBarValue, ignoreCase = true)) {
+                    PaintItem(paint = paint,
+                        modifier = Modifier
+                            .padding(dimensionResource(id = R.dimen.padding_small))
+                            .clickable { onPaintClick(paint) })
+                }
+            }
         }
     }
 }
