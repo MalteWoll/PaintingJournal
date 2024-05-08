@@ -18,4 +18,6 @@ data class MiniaturePaint (
     val createdAt: Long,
     var previewImageUri: Uri?,
     val hexColor: String,
+    @ColumnInfo(name = "saveState", defaultValue = "SAVED")
+    val saveState: SaveStateEnum
 )

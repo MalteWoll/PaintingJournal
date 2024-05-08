@@ -1,11 +1,13 @@
 package com.example.paintingjournal.data
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.paintingjournal.converters.DateConverters
+import com.example.paintingjournal.converters.SaveStateEnumConverter
 import com.example.paintingjournal.converters.UriConverters
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.Miniature
@@ -27,8 +29,15 @@ import com.example.paintingjournal.model.PaintingStepImageMappingTable
     PaintingStep::class,
     MiniaturePaintingStepMappingTable::class,
     PaintingStepImageMappingTable::class
-    ], version = 24, exportSchema = false)
-@TypeConverters(DateConverters::class, UriConverters::class)
+    ],
+    version = 26,
+    autoMigrations = [AutoMigration(from = 24, to = 26)],
+    exportSchema = true)
+@TypeConverters(
+    DateConverters::class,
+    UriConverters::class,
+    SaveStateEnumConverter::class
+)
 abstract class MiniatureDatabase : RoomDatabase() {
     abstract fun imageDao(): ImageDao
     abstract fun miniatureDao(): MiniatureDao
