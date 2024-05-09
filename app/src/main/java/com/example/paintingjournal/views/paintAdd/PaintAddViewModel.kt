@@ -19,6 +19,7 @@ import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.services.ImageManipulationService
 import com.example.paintingjournal.services.MiniaturesService
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.Instant
 import java.util.Date
 
@@ -28,19 +29,31 @@ class PaintAddViewModel(
     private val miniaturesService: MiniaturesService
 ) : ViewModel() {
 
+    var paintId: Long = 0
+
     init {
-        getManufacturerNames()
-        getPaintTypes()
+        createPaintInDb()
     }
 
-    private fun getManufacturerNames() {
+    private fun createPaintInDb() {
+        runBlocking {
+            paintId = paintsRepository.insertPaint(MiniaturePaintDetails().toPaint())
+            /*miniaturePaintUiState = miniaturePaintUiState.copy(
+                miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails.copy(
+                    id = paintId
+                )
+            )*/
+        }
+    }
+
+    fun getManufacturerNames() {
         viewModelScope.launch {
             val manufacturers = miniaturesService.getPaintManufacturersNameList()
             miniaturePaintUiState = miniaturePaintUiState.copy(manufacturerNames = manufacturers)
         }
     }
 
-    private fun getPaintTypes() {
+    fun getPaintTypes() {
         viewModelScope.launch {
             val paintTypes = miniaturesService.getPaintTypesList()
             miniaturePaintUiState = miniaturePaintUiState.copy(paintTypesList = paintTypes)
@@ -50,22 +63,36 @@ class PaintAddViewModel(
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun saveMiniaturePaint() {
         if(validateInput()) {
-            if(miniaturePaintUiState.imageList.isNotEmpty()) {
-                val paintDetails = miniaturePaintUiState.miniaturePaintDetails
-                paintDetails.previewImageUri = miniaturePaintUiState.imageList[0].imageUri
-                miniaturePaintUiState =
-                    miniaturePaintUiState.copy(miniaturePaintDetails = paintDetails)
+            runBlocking {
+                if (miniaturePaintUiState.imageList.isNotEmpty()) {
+                    val paintDetails = miniaturePaintUiState.miniaturePaintDetails
+                    paintDetails.previewImageUri = miniaturePaintUiState.imageList[0].imageUri
+                    miniaturePaintUiState =
+                        miniaturePaintUiState.copy(miniaturePaintDetails = paintDetails)
+                }
             }
 
-            val currentInstant = Instant.now()
-            miniaturePaintUiState = miniaturePaintUiState.copy(miniaturePaintDetails =
-                miniaturePaintUiState.miniaturePaintDetails.copy(createdAt = currentInstant.toEpochMilli()))
+            runBlocking {
+                val currentInstant = Instant.now()
+                miniaturePaintUiState = miniaturePaintUiState.copy(
+                    miniaturePaintDetails =
+                    miniaturePaintUiState.miniaturePaintDetails.copy(
+                        id = paintId,
+                        createdAt = currentInstant.toEpochMilli(),
+                        saveState = SaveStateEnum.SAVED
+                    )
+                )
+                paintsRepository.updatePaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())
+            }
 
-            val paintId = paintsRepository.insertPaint(miniaturePaintUiState.miniaturePaintDetails.toPaint())
-            miniaturePaintUiState.imageList.forEach {image ->
-                image.saveState = SaveStateEnum.SAVED
-                imagesRepository.updateImage(image)
-                paintsRepository.addImageForPaint(PaintImageMappingTable(paintId, image.id))
+            runBlocking {
+                miniaturePaintUiState.imageList.forEach { image ->
+                    image.saveState = SaveStateEnum.SAVED
+                    imagesRepository.updateImage(image)
+                    paintsRepository.addImageForPaint(PaintImageMappingTable(
+                        paintId, image.id)
+                    )
+                }
             }
         }
     }
@@ -146,6 +173,7 @@ data class MiniaturePaintDetails(
     val createdAt: Long = 0,
     var previewImageUri: Uri? = null,
     val hexColor: String = "",
+    val saveState: SaveStateEnum = SaveStateEnum.NEW
 )
 
 fun MiniaturePaintDetails.toPaint(): MiniaturePaint = MiniaturePaint(
@@ -156,7 +184,8 @@ fun MiniaturePaintDetails.toPaint(): MiniaturePaint = MiniaturePaint(
     type = type,
     createdAt = createdAt,
     previewImageUri = previewImageUri,
-    hexColor = hexColor
+    hexColor = hexColor,
+    saveState = saveState
 )
 
 fun MiniaturePaint.toMiniaturePaintUiState(isEntryValid: Boolean = false): MiniaturePaintUiState = MiniaturePaintUiState(
@@ -172,5 +201,6 @@ fun MiniaturePaint.toMiniaturePaintDetails(): MiniaturePaintDetails = MiniatureP
     type = type,
     createdAt = createdAt,
     previewImageUri = previewImageUri,
-    hexColor = hexColor
+    hexColor = hexColor,
+    saveState = saveState
 )

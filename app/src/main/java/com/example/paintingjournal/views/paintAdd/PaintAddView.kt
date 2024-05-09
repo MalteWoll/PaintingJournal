@@ -43,6 +43,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -91,6 +92,12 @@ fun PaintAddView(
     viewModel: PaintAddViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        viewModel.getManufacturerNames()
+        viewModel.getPaintTypes()
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -195,7 +202,7 @@ fun MiniaturePaintInputForm(
     paintTypes: List<String>,
     modifier: Modifier = Modifier,
     onValueChanged: (MiniaturePaintDetails) -> Unit = {},
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     Column(
         modifier = modifier,

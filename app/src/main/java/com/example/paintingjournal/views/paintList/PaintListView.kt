@@ -55,6 +55,7 @@ import com.example.paintingjournal.R
 import com.example.paintingjournal.model.FilterSortBy
 import com.example.paintingjournal.model.FilterSortByEnum
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.model.SelectableManufacturer
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
@@ -335,40 +336,42 @@ private fun PaintItem(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
-        ) {
-            Row {
-                if(paint.hexColor != "") {
-                    Box(
-                        modifier = Modifier
-                            .padding(dimensionResource(id = R.dimen.padding_small))
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(
-                                Color(paint.hexColor.toColorInt())
-                            )
-                    )
-                }
-                Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = paint.name,
-                            style = MaterialTheme.typography.titleLarge
+        if(paint.saveState == SaveStateEnum.SAVED) {
+            Column(
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            ) {
+                Row {
+                    if (paint.hexColor != "") {
+                        Box(
+                            modifier = Modifier
+                                .padding(dimensionResource(id = R.dimen.padding_small))
+                                .size(40.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    Color(paint.hexColor.toColorInt())
+                                )
                         )
-                        Spacer(Modifier.weight(1f))
                     }
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = paint.manufacturer,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(Modifier.weight(1f))
+                    Column {
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = paint.name,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            Spacer(Modifier.weight(1f))
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = paint.manufacturer,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Spacer(Modifier.weight(1f))
+                        }
                     }
                 }
             }
