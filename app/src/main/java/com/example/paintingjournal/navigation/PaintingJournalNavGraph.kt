@@ -129,7 +129,8 @@ fun PaintingJournalNavHost(
             )
         }
 
-        composable(route = PaintAddDestination.route) {
+        composable(route = PaintAddDestination.route)
+        {
             PaintAddView(
                 navigateBack = { navController.popBackStack() },
                 navigateToImageViewer = { l: Long, i: Int -> navController.navigate("${ImageViewerDestination.route}/${l}?entryType=${i}") },

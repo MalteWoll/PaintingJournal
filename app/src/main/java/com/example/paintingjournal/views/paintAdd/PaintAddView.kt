@@ -71,6 +71,7 @@ import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import com.example.paintingjournal.ui.composables.ImagePicker
 import com.example.paintingjournal.ui.composables.ImageSelection
+import com.example.paintingjournal.views.paintEdit.PaintEditDestination
 import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
@@ -80,6 +81,8 @@ import kotlinx.coroutines.launch
 object PaintAddDestination: NavigationDestination {
     override val route = "paint_add"
     override val titleRes = R.string.paint_add_title
+    const val paintArg = "paintId"
+    val routeWithArgs = "${PaintEditDestination.route}/{$paintArg}"
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -96,6 +99,7 @@ fun PaintAddView(
     LaunchedEffect(Unit) {
         viewModel.getManufacturerNames()
         viewModel.getPaintTypes()
+        viewModel.refreshPaintColor()
     }
 
     Surface(
@@ -133,6 +137,7 @@ fun PaintAddView(
                     viewModel.changeColor(it)
                 },
                 onToggleColorPicker = {viewModel.toggleColorPicker()},
+                entryType = 1,
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())

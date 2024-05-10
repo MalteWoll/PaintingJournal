@@ -126,12 +126,12 @@ class PaintEditViewModel(
             if(image.saveState != SaveStateEnum.SAVED) {
                 image.saveState = SaveStateEnum.SAVED
                 imagesRepository.updateImage(image)
-                paintsRepository.addImageForPaint(
+                /*paintsRepository.addImageForPaint(
                     PaintImageMappingTable(
                         paintId.toLong(),
                         image.id
                     )
-                )
+                )*/
             }
 
         }
@@ -145,6 +145,13 @@ class PaintEditViewModel(
                 val imageId = imagesRepository.insertImage(Image(imageUri = uri, saveState = SaveStateEnum.NEW))
                 imageList.add(Image(id = imageId, imageUri = uri))
                 miniaturePaintUiState = miniaturePaintUiState.copy(imageList = imageList)
+
+                paintsRepository.addImageForPaint(
+                    PaintImageMappingTable(
+                        paintId.toLong(),
+                        imageId
+                    )
+                )
             }
         }
     }

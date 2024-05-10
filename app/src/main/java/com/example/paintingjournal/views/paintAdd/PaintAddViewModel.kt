@@ -18,6 +18,8 @@ import com.example.paintingjournal.model.PaintImageMappingTable
 import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.services.ImageManipulationService
 import com.example.paintingjournal.services.MiniaturesService
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
@@ -30,6 +32,7 @@ class PaintAddViewModel(
 ) : ViewModel() {
 
     var paintId: Long = 0
+    var paintExists: Boolean = false
 
     init {
         createPaintInDb()
@@ -43,6 +46,7 @@ class PaintAddViewModel(
                     id = paintId
                 )
             )*/
+            paintExists = true
         }
     }
 
@@ -59,6 +63,25 @@ class PaintAddViewModel(
             miniaturePaintUiState = miniaturePaintUiState.copy(paintTypesList = paintTypes)
         }
     }
+
+    fun refreshPaintColor() {
+        viewModelScope.launch {
+            if (paintExists) {
+                val paint = paintsRepository.getPaintStream(paintId.toInt())
+                    .filterNotNull()
+                    .first()
+                    .toMiniaturePaintDetails()
+                if (paint.hexColor != "") {
+                    miniaturePaintUiState = miniaturePaintUiState.copy(
+                        miniaturePaintDetails = miniaturePaintUiState.miniaturePaintDetails.copy(
+                            hexColor = paint.hexColor
+                        )
+                    )
+                }
+            }
+        }
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun saveMiniaturePaint() {
@@ -89,9 +112,9 @@ class PaintAddViewModel(
                 miniaturePaintUiState.imageList.forEach { image ->
                     image.saveState = SaveStateEnum.SAVED
                     imagesRepository.updateImage(image)
-                    paintsRepository.addImageForPaint(PaintImageMappingTable(
+                    /*paintsRepository.addImageForPaint(PaintImageMappingTable(
                         paintId, image.id)
-                    )
+                    )*/
                 }
             }
         }
@@ -106,6 +129,13 @@ class PaintAddViewModel(
 
                 imageList.add(Image(id = imageId, imageUri = uri))
                 miniaturePaintUiState = miniaturePaintUiState.copy(imageList = imageList)
+
+                paintsRepository.addImageForPaint(
+                    PaintImageMappingTable(
+                        paintId,
+                        imageId
+                    )
+                )
             }
         }
     }
