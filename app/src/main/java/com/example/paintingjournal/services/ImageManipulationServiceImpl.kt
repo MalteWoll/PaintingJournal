@@ -140,4 +140,25 @@ class ImageManipulationServiceImpl : ImageManipulationService {
             ""
         }
     }
+
+    override fun getRgbFromHex(hex: String): IntArray {
+        var hexColor = hex
+        if(hexColor == "" || hexColor.isEmpty()) {
+            return IntArray(3)
+        }
+
+        if(hexColor.length == 8) {
+            hexColor = hexColor.substring(2)
+        } else {
+            if (hexColor.length == 7) {
+                hexColor = hexColor.substring(1)
+            }
+        }
+
+        val r = Integer.valueOf(hexColor.substring(0,2), 16)
+        val g = Integer.valueOf(hexColor.substring(2,4), 16)
+        val b = Integer.valueOf(hexColor.substring(4,6), 16)
+
+        return intArrayOf(r,g,b)
+    }
 }

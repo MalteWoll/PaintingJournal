@@ -15,4 +15,5 @@ interface ImageManipulationService {
     fun calculateAveragePixelValue(bitmap: Bitmap?) : String
     fun getArgbFromInt(intColor: Int): IntArray
     fun getHexFromRgb(rgbArray: IntArray): String
+    fun getRgbFromHex(hex: String): IntArray
 }
