@@ -26,7 +26,8 @@ object AppViewModelProvider {
                 this.createSavedStateHandle(),
                 paintingJournalApplication().container.imagesRepository,
                 paintingJournalApplication().container.paintsRepository,
-                paintingJournalApplication().container.imageManipulationService
+                paintingJournalApplication().container.imageManipulationService,
+                paintingJournalApplication().container.colorService
             )
         }
         initializer {

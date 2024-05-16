@@ -18,6 +18,7 @@ import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.SaveStateEnum
+import com.example.paintingjournal.services.ColorService
 import com.example.paintingjournal.services.ImageManipulationService
 import com.example.paintingjournal.views.paintAdd.MiniaturePaintDetails
 import com.example.paintingjournal.views.paintAdd.toMiniaturePaintDetails
@@ -31,7 +32,8 @@ class ImageViewerViewModel(
     savedStateHandle: SavedStateHandle,
     private val imagesRepository: ImagesRepository,
     private val paintsRepository: PaintsRepository,
-    private val imageManipulationService: ImageManipulationService
+    private val imageManipulationService: ImageManipulationService,
+    private val colorService: ColorService
 ): ViewModel() {
     var imageViewerUiState by mutableStateOf(ImageViewerUiState())
         private set
@@ -118,9 +120,9 @@ class ImageViewerViewModel(
                 val avgColorHex = imageManipulationService.calculateAveragePixelValue(mutableMagnifiedBitmap)
                 imageViewerUiState = imageViewerUiState.copy(hexColor = avgColorHex)
 
-                val colorRgb = imageManipulationService.getRgbFromHex(avgColorHex)
+                val colorRgb = colorService.getRgbFromHex(avgColorHex)
                 println("RGB: ${colorRgb[0]}, ${colorRgb[1]}, ${colorRgb[2]}")
-                val colorHsl = imageManipulationService.getHslFromRgb(colorRgb)
+                val colorHsl = colorService.getHslFromRgb(colorRgb)
                 println("HSL: ${colorHsl[0]}, ${colorHsl[1]}, ${colorHsl[2]}")
             }
         }
