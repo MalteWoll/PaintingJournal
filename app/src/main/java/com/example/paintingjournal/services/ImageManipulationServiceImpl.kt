@@ -4,6 +4,9 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntSize
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import okhttp3.internal.toHexString
 import org.opencv.android.Utils
 import org.opencv.core.Mat
@@ -28,8 +31,6 @@ class ImageManipulationServiceImpl : ImageManipulationService {
         Utils.matToBitmap(mat, bitmap)
         return bitmap
     }
-
-
 
     // Calculates the ratio to determine which point on the screen refers to which pixel on a bitmap image
     override fun getScreenToBitmapPixelConversion(
@@ -159,6 +160,20 @@ class ImageManipulationServiceImpl : ImageManipulationService {
         val g = Integer.valueOf(hexColor.substring(2,4), 16)
         val b = Integer.valueOf(hexColor.substring(4,6), 16)
 
+        return intArrayOf(r,g,b)
+    }
+
+    override fun getHslFromRgb(rgb: IntArray): FloatArray {
+        val hslFloatArray = FloatArray(3)
+        Color.colorToHSV(Color.rgb(rgb[0], rgb[1], rgb[2]), hslFloatArray)
+        return hslFloatArray
+    }
+
+    override fun getRgbFromHsl(hsl: FloatArray): IntArray {
+        val color = Color.HSVToColor(hsl)
+        val r = color.red
+        val g = color.green
+        val b = color.blue
         return intArrayOf(r,g,b)
     }
 }

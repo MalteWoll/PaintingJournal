@@ -117,6 +117,11 @@ class ImageViewerViewModel(
                 val mutableMagnifiedBitmap = magnifiedBitmap!!.copy(Bitmap.Config.ARGB_8888, true)
                 val avgColorHex = imageManipulationService.calculateAveragePixelValue(mutableMagnifiedBitmap)
                 imageViewerUiState = imageViewerUiState.copy(hexColor = avgColorHex)
+
+                val colorRgb = imageManipulationService.getRgbFromHex(avgColorHex)
+                println("RGB: ${colorRgb[0]}, ${colorRgb[1]}, ${colorRgb[2]}")
+                val colorHsl = imageManipulationService.getHslFromRgb(colorRgb)
+                println("HSL: ${colorHsl[0]}, ${colorHsl[1]}, ${colorHsl[2]}")
             }
         }
         imageViewerUiState = imageViewerUiState.copy(
