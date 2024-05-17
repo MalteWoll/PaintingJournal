@@ -38,4 +38,13 @@ interface ColorSchemeDao {
 
     @Delete
     suspend fun deleteColorSchemeColorHexMap(colorSchemeColorHexMappingTable: ColorSchemeColorHexMappingTable)
+
+    @Insert
+    suspend fun insertColorHex(colorHex: ColorHex): Long
+
+    @Delete
+    suspend fun deleteColorHex(colorHex: ColorHex)
+
+    @Update
+    suspend fun updateColorHex(colorHex: ColorHex)
 }

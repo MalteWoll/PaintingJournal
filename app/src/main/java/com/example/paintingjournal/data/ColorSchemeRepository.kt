@@ -14,4 +14,7 @@ interface ColorSchemeRepository {
     suspend fun getColorHexesForColorScheme(id: Long): Flow<List<ColorHex>>
     suspend fun addColorSchemeColorHexMap(colorSchemeColorHexMappingTable: ColorSchemeColorHexMappingTable)
     suspend fun deleteColorSchemeColorHexMap(colorSchemeColorHexMappingTable: ColorSchemeColorHexMappingTable)
+    suspend fun insertColorHex(colorHex: ColorHex): Long
+    suspend fun deleteColorHex(colorHex: ColorHex)
+    suspend fun updateColorHex(colorHex: ColorHex)
 }

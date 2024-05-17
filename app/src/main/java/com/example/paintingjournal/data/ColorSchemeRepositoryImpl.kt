@@ -16,4 +16,7 @@ class ColorSchemeRepositoryImpl(private val colorSchemeDao: ColorSchemeDao) : Co
     override suspend fun getColorHexesForColorScheme(id: Long): Flow<List<ColorHex>> = withContext(Dispatchers.IO) { colorSchemeDao.getColorHexesForColorScheme(id) }
     override suspend fun addColorSchemeColorHexMap(colorSchemeColorHexMappingTable: ColorSchemeColorHexMappingTable) = withContext(Dispatchers.IO) { colorSchemeDao.addColorSchemeColorHexMap(colorSchemeColorHexMappingTable) }
     override suspend fun deleteColorSchemeColorHexMap(colorSchemeColorHexMappingTable: ColorSchemeColorHexMappingTable) = withContext(Dispatchers.IO) { colorSchemeDao.deleteColorSchemeColorHexMap(colorSchemeColorHexMappingTable) }
+    override suspend fun insertColorHex(colorHex: ColorHex): Long = withContext(Dispatchers.IO) { colorSchemeDao.insertColorHex(colorHex) }
+    override suspend fun deleteColorHex(colorHex: ColorHex) = withContext(Dispatchers.IO) { colorSchemeDao.deleteColorHex(colorHex) }
+    override suspend fun updateColorHex(colorHex: ColorHex) = withContext(Dispatchers.IO) { colorSchemeDao.updateColorHex(colorHex) }
 }
