@@ -124,6 +124,8 @@ class ImageViewerViewModel(
                 println("RGB: ${colorRgb[0]}, ${colorRgb[1]}, ${colorRgb[2]}")
                 val colorHsl = colorService.getHslFromRgb(colorRgb)
                 println("HSL: ${colorHsl[0]}, ${colorHsl[1]}, ${colorHsl[2]}")
+                val shiftedHsl = colorService.adjustHue(colorHsl, 30f)
+                println("Shifted HSL: ${shiftedHsl[0]}, ${shiftedHsl[1]}, ${shiftedHsl[2]}")
             }
         }
         imageViewerUiState = imageViewerUiState.copy(

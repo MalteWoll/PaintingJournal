@@ -56,4 +56,41 @@ class ColorServiceImpl : ColorService {
         val b = color.blue
         return intArrayOf(r,g,b)
     }
+
+    override fun adjustHue(hsl: FloatArray, angle: Float): FloatArray {
+        var hueNew = hsl[0] + angle
+        if(hueNew >= 360) {
+            hueNew -= 360
+        } else {
+            if(hueNew < 0) {
+                hueNew += 360
+            }
+        }
+        return floatArrayOf(hueNew, hsl[1], hsl[2])
+    }
+
+    override fun getAnalogousColors(originalColor: FloatArray): List<FloatArray> {
+        val analogousColors = mutableListOf<FloatArray>()
+        analogousColors.add(adjustHue(originalColor, -30f))
+        analogousColors.add(originalColor)
+        analogousColors.add(adjustHue(originalColor, 30f))
+        return analogousColors
+    }
+
+    override fun getTriadicColors(originalColor: FloatArray): List<FloatArray> {
+        val triadicColors = mutableListOf<FloatArray>()
+        triadicColors.add(adjustHue(originalColor, -120f))
+        triadicColors.add(originalColor)
+        triadicColors.add(adjustHue(originalColor, 120f))
+        return triadicColors
+    }
+
+    override fun getTetradicColors(originalColor: FloatArray): List<FloatArray> {
+        val tetradicColors = mutableListOf<FloatArray>()
+        tetradicColors.add(originalColor)
+        tetradicColors.add(adjustHue(originalColor, 60f))
+        tetradicColors.add(adjustHue(originalColor, 180f))
+        tetradicColors.add(adjustHue(originalColor, 240f))
+        return tetradicColors
+    }
 }
