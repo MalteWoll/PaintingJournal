@@ -9,6 +9,9 @@ import androidx.room.TypeConverters
 import com.example.paintingjournal.converters.DateConverters
 import com.example.paintingjournal.converters.SaveStateEnumConverter
 import com.example.paintingjournal.converters.UriConverters
+import com.example.paintingjournal.model.ColorHex
+import com.example.paintingjournal.model.ColorScheme
+import com.example.paintingjournal.model.ColorSchemeColorHexMappingTable
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.Miniature
 import com.example.paintingjournal.model.MiniatureImageMappingTable
@@ -20,6 +23,9 @@ import com.example.paintingjournal.model.PaintingStep
 import com.example.paintingjournal.model.PaintingStepImageMappingTable
 
 @Database(entities = [
+    ColorScheme::class,
+    ColorSchemeColorHexMappingTable::class,
+    ColorHex::class,
     Image::class,
     Miniature::class,
     MiniaturePaint::class,
@@ -30,8 +36,8 @@ import com.example.paintingjournal.model.PaintingStepImageMappingTable
     MiniaturePaintingStepMappingTable::class,
     PaintingStepImageMappingTable::class
     ],
-    version = 26,
-    autoMigrations = [AutoMigration(from = 24, to = 26)],
+    version = 28,
+    autoMigrations = [AutoMigration(from = 27, to = 28)],
     exportSchema = true)
 @TypeConverters(
     DateConverters::class,
@@ -39,6 +45,7 @@ import com.example.paintingjournal.model.PaintingStepImageMappingTable
     SaveStateEnumConverter::class
 )
 abstract class MiniatureDatabase : RoomDatabase() {
+    abstract fun colorSchemeDao(): ColorSchemeDao
     abstract fun imageDao(): ImageDao
     abstract fun miniatureDao(): MiniatureDao
     abstract fun paintDao(): PaintDao

@@ -10,6 +10,7 @@ import com.example.paintingjournal.services.MiniaturesServiceImpl
 
 interface AppContainer {
     val colorService: ColorService
+    val colorSchemeRepository: ColorSchemeRepository
     val imagesRepository: ImagesRepository
     val imageManipulationService: ImageManipulationService
     val miniaturesRepository: MiniaturesRepository
@@ -20,6 +21,9 @@ interface AppContainer {
 class AppDataContainer(private val context: Context) : AppContainer {
     override val colorService: ColorService by lazy {
         ColorServiceImpl()
+    }
+    override val colorSchemeRepository: ColorSchemeRepository by lazy {
+        ColorSchemeRepositoryImpl(MiniatureDatabase.getDatabase(context).colorSchemeDao())
     }
     override val imagesRepository: ImagesRepository by lazy {
         ImagesRepositoryImpl(MiniatureDatabase.getDatabase(context).imageDao())

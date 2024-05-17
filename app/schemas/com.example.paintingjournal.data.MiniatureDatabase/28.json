@@ -1,9 +1,135 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 27,
-    "identityHash": "34ca9d5ea9af18023e877f0632e996eb",
+    "version": 28,
+    "identityHash": "6ee68a0a224fea4ab927d1d527039ec9",
     "entities": [
+      {
+        "tableName": "colorSchemes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`colorSchemeId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `originalColor` TEXT NOT NULL, `saveState` TEXT NOT NULL, `createdAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "colorSchemeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originalColor",
+            "columnName": "originalColor",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "saveState",
+            "columnName": "saveState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "colorSchemeId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "colorSchemeColorHexMappingTable",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`colorSchemeIdRef` INTEGER NOT NULL, `colorHexIdRef` INTEGER NOT NULL, PRIMARY KEY(`colorSchemeIdRef`, `colorHexIdRef`), FOREIGN KEY(`colorSchemeIdRef`) REFERENCES `colorSchemes`(`colorSchemeId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`colorHexIdRef`) REFERENCES `colorHex`(`colorHexId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "colorSchemeIdRef",
+            "columnName": "colorSchemeIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "colorHexIdRef",
+            "columnName": "colorHexIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "colorSchemeIdRef",
+            "colorHexIdRef"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "colorSchemes",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "colorSchemeIdRef"
+            ],
+            "referencedColumns": [
+              "colorSchemeId"
+            ]
+          },
+          {
+            "table": "colorHex",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "colorHexIdRef"
+            ],
+            "referencedColumns": [
+              "colorHexId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "colorHex",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`colorHexId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hex` TEXT NOT NULL, `createdAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "colorHexId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hex",
+            "columnName": "hex",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "colorHexId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
       {
         "tableName": "images",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`imageId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `imageUri` TEXT, `saveState` TEXT NOT NULL)",
@@ -505,7 +631,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '34ca9d5ea9af18023e877f0632e996eb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6ee68a0a224fea4ab927d1d527039ec9')"
     ]
   }
 }
