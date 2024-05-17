@@ -9,6 +9,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.paintingjournal.views.colorSchemeList.ColorSchemeListDestination
+import com.example.paintingjournal.views.colorSchemeList.ColorSchemeListView
 import com.example.paintingjournal.views.imageViewer.ImageViewerDestination
 import com.example.paintingjournal.views.imageViewer.ImageViewerView
 import com.example.paintingjournal.views.mainMenu.HomeDestination
@@ -43,6 +45,14 @@ fun PaintingJournalNavHost(
         startDestination = HomeDestination.route, 
         modifier = Modifier ) 
     {
+        composable(route = ColorSchemeListDestination.route) {
+            ColorSchemeListView(
+                navigateToColorSchemeAdd = { /*TODO*/ },
+                navigateBack = { /*TODO*/ },
+                navigateToColorSchemeEntry = { /*TODO*/ }
+            )
+        }
+
         composable(
             route = ImageViewerDestination.routeWithArgs,
             arguments = listOf(
