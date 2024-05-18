@@ -16,8 +16,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
+import com.example.paintingjournal.model.RgbEnum
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
+import com.example.paintingjournal.ui.composables.ColorPicker
 
 object ColorSchemeAddDestination: NavigationDestination {
     override val route: String = "color_scheme_add"
@@ -49,7 +51,10 @@ fun ColorSchemeAddView(
             }
         ) { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
-
+                ColorPicker(
+                    onValueChanged = { i: Int, r: RgbEnum -> viewModel.onColorPickerValueChanged(i,r) },
+                    colorRgb = viewModel.colorSchemeAddUiState.mainColorRgb
+                )
             }
         }
     }

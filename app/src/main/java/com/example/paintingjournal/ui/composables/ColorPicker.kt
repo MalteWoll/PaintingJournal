@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -35,21 +37,26 @@ fun ColorPicker(
     colorRgb: IntArray,
     modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(
+        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+    ) {
         ColorPickerSlider(
             title = stringResource(id = R.string.color_picker_red),
             rgbComponent = RgbEnum.RED,
-            onValueChanged = onValueChanged
-        )
-        ColorPickerSlider(
-            title = stringResource(id = R.string.color_picker_blue),
-            rgbComponent = RgbEnum.BLUE,
-            onValueChanged = onValueChanged
+            onValueChanged = onValueChanged,
+            color = Color.Red
         )
         ColorPickerSlider(
             title = stringResource(id = R.string.color_picker_green),
             rgbComponent = RgbEnum.GREEN,
-            onValueChanged = onValueChanged
+            onValueChanged = onValueChanged,
+            color = Color.Green
+        )
+        ColorPickerSlider(
+            title = stringResource(id = R.string.color_picker_blue),
+            rgbComponent = RgbEnum.BLUE,
+            onValueChanged = onValueChanged,
+            color = Color.Blue
         )
         ColorSquare(color = Color(red = colorRgb[0], blue = colorRgb[1], green = colorRgb[2]))
     }
@@ -60,6 +67,7 @@ fun ColorPickerSlider(
     title: String,
     rgbComponent: RgbEnum,
     onValueChanged: (Int, RgbEnum) -> Unit,
+    color: Color,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -73,14 +81,15 @@ fun ColorPickerSlider(
                 value = sliderPosition,
                 onValueChange = {
                     sliderPosition = it
+                    textFieldValue = TextFieldValue(sliderPosition.toInt().toString())
                     onValueChanged(it.toInt(), rgbComponent)
                 },
                 colors = SliderDefaults.colors(
-                    thumbColor = MaterialTheme.colorScheme.secondary,
+                    thumbColor = color,
                     activeTrackColor = MaterialTheme.colorScheme.secondary,
                     inactiveTrackColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
-                steps = 1,
+                steps = 255,
                 valueRange = 0f..255f
             )
             TextField(
@@ -103,6 +112,7 @@ fun ColorSquare(
 ) {
     Column(modifier = Modifier
         .fillMaxWidth()
+        .padding(dimensionResource(id = R.dimen.padding_small))
         .wrapContentSize(Alignment.Center)) {
         Box(
             modifier = Modifier
