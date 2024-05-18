@@ -1,12 +1,19 @@
 package com.example.paintingjournal.views.colorSchemeList
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -21,10 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
 import com.example.paintingjournal.model.ColorScheme
+import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 
@@ -101,7 +110,10 @@ private fun ColorSchemeListBody(
                 style = MaterialTheme.typography.titleLarge
             )
         } else {
-
+            ColorSchemeList(
+                colorSchemeList = colorSchemeListUiState.colorSchemeList,
+                onColorSchemeClick = { onColorSchemeClick(it.id) }
+            )
         }
     }
 }
@@ -113,8 +125,44 @@ private fun ColorSchemeList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
-        items(items = colorSchemeList, key = { it.id}) { colorScheme ->
+        items(items = colorSchemeList, key = { it.id }) { colorScheme ->
+            ColorSchemeItem(
+                colorScheme = colorScheme,
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+                    .clickable { onColorSchemeClick(colorScheme) }
+            )
+        }
+    }
+}
 
+@Composable
+private fun ColorSchemeItem(
+    colorScheme: ColorScheme,
+    modifier: Modifier = Modifier
+) {
+    if(colorScheme.saveState == SaveStateEnum.SAVED) {
+        Card(
+            modifier = modifier,
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            ) {
+                Row {
+                    // TODO: scheme preview
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = colorScheme.name,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Spacer(Modifier.weight(1f))
+                    }
+                }
+            }
         }
     }
 }

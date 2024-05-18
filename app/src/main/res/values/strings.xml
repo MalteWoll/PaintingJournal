@@ -4,6 +4,7 @@
     <string name="back_button">Back</string>
     <string name="close">Close</string>
     <string name="capture_image">Capture image</string>
+    <string name="color_scheme_add_title">Add color scheme</string>
     <string name="color_scheme_list_title">Color scheme list</string>
     <string name="color_scheme_list_no_entries">No color scheme added yet</string>
     <string name="delete">Delete</string>
@@ -17,8 +18,9 @@
     <string name="image_viewer_popup_show_magnifier">Toggle magnifier</string>
     <string name="image_viewer_popup_toggle_color_preview">Toggle color preview</string>
     <string name="no">No</string>
-    <string name="main_menu_mini_list_button">Miniature List</string>
-    <string name="main_menu_paint_list_button">Paint List</string>
+    <string name="main_menu_color_scheme_list_button">Color schemes</string>
+    <string name="main_menu_mini_list_button">Miniatures</string>
+    <string name="main_menu_paint_list_button">Paints</string>
     <string name="main_menu_title">Main Menu</string>
     <string name="manufacturer">Manufacturer</string>
     <string name="mini_section_general">General information</string>

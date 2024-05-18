@@ -9,6 +9,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
+import com.example.paintingjournal.views.colorSchemeAdd.ColorSchemeAddDestination
+import com.example.paintingjournal.views.colorSchemeAdd.ColorSchemeAddView
 import com.example.paintingjournal.views.colorSchemeList.ColorSchemeListDestination
 import com.example.paintingjournal.views.colorSchemeList.ColorSchemeListView
 import com.example.paintingjournal.views.imageViewer.ImageViewerDestination
@@ -45,11 +48,19 @@ fun PaintingJournalNavHost(
         startDestination = HomeDestination.route, 
         modifier = Modifier ) 
     {
+        composable(route = ColorSchemeAddDestination.route) {
+            ColorSchemeAddView(
+                navigateBack = { navController.popBackStack() },
+                canNavigateBack = true
+            )
+        }
+        
         composable(route = ColorSchemeListDestination.route) {
             ColorSchemeListView(
-                navigateToColorSchemeAdd = { /*TODO*/ },
-                navigateBack = { /*TODO*/ },
-                navigateToColorSchemeEntry = { /*TODO*/ }
+                navigateToColorSchemeAdd = { navController.navigate(ColorSchemeAddDestination.route) },
+                navigateBack = { navController.popBackStack() },
+                navigateToColorSchemeEntry = { /*TODO*/ },
+                canNavigateBack = true
             )
         }
 
@@ -74,7 +85,8 @@ fun PaintingJournalNavHost(
         composable(route = HomeDestination.route) {
             MainMenuView(
                 navigateToMiniList = { navController.navigate(MiniListDestination.route) },
-                navigateToPaintList = { navController.navigate(PaintListDestination.route) }
+                navigateToPaintList = { navController.navigate(PaintListDestination.route) },
+                navigateToColorschemeList = { navController.navigate(ColorSchemeListDestination.route) }
             )
         }
 

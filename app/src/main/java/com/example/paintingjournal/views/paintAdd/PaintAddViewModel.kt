@@ -32,7 +32,7 @@ class PaintAddViewModel(
 ) : ViewModel() {
 
     var paintId: Long = 0
-    var paintExists: Boolean = false
+    var paintExists: Boolean = false // Necessary to discern when navigating back from imageViewer
 
     init {
         createPaintInDb()

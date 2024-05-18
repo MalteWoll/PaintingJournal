@@ -39,6 +39,7 @@ object HomeDestination : NavigationDestination {
 fun MainMenuView(
     navigateToMiniList: () -> Unit,
     navigateToPaintList: () -> Unit,
+    navigateToColorschemeList: () -> Unit,
     viewModel: MainMenuViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     Surface(
@@ -65,6 +66,9 @@ fun MainMenuView(
                 }
                 Button(onClick = { navigateToPaintList() }) {
                     Text(text = stringResource(id = R.string.main_menu_paint_list_button))
+                }
+                Button(onClick = { navigateToColorschemeList() }) {
+                    Text(text = stringResource(id = R.string.main_menu_color_scheme_list_button))
                 }
             }
         }
