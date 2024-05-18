@@ -4,6 +4,9 @@
     <string name="back_button">Back</string>
     <string name="close">Close</string>
     <string name="capture_image">Capture image</string>
+    <string name="color_picker_red">Red</string>
+    <string name="color_picker_blue">Blue</string>
+    <string name="color_picker_green">Green</string>
     <string name="color_scheme_add_title">Add color scheme</string>
     <string name="color_scheme_list_title">Color scheme list</string>
     <string name="color_scheme_list_no_entries">No color scheme added yet</string>
