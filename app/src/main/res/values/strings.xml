@@ -8,6 +8,10 @@
     <string name="color_picker_blue">Blue</string>
     <string name="color_picker_green">Green</string>
     <string name="color_scheme_add_title">Add color scheme</string>
+    <string name="color_scheme_add_toggle_picker">Color picker</string>
+    <string name="color_scheme_add_pick_color">Pick a color</string>
+    <string name="color_scheme_add_select_paint">Select a paint</string>
+    <string name="color_scheme_add_paint_list_title">Select a paint</string>
     <string name="color_scheme_list_title">Color scheme list</string>
     <string name="color_scheme_list_no_entries">No color scheme added yet</string>
     <string name="delete">Delete</string>

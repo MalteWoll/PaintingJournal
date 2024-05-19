@@ -11,6 +11,7 @@ import com.example.paintingjournal.model.ColorScheme
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.RgbEnum
 import com.example.paintingjournal.model.SaveStateEnum
+import com.example.paintingjournal.services.ColorService
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -18,9 +19,11 @@ import kotlinx.coroutines.runBlocking
 
 class ColorSchemeAddViewModel(
     private val paintsRepository: PaintsRepository,
-    private val colorSchemeRepository: ColorSchemeRepository
+    private val colorSchemeRepository: ColorSchemeRepository,
+    private val colorService: ColorService
 ) : ViewModel() {
-    var colorSchemeId: Long = 0
+    private var colorSchemeId: Long = 0
+    private var colorSchemeExists = false
 
     var colorSchemeAddUiState by mutableStateOf(ColorSchemeUiState())
         private set
@@ -33,6 +36,12 @@ class ColorSchemeAddViewModel(
     private fun createColorSchemeInDb() {
         runBlocking {
             colorSchemeId = colorSchemeRepository.insertColorScheme(ColorSchemeDetails().toColorScheme())
+            colorSchemeAddUiState = colorSchemeAddUiState.copy(
+                colorSchemeDetails = colorSchemeAddUiState.colorSchemeDetails.copy(
+                    id = colorSchemeId
+                )
+            )
+            colorSchemeExists = true
         }
     }
 
@@ -48,16 +57,30 @@ class ColorSchemeAddViewModel(
         }
     }
 
+    fun updateMainColor() {
+        viewModelScope.launch {
+            if(colorSchemeExists) {
+                val colorScheme = colorSchemeRepository.getColorScheme(colorSchemeId)
+                    .filterNotNull()
+                    .first()
+                    .toColorSchemeDetails()
+                colorSchemeAddUiState = colorSchemeAddUiState.copy(
+                    mainColorRgb = colorService.getRgbFromHex(colorScheme.originalColor)
+                )
+            }
+        }
+    }
+
     fun onColorPickerValueChanged(newValue: Int, rgbEnum: RgbEnum) {
         val rgbColor = colorSchemeAddUiState.mainColorRgb
         when(rgbEnum) {
             RgbEnum.RED -> {
                 rgbColor[0] = newValue
             }
-            RgbEnum.BLUE -> {
+            RgbEnum.GREEN -> {
                 rgbColor[1] = newValue
             }
-            RgbEnum.GREEN -> {
+            RgbEnum.BLUE -> {
                 rgbColor[2] = newValue
             }
         }
@@ -66,12 +89,19 @@ class ColorSchemeAddViewModel(
             mainColorRgb = rgbColor
         )
     }
+
+    fun toggleColorPicker() {
+        colorSchemeAddUiState = colorSchemeAddUiState.copy(
+            showColorPicker = !colorSchemeAddUiState.showColorPicker
+        )
+    }
 }
 
 data class ColorSchemeUiState(
     val colorSchemeDetails: ColorSchemeDetails = ColorSchemeDetails(),
     val paints: List<MiniaturePaint> = listOf(),
-    val mainColorRgb: IntArray = intArrayOf(0,0,0)
+    val mainColorRgb: IntArray = intArrayOf(0,0,0),
+    val showColorPicker: Boolean = false
 )
 
 data class ColorSchemeDetails(

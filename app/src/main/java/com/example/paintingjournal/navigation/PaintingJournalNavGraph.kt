@@ -12,6 +12,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.paintingjournal.views.colorSchemeAdd.ColorSchemeAddDestination
 import com.example.paintingjournal.views.colorSchemeAdd.ColorSchemeAddView
+import com.example.paintingjournal.views.colorSchemeAddPaintList.ColorSchemeAddPaintListDestination
+import com.example.paintingjournal.views.colorSchemeAddPaintList.ColorSchemeAddPaintListView
 import com.example.paintingjournal.views.colorSchemeList.ColorSchemeListDestination
 import com.example.paintingjournal.views.colorSchemeList.ColorSchemeListView
 import com.example.paintingjournal.views.imageViewer.ImageViewerDestination
@@ -51,13 +53,23 @@ fun PaintingJournalNavHost(
         composable(route = ColorSchemeAddDestination.route) {
             ColorSchemeAddView(
                 navigateBack = { navController.popBackStack() },
+                navigateToPaintList = { navController.navigate("${ColorSchemeAddPaintListDestination.route}/${it}")},
                 canNavigateBack = true
             )
         }
         
+        composable(
+            route = ColorSchemeAddPaintListDestination.routeWithArgs,
+            arguments = listOf(navArgument(ColorSchemeAddPaintListDestination.colorSchemeIdArg) {
+                type = NavType.LongType
+            })
+        ) {
+            ColorSchemeAddPaintListView(navigateBack = { navController.popBackStack() })
+        }
+        
         composable(route = ColorSchemeListDestination.route) {
             ColorSchemeListView(
-                navigateToColorSchemeAdd = { navController.navigate(ColorSchemeAddDestination.route) },
+                navigateToColorSchemeAdd = { navController.navigate(ColorSchemeAddDestination.route)},
                 navigateBack = { navController.popBackStack() },
                 navigateToColorSchemeEntry = { /*TODO*/ },
                 canNavigateBack = true

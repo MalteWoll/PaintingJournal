@@ -328,7 +328,7 @@ private fun PaintList(
 }
 
 @Composable
-private fun PaintItem(
+fun PaintItem(
     paint: MiniaturePaint,
     modifier: Modifier = Modifier
 ) {

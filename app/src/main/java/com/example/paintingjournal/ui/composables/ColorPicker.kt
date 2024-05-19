@@ -44,21 +44,23 @@ fun ColorPicker(
             title = stringResource(id = R.string.color_picker_red),
             rgbComponent = RgbEnum.RED,
             onValueChanged = onValueChanged,
-            color = Color.Red
+            color = Color.Red,
+            value = colorRgb[0]
         )
         ColorPickerSlider(
             title = stringResource(id = R.string.color_picker_green),
             rgbComponent = RgbEnum.GREEN,
             onValueChanged = onValueChanged,
-            color = Color.Green
+            color = Color.Green,
+            value = colorRgb[1]
         )
         ColorPickerSlider(
             title = stringResource(id = R.string.color_picker_blue),
             rgbComponent = RgbEnum.BLUE,
             onValueChanged = onValueChanged,
-            color = Color.Blue
+            color = Color.Blue,
+            value = colorRgb[2]
         )
-        ColorSquare(color = Color(red = colorRgb[0], blue = colorRgb[1], green = colorRgb[2]))
     }
 }
 
@@ -68,6 +70,7 @@ fun ColorPickerSlider(
     rgbComponent: RgbEnum,
     onValueChanged: (Int, RgbEnum) -> Unit,
     color: Color,
+    value: Int,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -78,7 +81,7 @@ fun ColorPickerSlider(
         var textFieldValue by remember { mutableStateOf(TextFieldValue("")) }
         Column {
             Slider(
-                value = sliderPosition,
+                value = value.toFloat(),
                 onValueChange = {
                     sliderPosition = it
                     textFieldValue = TextFieldValue(sliderPosition.toInt().toString())
@@ -93,7 +96,7 @@ fun ColorPickerSlider(
                 valueRange = 0f..255f
             )
             TextField(
-                value = textFieldValue,
+                value = TextFieldValue(value.toString()),
                 onValueChange = { newValue ->
                     if(newValue.text.isDigitsOnly() && newValue.text.toInt() in 0..255) {
                         textFieldValue = newValue
