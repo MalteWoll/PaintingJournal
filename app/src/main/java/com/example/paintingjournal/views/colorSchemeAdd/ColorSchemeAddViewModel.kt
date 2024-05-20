@@ -10,6 +10,7 @@ import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.model.ColorScheme
 import com.example.paintingjournal.model.ColorSchemeEnum
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.RgbColorWithPaint
 import com.example.paintingjournal.model.RgbEnum
 import com.example.paintingjournal.model.SaveStateEnum
 import com.example.paintingjournal.services.ColorService
@@ -114,7 +115,7 @@ class ColorSchemeAddViewModel(
             colorService.getAnalogousColors(mainColorHsl)
         )
         colorSchemeAddUiState = colorSchemeAddUiState.copy(
-            colorSchemeColors = analogousColorsRgb,
+            colorSchemeColors = colorService.getRgbColorsWithPaintFromRgb(analogousColorsRgb),
             selectedColorScheme = ColorSchemeEnum.ANALOGOUS
         )
     }
@@ -125,7 +126,7 @@ class ColorSchemeAddViewModel(
             colorService.getTriadicColors(mainColorHsl)
         )
         colorSchemeAddUiState = colorSchemeAddUiState.copy(
-            colorSchemeColors = triadicColorsRgb,
+            colorSchemeColors = colorService.getRgbColorsWithPaintFromRgb(triadicColorsRgb),
             selectedColorScheme = ColorSchemeEnum.TRIADIC
         )
     }
@@ -136,7 +137,7 @@ class ColorSchemeAddViewModel(
             colorService.getTetradicColors(mainColorHsl)
         )
         colorSchemeAddUiState = colorSchemeAddUiState.copy(
-            colorSchemeColors = tetradicColorsRgb,
+            colorSchemeColors = colorService.getRgbColorsWithPaintFromRgb(tetradicColorsRgb),
             selectedColorScheme = ColorSchemeEnum.TETRADIC
         )
     }
@@ -147,7 +148,7 @@ data class ColorSchemeUiState(
     val paints: List<MiniaturePaint> = listOf(),
     val mainColorRgb: IntArray = intArrayOf(0,0,0),
     val showColorPicker: Boolean = false,
-    val colorSchemeColors: List<IntArray> = listOf(),
+    val colorSchemeColors: List<RgbColorWithPaint> = listOf(),
     val selectedColorScheme: ColorSchemeEnum = ColorSchemeEnum.NONE
 )
 

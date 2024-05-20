@@ -4,6 +4,7 @@ import android.graphics.Color
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
+import com.example.paintingjournal.model.RgbColorWithPaint
 
 class ColorServiceImpl : ColorService {
     override fun getArgbFromInt(intColor: Int): IntArray {
@@ -100,5 +101,13 @@ class ColorServiceImpl : ColorService {
             rgbList.add(getRgbFromHsl(hsl))
         }
         return rgbList.toList()
+    }
+
+    override fun getRgbColorsWithPaintFromRgb(rgbColors: List<IntArray>): List<RgbColorWithPaint> {
+        val rgbColorWithPaintList: MutableList<RgbColorWithPaint> = mutableListOf()
+        rgbColors.forEach { color ->
+            rgbColorWithPaintList.add(RgbColorWithPaint(rgbColor = color))
+        }
+        return rgbColorWithPaintList
     }
 }

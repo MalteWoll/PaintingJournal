@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
+import com.example.paintingjournal.model.RgbColorWithPaint
 import com.example.paintingjournal.model.RgbEnum
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
@@ -165,7 +166,7 @@ fun ColorSchemeSelection(
 
 @Composable
 fun ColorSchemeSquares(
-    rgbColors: List<IntArray>,
+    rgbColors: List<RgbColorWithPaint>,
     modifier: Modifier = Modifier
 ) {
     if(rgbColors.isNotEmpty()) {
@@ -182,7 +183,11 @@ fun ColorSchemeSquares(
                             .size(80.dp)
                             .clip(RectangleShape)
                             .background(
-                                Color(red = rgbColor[0], green = rgbColor[1], blue = rgbColor[2])
+                                Color(
+                                    red = rgbColor.rgbColor[0],
+                                    green = rgbColor.rgbColor[1],
+                                    blue = rgbColor.rgbColor[2]
+                                )
                             )
                     )
                 }
