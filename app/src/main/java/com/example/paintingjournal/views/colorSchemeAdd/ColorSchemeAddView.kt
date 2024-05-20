@@ -2,12 +2,16 @@ package com.example.paintingjournal.views.colorSchemeAdd
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -18,10 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
@@ -66,6 +74,9 @@ fun ColorSchemeAddView(
                 onColorPickerValueChanged = { i: Int, r: RgbEnum -> viewModel.onColorPickerValueChanged(i,r) },
                 toggleColorPicker = { viewModel.toggleColorPicker() },
                 navigateToPaintList = { navigateToPaintList(it) },
+                onSelectAnalogous = { viewModel.getAnalogousColors() },
+                onSelectTriadic = { viewModel.getTriadicColors() },
+                onSelectTetradic = { viewModel.getTetradicColors() },
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState()))
@@ -79,6 +90,9 @@ fun ColorSchemeAddBody(
     onColorPickerValueChanged: (Int, RgbEnum) -> Unit,
     toggleColorPicker: () -> Unit,
     navigateToPaintList: (Long) -> Unit,
+    onSelectAnalogous: () -> Unit,
+    onSelectTriadic: () -> Unit,
+    onSelectTetradic: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -113,6 +127,66 @@ fun ColorSchemeAddBody(
                     blue = colorSchemeUiState.mainColorRgb[2]
                 )
             )
+            ColorSchemeSelection(
+                onSelectAnalogous = onSelectAnalogous,
+                onSelectTriadic = onSelectTriadic,
+                onSelectTetradic = onSelectTetradic,
+            )
+            ColorSchemeSquares(rgbColors = colorSchemeUiState.colorSchemeColors)
+        }
+    }
+}
+
+@Composable
+fun ColorSchemeSelection(
+    onSelectAnalogous: () -> Unit,
+    onSelectTriadic: () -> Unit,
+    onSelectTetradic: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column {
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Button(onClick = { onSelectAnalogous() }) {
+                Text(text = stringResource(id = R.string.color_scheme_add_analogous_colors))
+            }
+            Button(onClick = { onSelectTriadic() }) {
+                Text(text = stringResource(id = R.string.color_scheme_add_triadic_colors))
+            }
+            Button(onClick = { onSelectTetradic() }) {
+                Text(text = stringResource(id = R.string.color_scheme_add_tetradic_colors))
+            }
+        }
+    }
+}
+
+@Composable
+fun ColorSchemeSquares(
+    rgbColors: List<IntArray>,
+    modifier: Modifier = Modifier
+) {
+    if(rgbColors.isNotEmpty()) {
+        Column {
+            rgbColors.forEach { rgbColor ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(id = R.dimen.padding_small))
+                        .wrapContentSize(Alignment.CenterStart)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(RectangleShape)
+                            .background(
+                                Color(red = rgbColor[0], green = rgbColor[1], blue = rgbColor[2])
+                            )
+                    )
+                }
+            }
         }
     }
 }

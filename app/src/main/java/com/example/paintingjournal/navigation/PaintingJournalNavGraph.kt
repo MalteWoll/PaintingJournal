@@ -64,7 +64,10 @@ fun PaintingJournalNavHost(
                 type = NavType.LongType
             })
         ) {
-            ColorSchemeAddPaintListView(navigateBack = { navController.popBackStack() })
+            ColorSchemeAddPaintListView(
+                navigateBack = { navController.popBackStack() },
+                canNavigateBack = true
+            )
         }
         
         composable(route = ColorSchemeListDestination.route) {

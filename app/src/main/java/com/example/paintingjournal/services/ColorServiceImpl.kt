@@ -93,4 +93,12 @@ class ColorServiceImpl : ColorService {
         tetradicColors.add(adjustHue(originalColor, 240f))
         return tetradicColors
     }
+
+    override fun getRgbListFromHslList(hslList: List<FloatArray>): List<IntArray> {
+        val rgbList: MutableList<IntArray> = mutableListOf()
+        hslList.forEach{ hsl ->
+            rgbList.add(getRgbFromHsl(hsl))
+        }
+        return rgbList.toList()
+    }
 }

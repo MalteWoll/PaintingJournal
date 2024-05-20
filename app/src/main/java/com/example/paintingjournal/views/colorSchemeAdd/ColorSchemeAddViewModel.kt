@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.paintingjournal.data.ColorSchemeRepository
 import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.model.ColorScheme
+import com.example.paintingjournal.model.ColorSchemeEnum
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.RgbEnum
 import com.example.paintingjournal.model.SaveStateEnum
@@ -88,11 +89,55 @@ class ColorSchemeAddViewModel(
         colorSchemeAddUiState = colorSchemeAddUiState.copy(
             mainColorRgb = rgbColor
         )
+
+        adjustColorSchemeColors()
+    }
+
+    private fun adjustColorSchemeColors() {
+        when(colorSchemeAddUiState.selectedColorScheme) {
+            ColorSchemeEnum.NONE -> return
+            ColorSchemeEnum.ANALOGOUS -> getAnalogousColors()
+            ColorSchemeEnum.TRIADIC -> getTriadicColors()
+            ColorSchemeEnum.TETRADIC -> getTetradicColors()
+        }
     }
 
     fun toggleColorPicker() {
         colorSchemeAddUiState = colorSchemeAddUiState.copy(
             showColorPicker = !colorSchemeAddUiState.showColorPicker
+        )
+    }
+
+    fun getAnalogousColors() {
+        val mainColorHsl = colorService.getHslFromRgb(colorSchemeAddUiState.mainColorRgb)
+        val analogousColorsRgb = colorService.getRgbListFromHslList(
+            colorService.getAnalogousColors(mainColorHsl)
+        )
+        colorSchemeAddUiState = colorSchemeAddUiState.copy(
+            colorSchemeColors = analogousColorsRgb,
+            selectedColorScheme = ColorSchemeEnum.ANALOGOUS
+        )
+    }
+
+    fun getTriadicColors() {
+        val mainColorHsl = colorService.getHslFromRgb(colorSchemeAddUiState.mainColorRgb)
+        val triadicColorsRgb = colorService.getRgbListFromHslList(
+            colorService.getTriadicColors(mainColorHsl)
+        )
+        colorSchemeAddUiState = colorSchemeAddUiState.copy(
+            colorSchemeColors = triadicColorsRgb,
+            selectedColorScheme = ColorSchemeEnum.TRIADIC
+        )
+    }
+
+    fun getTetradicColors() {
+        val mainColorHsl = colorService.getHslFromRgb(colorSchemeAddUiState.mainColorRgb)
+        val tetradicColorsRgb = colorService.getRgbListFromHslList(
+            colorService.getTetradicColors(mainColorHsl)
+        )
+        colorSchemeAddUiState = colorSchemeAddUiState.copy(
+            colorSchemeColors = tetradicColorsRgb,
+            selectedColorScheme = ColorSchemeEnum.TETRADIC
         )
     }
 }
@@ -101,7 +146,9 @@ data class ColorSchemeUiState(
     val colorSchemeDetails: ColorSchemeDetails = ColorSchemeDetails(),
     val paints: List<MiniaturePaint> = listOf(),
     val mainColorRgb: IntArray = intArrayOf(0,0,0),
-    val showColorPicker: Boolean = false
+    val showColorPicker: Boolean = false,
+    val colorSchemeColors: List<IntArray> = listOf(),
+    val selectedColorScheme: ColorSchemeEnum = ColorSchemeEnum.NONE
 )
 
 data class ColorSchemeDetails(

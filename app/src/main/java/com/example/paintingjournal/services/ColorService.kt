@@ -10,4 +10,5 @@ interface ColorService {
     fun getAnalogousColors(originalColor: FloatArray): List<FloatArray>
     fun getTriadicColors(originalColor: FloatArray): List<FloatArray>
     fun getTetradicColors(originalColor: FloatArray): List<FloatArray>
+    fun getRgbListFromHslList(hslList: List<FloatArray>): List<IntArray>
 }
