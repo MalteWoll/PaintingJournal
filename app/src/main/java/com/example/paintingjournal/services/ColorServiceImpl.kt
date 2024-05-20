@@ -4,9 +4,19 @@ import android.graphics.Color
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
+import com.example.paintingjournal.data.PaintsRepository
+import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.RgbColorWithPaint
+import com.example.paintingjournal.views.paintAdd.MiniaturePaintDetails
+import com.example.paintingjournal.views.paintAdd.toMiniaturePaintDetails
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlin.math.pow
+import kotlin.math.sqrt
 
-class ColorServiceImpl : ColorService {
+class ColorServiceImpl(
+    private val paintsRepository: PaintsRepository
+) : ColorService {
     override fun getArgbFromInt(intColor: Int): IntArray {
         val a = intColor shr 24 and 0xff
         val r = intColor shr 16 and 0xff
@@ -52,10 +62,7 @@ class ColorServiceImpl : ColorService {
 
     override fun getRgbFromHsl(hsl: FloatArray): IntArray {
         val color = Color.HSVToColor(hsl)
-        val r = color.red
-        val g = color.green
-        val b = color.blue
-        return intArrayOf(r,g,b)
+        return intArrayOf(color.red,color.green,color.blue)
     }
 
     override fun adjustHue(hsl: FloatArray, angle: Float): FloatArray {
@@ -109,5 +116,48 @@ class ColorServiceImpl : ColorService {
             rgbColorWithPaintList.add(RgbColorWithPaint(rgbColor = color))
         }
         return rgbColorWithPaintList
+    }
+
+    override suspend fun getClosestPaint(rgbColor: IntArray): MiniaturePaintDetails {
+        val paints = paintsRepository.getAllPaintsStream()
+            .filterNotNull()
+            .first()
+            .toList()
+            .filter { it.hexColor != "" }
+
+        var closestPaint = MiniaturePaintDetails()
+        var lowestDistance = 0.0
+
+        if(paints.isNotEmpty()) {
+            lowestDistance = getDistanceBetweenTwoRgbColors(getRgbFromHex(paints[0].hexColor), rgbColor)
+            closestPaint = paints[0].toMiniaturePaintDetails()
+        }
+
+        paints.forEach { paint ->
+            val paintColor = getRgbFromHex(paint.hexColor)
+            val distance = getDistanceBetweenTwoRgbColors(paintColor, rgbColor)
+            if(distance < lowestDistance) {
+                lowestDistance = distance
+                closestPaint = paint.toMiniaturePaintDetails()
+            }
+        }
+
+        return closestPaint
+    }
+
+    private fun getDistanceBetweenTwoRgbColors(rgbColor1: IntArray, rgbColor2: IntArray) : Double {
+        return sqrt( (rgbColor1[0]-rgbColor2[0]).toDouble().pow(2) +
+                (rgbColor1[1]-rgbColor2[1]).toDouble().pow(2) +
+                (rgbColor1[2]-rgbColor2[2]).toDouble().pow(2) )
+    }
+
+    private fun getDistanceBetweenTwoRgbColorsWeighted(rgbColor1: IntArray, rgbColor2: IntArray) : Double {
+        return sqrt( ( (rgbColor1[0]-rgbColor2[0])*0.3 ).pow(2) +
+                ( (rgbColor1[1]-rgbColor2[1]) * 0.59).pow(2) +
+                ( ( rgbColor1[2]-rgbColor2[2]) * 0.11).pow(2) )
+    }
+
+    override suspend fun getClosestPaintWeighted(rgbColor: IntArray): MiniaturePaintDetails {
+        TODO("Not yet implemented")
     }
 }

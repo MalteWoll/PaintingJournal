@@ -15,6 +15,7 @@
     <string name="color_scheme_add_analogous_colors">Analogous</string>
     <string name="color_scheme_add_triadic_colors">Triadic</string>
     <string name="color_scheme_add_tetradic_colors">Tetradic</string>
+    <string name="color_scheme_add_find_closest_paints">Find closest paints</string>
     <string name="color_scheme_list_title">Color scheme list</string>
     <string name="color_scheme_list_no_entries">No color scheme added yet</string>
     <string name="delete">Delete</string>

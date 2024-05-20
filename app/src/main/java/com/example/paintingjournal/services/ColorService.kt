@@ -1,6 +1,7 @@
 package com.example.paintingjournal.services
 
 import com.example.paintingjournal.model.RgbColorWithPaint
+import com.example.paintingjournal.views.paintAdd.MiniaturePaintDetails
 
 interface ColorService {
     fun getArgbFromInt(intColor: Int): IntArray
@@ -14,4 +15,6 @@ interface ColorService {
     fun getTetradicColors(originalColor: FloatArray): List<FloatArray>
     fun getRgbListFromHslList(hslList: List<FloatArray>): List<IntArray>
     fun getRgbColorsWithPaintFromRgb(rgbColors: List<IntArray>): List<RgbColorWithPaint>
+    suspend fun getClosestPaint(rgbColor: IntArray): MiniaturePaintDetails
+    suspend fun getClosestPaintWeighted(rgbColor: IntArray): MiniaturePaintDetails
 }

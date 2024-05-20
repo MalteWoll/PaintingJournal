@@ -330,7 +330,8 @@ private fun PaintList(
 @Composable
 fun PaintItem(
     paint: MiniaturePaint,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showManufacturer: Boolean = true
 ) {
     Card(
         modifier = modifier,
@@ -338,7 +339,7 @@ fun PaintItem(
     ) {
         if(paint.saveState == SaveStateEnum.SAVED) {
             Column(
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)),
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
             ) {
                 Row {
@@ -363,14 +364,16 @@ fun PaintItem(
                             )
                             Spacer(Modifier.weight(1f))
                         }
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = paint.manufacturer,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Spacer(Modifier.weight(1f))
+                        if(showManufacturer) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = paint.manufacturer,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Spacer(Modifier.weight(1f))
+                            }
                         }
                     }
                 }

@@ -20,7 +20,7 @@ interface AppContainer {
 
 class AppDataContainer(private val context: Context) : AppContainer {
     override val colorService: ColorService by lazy {
-        ColorServiceImpl()
+        ColorServiceImpl(paintsRepository)
     }
     override val colorSchemeRepository: ColorSchemeRepository by lazy {
         ColorSchemeRepositoryImpl(MiniatureDatabase.getDatabase(context).colorSchemeDao())

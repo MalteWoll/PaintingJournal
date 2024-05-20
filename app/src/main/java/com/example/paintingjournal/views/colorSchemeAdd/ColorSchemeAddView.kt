@@ -39,6 +39,8 @@ import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
 import com.example.paintingjournal.ui.composables.ColorPicker
 import com.example.paintingjournal.ui.composables.ColorSquare
+import com.example.paintingjournal.views.paintAdd.toPaint
+import com.example.paintingjournal.views.paintList.PaintItem
 
 object ColorSchemeAddDestination: NavigationDestination {
     override val route: String = "color_scheme_add"
@@ -78,6 +80,7 @@ fun ColorSchemeAddView(
                 onSelectAnalogous = { viewModel.getAnalogousColors() },
                 onSelectTriadic = { viewModel.getTriadicColors() },
                 onSelectTetradic = { viewModel.getTetradicColors() },
+                onFindClosestPaints = { viewModel.findClosestPaints() },
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState()))
@@ -94,6 +97,7 @@ fun ColorSchemeAddBody(
     onSelectAnalogous: () -> Unit,
     onSelectTriadic: () -> Unit,
     onSelectTetradic: () -> Unit,
+    onFindClosestPaints: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -133,7 +137,10 @@ fun ColorSchemeAddBody(
                 onSelectTriadic = onSelectTriadic,
                 onSelectTetradic = onSelectTetradic,
             )
-            ColorSchemeSquares(rgbColors = colorSchemeUiState.colorSchemeColors)
+            ColorSchemeSquares(
+                rgbColors = colorSchemeUiState.colorSchemeColors,
+                onFindClosestPaints = onFindClosestPaints
+            )
         }
     }
 }
@@ -167,30 +174,46 @@ fun ColorSchemeSelection(
 @Composable
 fun ColorSchemeSquares(
     rgbColors: List<RgbColorWithPaint>,
+    onFindClosestPaints: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     if(rgbColors.isNotEmpty()) {
-        Column {
+        Column(modifier = Modifier.fillMaxSize()) {
             rgbColors.forEach { rgbColor ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(dimensionResource(id = R.dimen.padding_small))
-                        .wrapContentSize(Alignment.CenterStart)
-                ) {
-                    Box(
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Column(
                         modifier = Modifier
-                            .size(80.dp)
-                            .clip(RectangleShape)
-                            .background(
-                                Color(
-                                    red = rgbColor.rgbColor[0],
-                                    green = rgbColor.rgbColor[1],
-                                    blue = rgbColor.rgbColor[2]
-                                )
+                            .fillMaxWidth()
+                            .padding(dimensionResource(id = R.dimen.padding_small))
+                            .wrapContentSize(Alignment.CenterStart)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(RectangleShape)
+                                    .background(
+                                        Color(
+                                            red = rgbColor.rgbColor[0],
+                                            green = rgbColor.rgbColor[1],
+                                            blue = rgbColor.rgbColor[2]
+                                        )
+                                    )
                             )
-                    )
+                            if(rgbColor.miniaturePaint.hexColor != "") {
+                                PaintItem(
+                                    paint = rgbColor.miniaturePaint.toPaint(),
+                                )
+                            }
+                        }
+                    }
                 }
+            }
+            Button(onClick = { onFindClosestPaints() }) {
+                Text(text = stringResource(id = R.string.color_scheme_add_find_closest_paints))
             }
         }
     }

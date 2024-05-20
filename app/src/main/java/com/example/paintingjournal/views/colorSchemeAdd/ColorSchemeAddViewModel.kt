@@ -141,6 +141,19 @@ class ColorSchemeAddViewModel(
             selectedColorScheme = ColorSchemeEnum.TETRADIC
         )
     }
+
+    fun findClosestPaints() {
+        viewModelScope.launch {
+            val colorSchemeColors = colorSchemeAddUiState.colorSchemeColors
+            colorSchemeColors.forEach { colorWithPaint ->
+                colorWithPaint.miniaturePaint =
+                    colorService.getClosestPaint(colorWithPaint.rgbColor)
+            }
+            colorSchemeAddUiState = colorSchemeAddUiState.copy(colorSchemeColors = listOf())
+            colorSchemeAddUiState =
+                colorSchemeAddUiState.copy(colorSchemeColors = colorSchemeColors)
+        }
+    }
 }
 
 data class ColorSchemeUiState(
