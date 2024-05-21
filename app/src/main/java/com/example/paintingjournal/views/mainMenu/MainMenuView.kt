@@ -70,6 +70,10 @@ fun MainMenuView(
                 Button(onClick = { navigateToColorschemeList() }) {
                     Text(text = stringResource(id = R.string.main_menu_color_scheme_list_button))
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                Button(onClick = { viewModel.importArmyPainterFanaticRange() }) {
+                    Text(text = stringResource(id = R.string.main_menu_import_army_painter_fanatic_paints))
+                }
             }
         }
     }

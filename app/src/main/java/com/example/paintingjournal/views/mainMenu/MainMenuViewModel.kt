@@ -7,6 +7,7 @@ import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.MiniaturesRepository
 import com.example.paintingjournal.data.PaintsRepository
 import com.example.paintingjournal.model.SaveStateEnum
+import com.example.paintingjournal.services.ImportService
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -14,10 +15,17 @@ import kotlinx.coroutines.launch
 class MainMenuViewModel(
     private val miniaturesRepository: MiniaturesRepository,
     private val imagesRepository: ImagesRepository,
-    private val paintsRepository: PaintsRepository
+    private val paintsRepository: PaintsRepository,
+    private val importService: ImportService
 ) : ViewModel() {
     init {
         removeCancelledEntries()
+    }
+
+    fun importArmyPainterFanaticRange() {
+        viewModelScope.launch {
+            importService.importArmyPainterFanatic()
+        }
     }
 
     private fun removeCancelledEntries() {

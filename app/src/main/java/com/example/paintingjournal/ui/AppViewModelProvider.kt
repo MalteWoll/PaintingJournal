@@ -56,7 +56,8 @@ object AppViewModelProvider {
             MainMenuViewModel(
                 paintingJournalApplication().container.miniaturesRepository,
                 paintingJournalApplication().container.imagesRepository,
-                paintingJournalApplication().container.paintsRepository
+                paintingJournalApplication().container.paintsRepository,
+                paintingJournalApplication().container.importService
             )
         }
         initializer {
