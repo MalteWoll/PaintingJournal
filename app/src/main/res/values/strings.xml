@@ -3,6 +3,8 @@
     <string name="attention">Attention</string>
     <string name="back_button">Back</string>
     <string name="close">Close</string>
+    <string name="close_do_not_ask_again">Close and do not ask again</string>
+    <string name="ok">OK</string>
     <string name="capture_image">Capture image</string>
     <string name="color_picker_red">Red</string>
     <string name="color_picker_blue">Blue</string>
@@ -34,6 +36,7 @@
     <string name="main_menu_paint_list_button">Paints</string>
     <string name="main_menu_title">Main Menu</string>
     <string name="main_menu_import_army_painter_fanatic_paints">Import Army Painter Fanatic Paints</string>
+    <string name="main_menu_add_army_painter_fanatic_paints_dialog">Import the Army Painter Fanatics paint range?</string>
     <string name="manufacturer">Manufacturer</string>
     <string name="mini_section_general">General information</string>
     <string name="mini_section_images">Images</string>

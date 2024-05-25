@@ -1,5 +1,8 @@
 package com.example.paintingjournal.views.mainMenu
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -18,14 +21,30 @@ class MainMenuViewModel(
     private val paintsRepository: PaintsRepository,
     private val importService: ImportService
 ) : ViewModel() {
+    var mainMenuUiState by mutableStateOf(MainMenuUiState())
+        private set
+
     init {
         removeCancelledEntries()
+    }
+
+    private fun getArmyPainterImportStatus() {
+
     }
 
     fun importArmyPainterFanaticRange() {
         viewModelScope.launch {
             importService.importArmyPainterFanatic()
         }
+        onToggleFanaticDialog()
+    }
+
+    fun onSetFanaticRangeStatus() {
+
+    }
+
+    fun onToggleFanaticDialog() {
+        mainMenuUiState = mainMenuUiState.copy(showFanaticRangeDialog = !mainMenuUiState.showFanaticRangeDialog)
     }
 
     private fun removeCancelledEntries() {
@@ -79,3 +98,7 @@ class MainMenuViewModel(
         }
     }
 }
+
+data class MainMenuUiState(
+    val showFanaticRangeDialog: Boolean = false
+)

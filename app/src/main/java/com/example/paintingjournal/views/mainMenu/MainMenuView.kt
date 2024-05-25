@@ -28,6 +28,7 @@ import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
+import com.example.paintingjournal.ui.composables.DialogWithThreeButtons
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
@@ -73,6 +74,17 @@ fun MainMenuView(
                 Spacer(modifier = Modifier.weight(1f))
                 Button(onClick = { viewModel.importArmyPainterFanaticRange() }) {
                     Text(text = stringResource(id = R.string.main_menu_import_army_painter_fanatic_paints))
+                }
+                if(viewModel.mainMenuUiState.showFanaticRangeDialog) {
+                    DialogWithThreeButtons(
+                        text = stringResource(id = R.string.main_menu_add_army_painter_fanatic_paints_dialog),
+                        buttonOneText = stringResource(id = R.string.ok),
+                        buttonTwoText = stringResource(id = R.string.close),
+                        buttonThreeText = stringResource(id = R.string.close_do_not_ask_again),
+                        onButtonOneClicked = { viewModel.importArmyPainterFanaticRange() },
+                        onButtonTwoClicked = { viewModel.onToggleFanaticDialog() },
+                        onButtonThreeClicked = { viewModel.onSetFanaticRangeStatus() },
+                        onDismissRequest = { /*TODO*/ })
                 }
             }
         }
