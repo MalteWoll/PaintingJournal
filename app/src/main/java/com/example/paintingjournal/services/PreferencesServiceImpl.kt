@@ -25,6 +25,6 @@ class PreferencesServiceImpl: PreferencesService {
 
     override fun getData(key: String, defaultValue: Boolean, context: Context): Boolean {
         val sharedPreferences: SharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getBoolean(key, defaultValue) ?: defaultValue
+        return sharedPreferences.getBoolean(key, defaultValue)
     }
 }

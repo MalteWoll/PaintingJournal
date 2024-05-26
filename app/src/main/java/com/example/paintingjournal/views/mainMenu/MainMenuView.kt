@@ -1,5 +1,6 @@
 package com.example.paintingjournal.views.mainMenu
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,9 +18,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -43,6 +46,11 @@ fun MainMenuView(
     navigateToColorschemeList: () -> Unit,
     viewModel: MainMenuViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val context: Context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.getArmyPainterImportStatus(context)
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -72,8 +80,10 @@ fun MainMenuView(
                     Text(text = stringResource(id = R.string.main_menu_color_scheme_list_button))
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                Button(onClick = { viewModel.importArmyPainterFanaticRange() }) {
-                    Text(text = stringResource(id = R.string.main_menu_import_army_painter_fanatic_paints))
+                if(viewModel.mainMenuUiState.showFanaticRangeButton) {
+                    Button(onClick = { viewModel.onToggleFanaticDialog() }) {
+                        Text(text = stringResource(id = R.string.main_menu_import_army_painter_fanatic_paints))
+                    }
                 }
                 if(viewModel.mainMenuUiState.showFanaticRangeDialog) {
                     DialogWithThreeButtons(
@@ -81,10 +91,12 @@ fun MainMenuView(
                         buttonOneText = stringResource(id = R.string.ok),
                         buttonTwoText = stringResource(id = R.string.close),
                         buttonThreeText = stringResource(id = R.string.close_do_not_ask_again),
-                        onButtonOneClicked = { viewModel.importArmyPainterFanaticRange() },
+                        onButtonOneClicked = { viewModel.importArmyPainterFanaticRange(context) },
                         onButtonTwoClicked = { viewModel.onToggleFanaticDialog() },
-                        onButtonThreeClicked = { viewModel.onSetFanaticRangeStatus() },
-                        onDismissRequest = { /*TODO*/ })
+                        onButtonThreeClicked = { viewModel.onSetFanaticRangeStatus(context) },
+                        onDismissRequest = { /*TODO*/ },
+                        context = context
+                    )
                 }
             }
         }

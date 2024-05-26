@@ -9,6 +9,8 @@ import com.example.paintingjournal.services.ImportService
 import com.example.paintingjournal.services.ImportServiceImpl
 import com.example.paintingjournal.services.MiniaturesService
 import com.example.paintingjournal.services.MiniaturesServiceImpl
+import com.example.paintingjournal.services.PreferencesService
+import com.example.paintingjournal.services.PreferencesServiceImpl
 
 interface AppContainer {
     val colorService: ColorService
@@ -19,6 +21,7 @@ interface AppContainer {
     val miniaturesRepository: MiniaturesRepository
     val miniaturesService: MiniaturesService
     val paintsRepository: PaintsRepository
+    val preferencesService: PreferencesService
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
@@ -45,5 +48,8 @@ class AppDataContainer(private val context: Context) : AppContainer {
     }
     override val paintsRepository: PaintsRepository by lazy {
         PaintsRepositoryImpl(MiniatureDatabase.getDatabase(context).paintDao())
+    }
+    override val preferencesService: PreferencesService by lazy {
+        PreferencesServiceImpl()
     }
 }

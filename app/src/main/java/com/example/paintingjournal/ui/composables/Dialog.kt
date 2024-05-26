@@ -1,5 +1,6 @@
 package com.example.paintingjournal.ui.composables
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,10 +25,11 @@ fun DialogWithThreeButtons(
     buttonOneText: String,
     buttonTwoText: String,
     buttonThreeText: String,
-    onButtonOneClicked: () -> Unit,
-    onButtonTwoClicked: () -> Unit,
-    onButtonThreeClicked: () -> Unit,
+    onButtonOneClicked: (context: Context) -> Unit,
+    onButtonTwoClicked: (context: Context) -> Unit,
+    onButtonThreeClicked: (context: Context) -> Unit,
     onDismissRequest: () -> Unit,
+    context: Context,
     modifier: Modifier = Modifier
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
@@ -45,13 +47,13 @@ fun DialogWithThreeButtons(
             ) {
                 Text(text = text)
                 Column(horizontalAlignment = Alignment.End) {
-                    Button(onClick = { onButtonOneClicked() }) {
+                    Button(onClick = { onButtonOneClicked(context) }) {
                         Text(text = buttonOneText)
                     }
-                    Button(onClick = { onButtonTwoClicked() }) {
+                    Button(onClick = { onButtonTwoClicked(context) }) {
                         Text(text = buttonTwoText)
                     }
-                    Button(onClick = { onButtonThreeClicked() }) {
+                    Button(onClick = { onButtonThreeClicked(context) }) {
                         Text(text = buttonThreeText)
                     }
                 }
