@@ -2,6 +2,7 @@ package com.example.paintingjournal.data
 
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.PaintColorHexMappingTable
 import com.example.paintingjournal.model.PaintImageMappingTable
 import kotlinx.coroutines.flow.Flow
 
@@ -17,4 +18,7 @@ interface PaintsRepository {
     suspend fun deleteImageForPaint(paintImageMappingTable: PaintImageMappingTable)
     suspend fun getAllManufacturers(): Flow<List<String>>
     suspend fun getAllPaintTypes(): Flow<List<String>>
+    suspend fun addPaintForColor(paintColorHexMappingTable: PaintColorHexMappingTable)
+    suspend fun getPaintForColor(id: Long): Flow<MiniaturePaint>
+    suspend fun removePaintColorHexMapping(paintColorHexMappingTable: PaintColorHexMappingTable)
 }

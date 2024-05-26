@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.PaintColorHexMappingTable
 import com.example.paintingjournal.model.PaintImageMappingTable
 import kotlinx.coroutines.flow.Flow
 
@@ -49,4 +50,15 @@ interface PaintDao {
 
     @Query("SELECT DISTINCT type from paints where type <> ''")
     fun getAllPaintTypes(): Flow<List<String>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun addPaintColorHexMappingTable(paintColorHexMappingTable: PaintColorHexMappingTable)
+
+    @Query("SELECT * from paints " +
+            "left join paintColorHexMappingTable map on paints.paintId = map.paintIdRef " +
+            "where colorHexIdRef = :id")
+    fun getPaintForColorHex(id: Long): Flow<MiniaturePaint>
+
+    @Delete
+    fun removePaintColorHexMappingTable(paintColorHexMappingTable: PaintColorHexMappingTable)
 }

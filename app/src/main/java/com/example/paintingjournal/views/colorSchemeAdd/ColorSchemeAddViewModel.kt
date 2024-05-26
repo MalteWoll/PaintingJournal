@@ -15,6 +15,7 @@ import com.example.paintingjournal.model.ColorScheme
 import com.example.paintingjournal.model.ColorSchemeColorHexMappingTable
 import com.example.paintingjournal.model.ColorSchemeEnum
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.PaintColorHexMappingTable
 import com.example.paintingjournal.model.RgbColorWithPaint
 import com.example.paintingjournal.model.RgbEnum
 import com.example.paintingjournal.model.SaveStateEnum
@@ -182,6 +183,10 @@ class ColorSchemeAddViewModel(
                 colorSchemeRepository.addColorSchemeColorHexMap(
                     ColorSchemeColorHexMappingTable(colorSchemeId, colorId)
                 )
+
+                if(color.miniaturePaint.name != "") {
+                    paintsRepository.addPaintForColor(PaintColorHexMappingTable(color.miniaturePaint.id, colorId,))
+                }
             }
         }
     }

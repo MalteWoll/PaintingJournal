@@ -2,6 +2,7 @@ package com.example.paintingjournal.data
 
 import com.example.paintingjournal.model.Image
 import com.example.paintingjournal.model.MiniaturePaint
+import com.example.paintingjournal.model.PaintColorHexMappingTable
 import com.example.paintingjournal.model.PaintImageMappingTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -19,4 +20,7 @@ class PaintsRepositoryImpl(private val paintDao: PaintDao) : PaintsRepository {
     override suspend fun deleteImageForPaint(paintImageMappingTable: PaintImageMappingTable) = withContext(Dispatchers.IO) { paintDao.deletePaintImageMap(paintImageMappingTable) }
     override suspend fun getAllManufacturers(): Flow<List<String>> = withContext(Dispatchers.IO) { paintDao.getAllPaintManufacturers() }
     override suspend fun getAllPaintTypes(): Flow<List<String>> = withContext(Dispatchers.IO) { paintDao.getAllPaintTypes() }
+    override suspend fun addPaintForColor(paintColorHexMappingTable: PaintColorHexMappingTable) = withContext(Dispatchers.IO) { paintDao.addPaintColorHexMappingTable(paintColorHexMappingTable) }
+    override suspend fun getPaintForColor(id: Long): Flow<MiniaturePaint> = withContext(Dispatchers.IO) { paintDao.getPaintForColorHex(id) }
+    override suspend fun removePaintColorHexMapping(paintColorHexMappingTable: PaintColorHexMappingTable) = withContext(Dispatchers.IO) { paintDao.removePaintColorHexMappingTable(paintColorHexMappingTable) }
 }

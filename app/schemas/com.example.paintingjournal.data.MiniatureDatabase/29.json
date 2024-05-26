@@ -1,0 +1,687 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 29,
+    "identityHash": "526c6f71940b7e7d4756a45ea51421aa",
+    "entities": [
+      {
+        "tableName": "colorSchemes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`colorSchemeId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `originalColor` TEXT NOT NULL, `saveState` TEXT NOT NULL, `createdAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "colorSchemeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originalColor",
+            "columnName": "originalColor",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "saveState",
+            "columnName": "saveState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "colorSchemeId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "colorSchemeColorHexMappingTable",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`colorSchemeIdRef` INTEGER NOT NULL, `colorHexIdRef` INTEGER NOT NULL, PRIMARY KEY(`colorSchemeIdRef`, `colorHexIdRef`), FOREIGN KEY(`colorSchemeIdRef`) REFERENCES `colorSchemes`(`colorSchemeId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`colorHexIdRef`) REFERENCES `colorHex`(`colorHexId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "colorSchemeIdRef",
+            "columnName": "colorSchemeIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "colorHexIdRef",
+            "columnName": "colorHexIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "colorSchemeIdRef",
+            "colorHexIdRef"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "colorSchemes",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "colorSchemeIdRef"
+            ],
+            "referencedColumns": [
+              "colorSchemeId"
+            ]
+          },
+          {
+            "table": "colorHex",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "colorHexIdRef"
+            ],
+            "referencedColumns": [
+              "colorHexId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "colorHex",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`colorHexId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hex` TEXT NOT NULL, `createdAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "colorHexId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hex",
+            "columnName": "hex",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "colorHexId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "images",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`imageId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `imageUri` TEXT, `saveState` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "imageId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageUri",
+            "columnName": "imageUri",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "saveState",
+            "columnName": "saveState",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "imageId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "miniatures",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`miniatureId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `manufacturer` TEXT NOT NULL, `faction` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `previewImageUri` TEXT, `saveState` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "miniatureId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "manufacturer",
+            "columnName": "manufacturer",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "faction",
+            "columnName": "faction",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "previewImageUri",
+            "columnName": "previewImageUri",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "saveState",
+            "columnName": "saveState",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "miniatureId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "paints",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`paintId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `manufacturer` TEXT NOT NULL, `description` TEXT NOT NULL, `type` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `previewImageUri` TEXT, `hexColor` TEXT NOT NULL, `saveState` TEXT NOT NULL DEFAULT 'SAVED')",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "paintId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "manufacturer",
+            "columnName": "manufacturer",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "previewImageUri",
+            "columnName": "previewImageUri",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hexColor",
+            "columnName": "hexColor",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "saveState",
+            "columnName": "saveState",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'SAVED'"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "paintId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "paintColorHexMappingTable",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`paintIdRef` INTEGER NOT NULL, `colorHexIdRef` INTEGER NOT NULL, PRIMARY KEY(`paintIdRef`, `colorHexIdRef`), FOREIGN KEY(`paintIdRef`) REFERENCES `paints`(`paintId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`colorHexIdRef`) REFERENCES `colorHex`(`colorHexId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "paintIdRef",
+            "columnName": "paintIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "colorHexIdRef",
+            "columnName": "colorHexIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "paintIdRef",
+            "colorHexIdRef"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "paints",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "paintIdRef"
+            ],
+            "referencedColumns": [
+              "paintId"
+            ]
+          },
+          {
+            "table": "colorHex",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "colorHexIdRef"
+            ],
+            "referencedColumns": [
+              "colorHexId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "paintImageMapping",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`paintIdRef` INTEGER NOT NULL, `imageIdRef` INTEGER NOT NULL, PRIMARY KEY(`paintIdRef`, `imageIdRef`), FOREIGN KEY(`paintIdRef`) REFERENCES `paints`(`paintId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`imageIdRef`) REFERENCES `images`(`imageId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "paintIdRef",
+            "columnName": "paintIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageIdRef",
+            "columnName": "imageIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "paintIdRef",
+            "imageIdRef"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_paintImageMapping_imageIdRef",
+            "unique": false,
+            "columnNames": [
+              "imageIdRef"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_paintImageMapping_imageIdRef` ON `${TABLE_NAME}` (`imageIdRef`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "paints",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "paintIdRef"
+            ],
+            "referencedColumns": [
+              "paintId"
+            ]
+          },
+          {
+            "table": "images",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "imageIdRef"
+            ],
+            "referencedColumns": [
+              "imageId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "miniatureImageMapping",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`miniatureIdRef` INTEGER NOT NULL, `imageIdRef` INTEGER NOT NULL, PRIMARY KEY(`miniatureIdRef`, `imageIdRef`), FOREIGN KEY(`miniatureIdRef`) REFERENCES `miniatures`(`miniatureId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`imageIdRef`) REFERENCES `images`(`imageId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "miniatureIdRef",
+            "columnName": "miniatureIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageIdRef",
+            "columnName": "imageIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "miniatureIdRef",
+            "imageIdRef"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_miniatureImageMapping_imageIdRef",
+            "unique": false,
+            "columnNames": [
+              "imageIdRef"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_miniatureImageMapping_imageIdRef` ON `${TABLE_NAME}` (`imageIdRef`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "miniatures",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "miniatureIdRef"
+            ],
+            "referencedColumns": [
+              "miniatureId"
+            ]
+          },
+          {
+            "table": "images",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "imageIdRef"
+            ],
+            "referencedColumns": [
+              "imageId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "miniaturePaintMapping",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`miniatureIdRef` INTEGER NOT NULL, `paintIdRef` INTEGER NOT NULL, PRIMARY KEY(`miniatureIdRef`, `paintIdRef`), FOREIGN KEY(`miniatureIdRef`) REFERENCES `miniatures`(`miniatureId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`paintIdRef`) REFERENCES `paints`(`paintId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "miniatureIdRef",
+            "columnName": "miniatureIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paintIdRef",
+            "columnName": "paintIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "miniatureIdRef",
+            "paintIdRef"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "miniatures",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "miniatureIdRef"
+            ],
+            "referencedColumns": [
+              "miniatureId"
+            ]
+          },
+          {
+            "table": "paints",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "paintIdRef"
+            ],
+            "referencedColumns": [
+              "paintId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "painting_steps",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stepId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `stepTitle` TEXT NOT NULL, `stepDescription` TEXT NOT NULL, `stepOrder` INTEGER NOT NULL, `saveState` TEXT NOT NULL, `hasChanged` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "stepId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stepTitle",
+            "columnName": "stepTitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stepDescription",
+            "columnName": "stepDescription",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stepOrder",
+            "columnName": "stepOrder",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "saveState",
+            "columnName": "saveState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasChanged",
+            "columnName": "hasChanged",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "stepId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "miniaturePaintingStepMappingTable",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`miniatureIdRef` INTEGER NOT NULL, `paintingStepIdRef` INTEGER NOT NULL, PRIMARY KEY(`miniatureIdRef`, `paintingStepIdRef`), FOREIGN KEY(`miniatureIdRef`) REFERENCES `miniatures`(`miniatureId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`paintingStepIdRef`) REFERENCES `painting_steps`(`stepId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "miniatureIdRef",
+            "columnName": "miniatureIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paintingStepIdRef",
+            "columnName": "paintingStepIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "miniatureIdRef",
+            "paintingStepIdRef"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_miniaturePaintingStepMappingTable_paintingStepIdRef",
+            "unique": false,
+            "columnNames": [
+              "paintingStepIdRef"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_miniaturePaintingStepMappingTable_paintingStepIdRef` ON `${TABLE_NAME}` (`paintingStepIdRef`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "miniatures",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "miniatureIdRef"
+            ],
+            "referencedColumns": [
+              "miniatureId"
+            ]
+          },
+          {
+            "table": "painting_steps",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "paintingStepIdRef"
+            ],
+            "referencedColumns": [
+              "stepId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "paintingStepImageMappingTable",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`paintingStepIdRef` INTEGER NOT NULL, `imageIdRef` INTEGER NOT NULL, PRIMARY KEY(`paintingStepIdRef`, `imageIdRef`), FOREIGN KEY(`paintingStepIdRef`) REFERENCES `painting_steps`(`stepId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`imageIdRef`) REFERENCES `images`(`imageId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "paintingStepIdRef",
+            "columnName": "paintingStepIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageIdRef",
+            "columnName": "imageIdRef",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "paintingStepIdRef",
+            "imageIdRef"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_paintingStepImageMappingTable_imageIdRef",
+            "unique": false,
+            "columnNames": [
+              "imageIdRef"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_paintingStepImageMappingTable_imageIdRef` ON `${TABLE_NAME}` (`imageIdRef`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "painting_steps",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "paintingStepIdRef"
+            ],
+            "referencedColumns": [
+              "stepId"
+            ]
+          },
+          {
+            "table": "images",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "imageIdRef"
+            ],
+            "referencedColumns": [
+              "imageId"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '526c6f71940b7e7d4756a45ea51421aa')"
+    ]
+  }
+}

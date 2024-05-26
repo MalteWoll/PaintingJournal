@@ -18,6 +18,7 @@ import com.example.paintingjournal.model.MiniatureImageMappingTable
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.MiniaturePaintMappingTable
 import com.example.paintingjournal.model.MiniaturePaintingStepMappingTable
+import com.example.paintingjournal.model.PaintColorHexMappingTable
 import com.example.paintingjournal.model.PaintImageMappingTable
 import com.example.paintingjournal.model.PaintingStep
 import com.example.paintingjournal.model.PaintingStepImageMappingTable
@@ -29,6 +30,7 @@ import com.example.paintingjournal.model.PaintingStepImageMappingTable
     Image::class,
     Miniature::class,
     MiniaturePaint::class,
+    PaintColorHexMappingTable::class,
     PaintImageMappingTable::class,
     MiniatureImageMappingTable::class,
     MiniaturePaintMappingTable::class,
@@ -36,8 +38,10 @@ import com.example.paintingjournal.model.PaintingStepImageMappingTable
     MiniaturePaintingStepMappingTable::class,
     PaintingStepImageMappingTable::class
     ],
-    version = 28,
-    autoMigrations = [AutoMigration(from = 27, to = 28)],
+    version = 29,
+    autoMigrations = [
+        AutoMigration(from = 27, to = 28),
+        AutoMigration(from = 28, to = 29)],
     exportSchema = true)
 @TypeConverters(
     DateConverters::class,

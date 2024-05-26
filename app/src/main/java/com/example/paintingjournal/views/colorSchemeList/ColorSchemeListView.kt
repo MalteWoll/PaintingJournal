@@ -162,7 +162,7 @@ private fun ColorSchemeItem(
                 ) {
                     Text(
                         text = colorScheme.name,
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.bodyLarge,
                     )
                     Spacer(Modifier.weight(1f))
                     ColorSchemeItemColorSquares(colors = colorScheme.colorList)
@@ -181,7 +181,7 @@ private fun ColorSchemeItemColorSquares(
         colors.forEach { color ->
             Box(
                 modifier = Modifier
-                    .size(25.dp)
+                    .size(30.dp)
                     .clip(RectangleShape)
                     .background(
                         Color(
