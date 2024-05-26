@@ -40,7 +40,8 @@ object AppViewModelProvider {
         }
         initializer {
             ColorSchemeListViewModel(
-                paintingJournalApplication().container.colorSchemeRepository
+                paintingJournalApplication().container.colorSchemeRepository,
+                paintingJournalApplication().container.colorService
             )
         }
         initializer {

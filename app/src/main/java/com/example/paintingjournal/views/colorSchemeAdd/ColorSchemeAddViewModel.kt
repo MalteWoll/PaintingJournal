@@ -205,7 +205,8 @@ data class ColorSchemeDetails(
     val name: String = "",
     val originalColor: String = "",
     val createdAt: Long = 0,
-    val saveState: SaveStateEnum = SaveStateEnum.NEW
+    val saveState: SaveStateEnum = SaveStateEnum.NEW,
+    val colorList: MutableList<IntArray> = mutableListOf()
 )
 
 fun ColorSchemeDetails.toColorScheme(): ColorScheme = ColorScheme(
