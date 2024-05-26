@@ -1,13 +1,18 @@
 package com.example.paintingjournal.views.colorSchemeAdd
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.util.copy
 import com.example.paintingjournal.data.ColorSchemeRepository
 import com.example.paintingjournal.data.PaintsRepository
+import com.example.paintingjournal.model.ColorHex
 import com.example.paintingjournal.model.ColorScheme
+import com.example.paintingjournal.model.ColorSchemeColorHexMappingTable
 import com.example.paintingjournal.model.ColorSchemeEnum
 import com.example.paintingjournal.model.MiniaturePaint
 import com.example.paintingjournal.model.RgbColorWithPaint
@@ -18,6 +23,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.Instant
 
 class ColorSchemeAddViewModel(
     private val paintsRepository: PaintsRepository,
@@ -153,6 +159,35 @@ class ColorSchemeAddViewModel(
             colorSchemeAddUiState =
                 colorSchemeAddUiState.copy(colorSchemeColors = colorSchemeColors)
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun onAddColorScheme() {
+        val currentInstant = Instant.now()
+        runBlocking {
+            colorSchemeAddUiState = colorSchemeAddUiState.copy(colorSchemeDetails =  colorSchemeAddUiState.colorSchemeDetails.copy(
+                saveState = SaveStateEnum.SAVED,
+                id = colorSchemeId,
+                originalColor = colorService.getHexFromRgb(colorSchemeAddUiState.mainColorRgb),
+                createdAt = currentInstant.toEpochMilli())
+            )
+            colorSchemeRepository.updateColorScheme(colorSchemeAddUiState.colorSchemeDetails.toColorScheme())
+            colorSchemeAddUiState.colorSchemeColors.forEach { color ->
+                val colorHex = ColorHex(
+                    id = 0,
+                    colorService.getHexFromRgb(color.rgbColor),
+                    currentInstant.toEpochMilli()
+                )
+                val colorId = colorSchemeRepository.insertColorHex(colorHex)
+                colorSchemeRepository.addColorSchemeColorHexMap(
+                    ColorSchemeColorHexMappingTable(colorSchemeId, colorId)
+                )
+            }
+        }
+    }
+
+    fun updateUiState(colorSchemeDetails: ColorSchemeDetails) {
+        colorSchemeAddUiState = colorSchemeAddUiState.copy(colorSchemeDetails = colorSchemeDetails)
     }
 }
 

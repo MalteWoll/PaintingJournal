@@ -58,7 +58,8 @@ object AppViewModelProvider {
                 paintingJournalApplication().container.imagesRepository,
                 paintingJournalApplication().container.paintsRepository,
                 paintingJournalApplication().container.importService,
-                paintingJournalApplication().container.preferencesService
+                paintingJournalApplication().container.preferencesService,
+                paintingJournalApplication().container.colorSchemeRepository
             )
         }
         initializer {

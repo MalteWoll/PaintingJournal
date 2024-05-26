@@ -16,6 +16,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -33,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
+import com.example.paintingjournal.model.ColorSchemeEnum
 import com.example.paintingjournal.model.RgbColorWithPaint
 import com.example.paintingjournal.model.RgbEnum
 import com.example.paintingjournal.navigation.NavigationDestination
@@ -81,6 +85,9 @@ fun ColorSchemeAddView(
                 onSelectTriadic = { viewModel.getTriadicColors() },
                 onSelectTetradic = { viewModel.getTetradicColors() },
                 onFindClosestPaints = { viewModel.findClosestPaints() },
+                onAddColorScheme = { viewModel.onAddColorScheme() },
+                onValueChanged = viewModel::updateUiState,
+                navigateBack = navigateBack,
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState()))
@@ -98,6 +105,9 @@ fun ColorSchemeAddBody(
     onSelectTriadic: () -> Unit,
     onSelectTetradic: () -> Unit,
     onFindClosestPaints: () -> Unit,
+    onAddColorScheme: () -> Unit,
+    onValueChanged: (ColorSchemeDetails) -> Unit,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -141,6 +151,33 @@ fun ColorSchemeAddBody(
                 rgbColors = colorSchemeUiState.colorSchemeColors,
                 onFindClosestPaints = onFindClosestPaints
             )
+            if(colorSchemeUiState.selectedColorScheme != ColorSchemeEnum.NONE) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = colorSchemeUiState.colorSchemeDetails.name,
+                        onValueChange = { onValueChanged(colorSchemeUiState.colorSchemeDetails.copy(name = it)) },
+                        label = { Text(stringResource(id = R.string.mini_add_form_name)) },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = true,
+                        singleLine = true
+                    )
+                    Button(onClick = {
+                        onAddColorScheme()
+                        navigateBack()
+                    }) {
+                        Text(text = stringResource(id = R.string.color_scheme_add_button_add_scheme))
+                    }
+                }
+            }
         }
     }
 }
@@ -178,7 +215,10 @@ fun ColorSchemeSquares(
     modifier: Modifier = Modifier
 ) {
     if(rgbColors.isNotEmpty()) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
             rgbColors.forEach { rgbColor ->
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Column(

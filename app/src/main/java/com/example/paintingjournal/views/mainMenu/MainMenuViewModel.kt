@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.paintingjournal.data.ColorSchemeRepository
 import com.example.paintingjournal.data.ImagesRepository
 import com.example.paintingjournal.data.MiniaturesRepository
 import com.example.paintingjournal.data.PaintsRepository
@@ -23,7 +24,8 @@ class MainMenuViewModel(
     private val imagesRepository: ImagesRepository,
     private val paintsRepository: PaintsRepository,
     private val importService: ImportService,
-    private val preferencesService: PreferencesService
+    private val preferencesService: PreferencesService,
+    private val colorSchemeRepository: ColorSchemeRepository
 ) : ViewModel() {
     var mainMenuUiState by mutableStateOf(MainMenuUiState())
         private set
@@ -33,8 +35,7 @@ class MainMenuViewModel(
     }
 
     fun getArmyPainterImportStatus(context: Context) {
-        val status = preferencesService.getData("FanaticImportStatus", "", context)
-        when(status) {
+        when(preferencesService.getData("FanaticImportStatus", "", context)) {
             "" -> {
                 preferencesService.saveData("FanaticImportStatus", "not imported", context)
                 mainMenuUiState = mainMenuUiState.copy(showFanaticRangeButton = true)
@@ -113,6 +114,18 @@ class MainMenuViewModel(
             paintList.forEach { paint ->
                 if(paint.saveState == SaveStateEnum.NEW) {
                     paintsRepository.deletePaint(paint)
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            val colorSchemeList = colorSchemeRepository.getAllColorSchemesStream()
+                .filterNotNull()
+                .first()
+                .toList()
+            colorSchemeList.forEach { colorScheme ->
+                if(colorScheme.saveState == SaveStateEnum.NEW) {
+                    colorSchemeRepository.deleteColorScheme(colorScheme)
                 }
             }
         }
