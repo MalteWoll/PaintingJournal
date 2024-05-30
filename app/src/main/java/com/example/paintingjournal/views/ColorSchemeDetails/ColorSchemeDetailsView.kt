@@ -1,5 +1,7 @@
 package com.example.paintingjournal.views.ColorSchemeDetails
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -13,6 +15,7 @@ import com.example.paintingjournal.PaintingJournalTopAppBar
 import com.example.paintingjournal.R
 import com.example.paintingjournal.navigation.NavigationDestination
 import com.example.paintingjournal.ui.AppViewModelProvider
+import com.example.paintingjournal.views.colorSchemeAdd.ColorSchemeSquares
 
 object ColorSchemeDetailsDestination : NavigationDestination {
     override val route: String = "color_scheme_details"
@@ -43,6 +46,24 @@ fun ColorSchemeDetailsView(
         },
         modifier = modifier
     ) { innerPadding ->
-        Text(text = "asd", modifier = Modifier.padding(innerPadding))
+        Column(modifier = Modifier.padding(innerPadding)) {
+            ColorSchemeDetailsBody(
+                colorSchemeDetailsUiState = viewModel.colorSchemeDetailsUiState
+            )
+        }
+    }
+}
+
+@Composable
+fun ColorSchemeDetailsBody(
+    colorSchemeDetailsUiState: ColorSchemeDetailsUiState,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.fillMaxSize()) {
+        ColorSchemeSquares(
+            rgbColors = colorSchemeDetailsUiState.rgbColorsWithPaint,
+            onFindClosestPaints = {  },
+            canFindPaints = false
+        )
     }
 }

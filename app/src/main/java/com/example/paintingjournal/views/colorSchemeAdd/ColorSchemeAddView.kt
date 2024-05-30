@@ -212,12 +212,14 @@ fun ColorSchemeSelection(
 fun ColorSchemeSquares(
     rgbColors: List<RgbColorWithPaint>,
     onFindClosestPaints: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    canFindPaints: Boolean = true,
 ) {
     if(rgbColors.isNotEmpty()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
         ) {
             rgbColors.forEach { rgbColor ->
                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -252,8 +254,10 @@ fun ColorSchemeSquares(
                     }
                 }
             }
-            Button(onClick = { onFindClosestPaints() }) {
-                Text(text = stringResource(id = R.string.color_scheme_add_find_closest_paints))
+            if(canFindPaints) {
+                Button(onClick = { onFindClosestPaints() }) {
+                    Text(text = stringResource(id = R.string.color_scheme_add_find_closest_paints))
+                }
             }
         }
     }
