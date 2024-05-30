@@ -19,6 +19,7 @@
     <string name="color_scheme_add_tetradic_colors">Tetradic</string>
     <string name="color_scheme_add_find_closest_paints">Find closest paints</string>
     <string name="color_scheme_add_button_add_scheme">Save</string>
+    <string name="color_scheme_details_title">Color scheme details</string>
     <string name="color_scheme_list_title">Color scheme list</string>
     <string name="color_scheme_list_no_entries">No color scheme added yet</string>
     <string name="delete">Delete</string>

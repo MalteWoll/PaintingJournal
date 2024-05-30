@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.paintingjournal.PaintingJournal
+import com.example.paintingjournal.views.ColorSchemeDetails.ColorSchemeDetailsViewModel
 import com.example.paintingjournal.views.colorSchemeAdd.ColorSchemeAddViewModel
 import com.example.paintingjournal.views.colorSchemeAddPaintList.ColorSchemeAddPaintListViewModel
 import com.example.paintingjournal.views.colorSchemeList.ColorSchemeListViewModel
@@ -29,6 +30,14 @@ object AppViewModelProvider {
                 paintingJournalApplication().container.paintsRepository,
                 paintingJournalApplication().container.colorSchemeRepository,
                 paintingJournalApplication().container.colorService,
+            )
+        }
+        initializer {
+            ColorSchemeDetailsViewModel(
+                this.createSavedStateHandle(),
+                paintingJournalApplication().container.paintsRepository,
+                paintingJournalApplication().container.colorSchemeRepository,
+                paintingJournalApplication().container.colorService
             )
         }
         initializer {
